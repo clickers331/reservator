@@ -1,8 +1,8 @@
-# React + Vite
+# Bursa Kürek Kulubu Rezervasyon Sistemi
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Kullanılan teknolojiler
+1. React 18
+2. React Router v6
+3. Vite
+4. Cloud Firestore
+5. Firebase Auth
