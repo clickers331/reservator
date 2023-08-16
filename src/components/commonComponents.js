@@ -67,52 +67,6 @@ const SearchIconImg = styled.div`
   aspect-ratio: 1;
 `;
 
-const TableItemContainer = styled.div`
-  border: red solid 1px;
-  min-width: fit-content;
-  ${({
-    children: {
-      props: { itemwidth },
-    },
-  }) => {
-    itemwidth && console.log(itemwidth);
-    return itemwidth && `width:${itemwidth} !important`;
-  }}
-`;
-
-const TableRow = styled.div`
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5em 1em;
-  width: 100%;
-  border-radius: 15px;
-  background-color: ${({ type, theme }) => {
-    switch (type) {
-      case "guide":
-        return theme.colors.neutrals[600];
-      case "red":
-        return theme.colors.accents.red[300];
-      case "yellow":
-        return theme.colors.accents.yellow[300];
-      default:
-        return theme.colors.primaries[300];
-    }
-  }};
-  color: ${({ type, theme }) => {
-    return type === "guide"
-      ? theme.colors.neutrals[200]
-      : theme.colors.neutrals[900];
-  }};
-  font-size: ${({ type }) => (type === "guide" ? "1.2rem" : "1rem")};
-  font-weight: 600;
-  & > ${TableItemContainer} {
-    width: ${({ children }) => 100 / children.length}%;
-  }
-`;
-
 const TableContainer = styled.div`
   box-sizing: border-box;
   display: flex;
@@ -131,7 +85,5 @@ export {
   SearchInputContainer,
   SearchInput,
   SearchIconImg,
-  TableRow,
-  TableItemContainer,
   TableContainer,
 };
