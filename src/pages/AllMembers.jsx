@@ -6,13 +6,15 @@ import { Container, TableContainer } from "../components/commonComponents";
 import SearchNav from "../components/SearchNav";
 import GuideRow from "../components/GuideRow";
 import TableRow from "../components/TableRow";
-import CircleButton from "../components/CircleButton";
-import { ReactComponent as CloseIcon } from "../assets/icons/close_ring.svg";
-import { ReactComponent as EditIcon } from "../assets/icons/edit_pen.svg";
+
+import EditBtn from "../components/circle_buttons/EditBtn.jsx";
+import ActiveBtn from "../components/circle_buttons/ActiveBtn.jsx";
+import PassiveBtn from "../components/circle_buttons/PassiveBtn.jsx";
 
 const CircleButtonContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 1rem;
 `;
 export async function loader() {
   return defer({ users: getAllUsersWithDetails() });
@@ -48,18 +50,8 @@ export default function AllMembers() {
                       <p itemwidth="50%">{email}</p>
                       <p>{isActive ? "Aktif" : "Pasif"}</p>
                       <CircleButtonContainer>
-                        <CircleButton
-                          text="P"
-                          iconColor={"white"}
-                          backgroundColor={theme.colors.accents.red[500]}
-                          fill={false}
-                        />
-                        <CircleButton
-                          icon={EditIcon}
-                          iconColor={"white"}
-                          backgroundColor={theme.colors.accents.yellow[500]}
-                          stroke={false}
-                        />
+                        {isActive ? <PassiveBtn /> : <ActiveBtn />}
+                        <EditBtn />
                       </CircleButtonContainer>
                     </TableRow>
                   );

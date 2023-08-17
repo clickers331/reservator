@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Container = styled.div`
+  overflow: hidden;
   margin: 3em 0;
   display: flex;
   flex-direction: column;
