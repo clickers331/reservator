@@ -2,10 +2,10 @@ import React, { Suspense } from "react";
 import styled, { useTheme } from "styled-components";
 import { getAllUsersWithDetails } from "../api.js";
 import { defer, useLoaderData, Await } from "react-router-dom";
-import { Container, TableContainer } from "../components/commonComponents";
-import SearchNav from "../components/SearchNav";
-import GuideRow from "../components/GuideRow";
-import TableRow from "../components/TableRow";
+import { Container, TableContainer } from "../components/commonComponents.js";
+import SearchNav from "../components/SearchNav.jsx";
+import GuideRow from "../components/GuideRow.jsx";
+import TableRow from "../components/TableRow.jsx";
 
 import EditBtn from "../components/circle_buttons/EditBtn.jsx";
 import ActiveBtn from "../components/circle_buttons/ActiveBtn.jsx";
@@ -22,7 +22,6 @@ export async function loader() {
 
 export default function AllMembers() {
   const { users } = useLoaderData();
-  const theme = useTheme();
   return (
     <Container>
       <SearchNav />
