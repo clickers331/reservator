@@ -8,5 +8,5 @@ const ErrorMessage = styled.h2`
 
 export default function Error() {
   const error = useRouteError();
-  return <ErrorMessage>{error.message}</ErrorMessage>;
+  return <ErrorMessage>{error?.message || JSON.stringify(error)}</ErrorMessage>;
 }

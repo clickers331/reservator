@@ -1,7 +1,8 @@
-import { users, userDetailData } from "./data/mockDatabase.js";
+import { users, userDetailData, allRandezvous } from "./data/mockDatabase.js";
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function getAllUsers() {
-  delay();
+  await sleep(1000);
   return await users;
 }
 
@@ -29,8 +30,28 @@ async function getOneUser(uid) {
   };
 }
 
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+async function getAllRendezvous() {
+  await sleep(1000);
+  return allRandezvous;
+}
 
-getAllUsersWithDetails();
+async function getAllRendezvousFormatted() {
+  const rendezvous = await getAllRendezvous();
+  const formattedArr = [];
+  for (let i = 1; i < 31; i++) {
+    formattedArr.push(
+      rendezvous.filter((item) => new Date(item.date).getDate() === i)
+    );
+  }
+  return formattedArr;
+}
 
-export { getAllUsers, getOneUser, getAllUsersWithDetails };
+getAllRendezvousFormatted().then((data) => console.log(data));
+
+export {
+  getAllUsers,
+  getOneUser,
+  getAllUsersWithDetails,
+  getAllRendezvous,
+  getAllRendezvousFormatted,
+};

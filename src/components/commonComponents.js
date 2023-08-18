@@ -8,7 +8,8 @@ const Container = styled.div`
   align-items: stretch;
   border-radius: 30px;
   border: 5px solid ${({ theme }) => theme.colors.primaries[600]};
-  width: 60%;
+  width: 90%;
+  max-width: 1300px;
   min-height: 50vh;
 `;
 
