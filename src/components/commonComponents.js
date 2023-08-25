@@ -9,7 +9,7 @@ const Container = styled.div`
   border-radius: 30px;
   border: 5px solid ${({ theme }) => theme.colors.primaries[600]};
   width: 90%;
-  max-width: 1300px;
+  max-width: 1700px;
   min-height: 50vh;
 `;
 

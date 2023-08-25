@@ -16,7 +16,7 @@ const CircleButtonContainer = styled.div`
   align-items: center;
   gap: 1rem;
 `;
-export async function loader() {
+async function loader() {
   return defer({ users: getAllUsersWithDetails() });
 }
 
@@ -63,3 +63,5 @@ export default function AllMembers() {
     </Container>
   );
 }
+
+AllMembers.loader = loader;

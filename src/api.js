@@ -35,12 +35,13 @@ async function getAllRendezvous() {
   return allRandezvous;
 }
 
-async function getAllRendezvousFormatted() {
+async function getAllRendezvousFormatted(year, month) {
   const rendezvous = await getAllRendezvous();
+  const rendezvousSelected = rendezvous[year][month]; //undefined for some reason
   const formattedArr = [];
-  for (let i = 1; i < 31; i++) {
+  for (let i = 1; i < 32; i++) {
     formattedArr.push(
-      rendezvous.filter((item) => new Date(item.date).getDate() === i)
+      rendezvousSelected.filter((item) => new Date(item.date).getDate() === i)
     );
   }
   return formattedArr;

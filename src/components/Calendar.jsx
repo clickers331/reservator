@@ -18,7 +18,7 @@ export default function Calendar() {
   return (
     <>
       <ContainerNav backgroundColor={theme.colors.primaries[500]}>
-        <NavLink to="../takvim">ay</NavLink>
+        <NavLink to="month/january">ay</NavLink>
         <NavLink to="hafta">hafta</NavLink>
         <NavLink to="gun">gun</NavLink>
       </ContainerNav>
