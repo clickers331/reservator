@@ -16,10 +16,20 @@ const StyledContainerNav = styled.nav`
   }
   a {
     text-decoration: none;
-    color: ${({ theme }) => theme.colors.neutrals[200]};
+    color: ${({
+      theme: {
+        colors: { neutrals },
+      },
+      backgroundColor,
+    }) => (backgroundColor == !"white" ? neutrals[200] : neutrals[600])};
   }
   a.active {
-    color: ${({ theme }) => theme.colors.neutrals[100]};
+    color: ${({
+      theme: {
+        colors: { neutrals },
+      },
+      backgroundColor,
+    }) => (backgroundColor == !"white" ? neutrals[100] : neutrals[900])};
   }
 `;
 export default function ContainerNav({ backgroundColor, children }) {
