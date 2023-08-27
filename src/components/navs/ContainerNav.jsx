@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "styled-components";
+import { readableColor } from "polished";
 
 const StyledContainerNav = styled.nav`
+  transition: all 0.2s ease-in-out;
   background: ${({ backgroundcolor }) => backgroundcolor};
   box-sizing: border-box;
   padding: 1em 2em;
@@ -9,7 +11,7 @@ const StyledContainerNav = styled.nav`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  border-bottom: 5px solid ${({ theme }) => theme.colors.neutrals[300]};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.neutrals[300]};
   width: 100%;
   * {
     margin: 0;
@@ -20,16 +22,17 @@ const StyledContainerNav = styled.nav`
       theme: {
         colors: { neutrals },
       },
-      backgroundColor,
-    }) => (backgroundColor == !"white" ? neutrals[200] : neutrals[600])};
+      backgroundcolor,
+    }) => (backgroundcolor == "#fff" ? neutrals[500] : neutrals[200])};
   }
   a.active {
     color: ${({
       theme: {
         colors: { neutrals },
       },
-      backgroundColor,
-    }) => (backgroundColor == !"white" ? neutrals[100] : neutrals[900])};
+      backgroundcolor,
+    }) => (backgroundcolor == "#fff" ? neutrals[900] : neutrals[100])};
+    font-weight: 600;
   }
 `;
 export default function ContainerNav({ backgroundColor, children }) {
@@ -39,3 +42,7 @@ export default function ContainerNav({ backgroundColor, children }) {
     </StyledContainerNav>
   );
 }
+
+ContainerNav.defaultProps = {
+  backgroundColor: "#fff",
+};

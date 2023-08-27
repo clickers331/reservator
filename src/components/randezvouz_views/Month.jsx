@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import ContainerNav from "../ContainerNav";
+import ContainerNav from "../navs/ContainerNav";
 import styled, { useTheme } from "styled-components";
 import { getAllRendezvousFormatted } from "../../api";
 import TimeCard from "../TimeCard";
@@ -42,9 +42,9 @@ const MonthGrid = styled.div`
 `;
 
 async function loader({ params: { month } }) {
-  console.log(new Date());
-  const rendezvousData = getAllRendezvousFormatted("2023", month);
-  return defer({ rendezvousData: rendezvousData });
+  return defer({
+    rendezvousData: getAllRendezvousFormatted("2023", month),
+  });
 }
 
 export default function Month() {
@@ -52,15 +52,6 @@ export default function Month() {
   const theme = useTheme();
   return (
     <>
-      <WeekRow>
-        <WeekRowItem>pazartesi</WeekRowItem>
-        <WeekRowItem>salı</WeekRowItem>
-        <WeekRowItem>carşamba</WeekRowItem>
-        <WeekRowItem>perşembe</WeekRowItem>
-        <WeekRowItem>cuma</WeekRowItem>
-        <WeekRowItem>cumartesi</WeekRowItem>
-        <WeekRowItem>pazar</WeekRowItem>
-      </WeekRow>
       <MonthRow>
         <MonthRowItem to="../month/january">ocak</MonthRowItem>
         <MonthRowItem to="../month/february">şubat</MonthRowItem>
@@ -75,11 +66,29 @@ export default function Month() {
         <MonthRowItem to="../month/november">kasım</MonthRowItem>
         <MonthRowItem to="../month/december">aralık</MonthRowItem>
       </MonthRow>
+      <WeekRow>
+        <WeekRowItem>pazartesi</WeekRowItem>
+        <WeekRowItem>salı</WeekRowItem>
+        <WeekRowItem>carşamba</WeekRowItem>
+        <WeekRowItem>perşembe</WeekRowItem>
+        <WeekRowItem>cuma</WeekRowItem>
+        <WeekRowItem>cumartesi</WeekRowItem>
+        <WeekRowItem>pazar</WeekRowItem>
+      </WeekRow>
       <MonthGrid>
         <Suspense fallback={<h1>Takvim Yükleniyor...</h1>}>
           <Await resolve={rendezvousData} errorElement={<Error />}>
-            {(rendezvousData) =>
-              rendezvousData.map((data, idx) => {
+            {(rendezvousData) => {
+              if (rendezvousData.length == 0)
+                return <h1>Bu ay hiçbir randevu yok</h1>;
+              return rendezvousData.map((data, idx) => {
+                if (data.length == 0)
+                  return (
+                    <TimeCard key={nanoid()}>
+                      <p>{idx + 1}</p>
+                      <p>Bugün kürekçi yok</p>
+                    </TimeCard>
+                  );
                 const currentDate = new Date(data[0].date);
                 return (
                   <TimeCard
@@ -97,7 +106,7 @@ export default function Month() {
                               textAlign: "right",
                               fontWeight: "700",
                               color: theme.colors.neutrals[200],
-                              fontSize: "1rem",
+                              fontSize: "1em",
                               padding: "0.2em",
                             }}
                           >
@@ -109,7 +118,7 @@ export default function Month() {
                               textAlign: "left",
                               fontWeight: "700",
                               color: theme.colors.neutrals[100],
-                              fontSize: "1.1rem",
+                              fontSize: "1.2em",
                               padding: "0.2em",
                             }}
                           >
@@ -120,8 +129,8 @@ export default function Month() {
                     })}
                   </TimeCard>
                 );
-              })
-            }
+              });
+            }}
           </Await>
         </Suspense>
       </MonthGrid>

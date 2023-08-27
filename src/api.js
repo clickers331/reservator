@@ -37,17 +37,44 @@ async function getAllRendezvous() {
 
 async function getAllRendezvousFormatted(year, month) {
   const rendezvous = await getAllRendezvous();
+  const monthDayCount = new Date(
+    year,
+    Object.keys(rendezvous[year]).indexOf(month) + 1,
+    0
+  ).getDate();
+  console.log(monthDayCount);
   const rendezvousSelected = rendezvous[year][month]; //undefined for some reason
+  if (!rendezvousSelected) return [];
   const formattedArr = [];
-  for (let i = 1; i < 32; i++) {
+
+  //Put all of the objects that are on the same day into an array of their own, so mapping is easier
+  for (let i = 1; i < monthDayCount + 1; i++) {
     formattedArr.push(
       rendezvousSelected.filter((item) => new Date(item.date).getDate() === i)
     );
   }
+  console.log(formattedArr);
   return formattedArr;
 }
 
-getAllRendezvousFormatted().then((data) => console.log(data));
+console.log(allRandezvous["2023"]["february"]);
+
+/*
+[
+  {
+    date: new Date
+  }
+  {
+    date: new Date
+  }
+  {
+    date: new Date
+  }
+  {
+    date: new Date
+  }
+]
+*/
 
 export {
   getAllUsers,

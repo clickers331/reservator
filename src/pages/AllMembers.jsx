@@ -3,7 +3,7 @@ import styled, { useTheme } from "styled-components";
 import { getAllUsersWithDetails } from "../api.js";
 import { defer, useLoaderData, Await } from "react-router-dom";
 import { Container, TableContainer } from "../components/commonComponents.js";
-import SearchNav from "../components/SearchNav.jsx";
+import SearchNav from "../components/navs/SearchNav.jsx";
 import GuideRow from "../components/GuideRow.jsx";
 import TableRow from "../components/TableRow.jsx";
 

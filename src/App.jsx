@@ -32,6 +32,7 @@ const router = createBrowserRouter(
             path="month/:month"
             loader={Month.loader}
             element={<Month />}
+            end
           />
           <Route path="hafta" element={<Week />} />
           <Route path="gun" element={<Day />} />

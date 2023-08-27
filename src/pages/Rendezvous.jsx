@@ -1,7 +1,6 @@
 import React from "react";
 import { Container } from "../components/commonComponents";
-import Calendar from "../components/Calendar";
-import ContainerNav from "../components/ContainerNav";
+import ContainerNav from "../components/navs/ContainerNav";
 import { NavLink, Outlet } from "react-router-dom";
 import { useTheme } from "styled-components";
 

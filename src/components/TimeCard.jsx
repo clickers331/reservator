@@ -3,12 +3,13 @@ import React from "react";
 import { styled } from "styled-components";
 
 const StyledTimeCard = styled.div`
+  transition: transform 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
   color: white;
   width: 100%;
   border-radius: 10px;
-  background-color: ${({ theme }) => theme.colors.primaries[700]};
+  background-color: ${({ theme }) => theme.colors.neutrals[500]};
   padding: 0.7em;
   box-sizing: border-box;
   grid-column-start: ${({ startindex }) => {
@@ -18,6 +19,10 @@ const StyledTimeCard = styled.div`
 
   gap: 0.5em;
   ${({ square }) => square || `aspect-ratio:1;`}
+  &:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
 `;
 
 const StyledTimeCardItem = styled.div`
@@ -26,21 +31,21 @@ const StyledTimeCardItem = styled.div`
   padding: 0.5em;
   width: 100%;
   text-align: center;
-  background-color: ${({ theme }) => theme.colors.primaries[900]};
+  background-color: ${({ theme }) => theme.colors.primaries[800]};
   display: flex;
   justify-content: space-between;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
 `;
 
 const StyledDateNumber = styled.div`
-  font-size: 1.4rem;
+  font-size: 1rem;
 `;
 
 const StyledMoreInfo = styled.p`
   font-size: 1rem;
   padding: 0;
   margin: 0;
-  color: ${({ theme }) => theme.colors.neutrals[300]};
+  color: ${({ theme }) => theme.colors.neutrals[700]};
 `;
 
 function getRenderedComponents(children, shorten) {
@@ -59,7 +64,9 @@ function getRenderedComponents(children, shorten) {
       }
       return [
         ...items,
-        <StyledMoreInfo>{children.length - 4} tane daha</StyledMoreInfo>,
+        <StyledMoreInfo key={nanoid()}>
+          {children.length - 4} tane daha
+        </StyledMoreInfo>,
         ,
       ];
     }
@@ -83,7 +90,11 @@ export default function TimeCard({
   shorten,
 }) {
   const components = getRenderedComponents(children, shorten);
-  return <StyledTimeCard startindex={startindex}>{components}</StyledTimeCard>;
+  return (
+    <StyledTimeCard key={nanoid()} startindex={startindex}>
+      {components}
+    </StyledTimeCard>
+  );
 }
 
 //{!Array.isArray(children) ? (

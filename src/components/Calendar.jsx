@@ -1,16 +1,11 @@
 import React from "react";
 import { NavLink, Outlet, defer } from "react-router-dom";
-import ContainerNav from "./ContainerNav";
+import ContainerNav from "./navs/ContainerNav";
 import { useTheme } from "styled-components";
 
 //get all data
 //filter them out based on their week day (monday, tuesday, wednesday, ...)
 //map those to corresponding columns (monday, tuesday, wednesday, ...)
-
-export async function loader({ request }) {
-  console.log(request);
-  return defer({ request });
-}
 
 export default function Calendar() {
   const theme = useTheme();
