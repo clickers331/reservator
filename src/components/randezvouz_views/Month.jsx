@@ -82,18 +82,21 @@ export default function Month() {
               if (rendezvousData.length == 0)
                 return <h1>Bu ay hiçbir randevu yok</h1>;
               return rendezvousData.map((data, idx) => {
+                const currentDate = new Date(data[0].date);
+                const currentWeekDay = currentDate.getDay();
+                const currentMonthDay = currentDate.getDate();
                 if (data.length == 0)
                   return (
-                    <TimeCard key={nanoid()}>
-                      <p>{idx + 1}</p>
+                    <TimeCard key={nanoid()} day={currentMonthDay}>
+                      <p>{currentMonthDay}</p>
                       <p>Bugün kürekçi yok</p>
                     </TimeCard>
                   );
-                const currentDate = new Date(data[0].date);
                 return (
                   <TimeCard
                     key={nanoid()}
-                    startIndex={currentDate.getDay()}
+                    day={currentMonthDay}
+                    startIndex={currentWeekDay}
                     shorten
                   >
                     <p>{idx + 1}</p>

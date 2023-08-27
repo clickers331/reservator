@@ -1,8 +1,10 @@
 import { nanoid } from "nanoid";
 import React from "react";
 import { styled } from "styled-components";
+import { Link } from "react-router-dom";
 
-const StyledTimeCard = styled.div`
+const StyledTimeCard = styled(Link)`
+  text-decoration: none;
   transition: transform 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
@@ -86,12 +88,13 @@ function getRenderedComponents(children, shorten) {
 
 export default function TimeCard({
   children,
+  day,
   startIndex: startindex,
   shorten,
 }) {
   const components = getRenderedComponents(children, shorten);
   return (
-    <StyledTimeCard key={nanoid()} startindex={startindex}>
+    <StyledTimeCard to={`${day}`} key={nanoid()} startindex={startindex}>
       {components}
     </StyledTimeCard>
   );

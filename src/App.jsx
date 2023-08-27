@@ -35,7 +35,7 @@ const router = createBrowserRouter(
             end
           />
           <Route path="hafta" element={<Week />} />
-          <Route path="gun" element={<Day />} />
+          <Route path="month/:month/:day" element={<Day />} />
         </Route>
       </Route>
       <Route
