@@ -1,4 +1,4 @@
-const monthNames = [
+const monthNamesTR = [
   "Ocak",
   "Şubat",
   "Mart",
@@ -13,4 +13,19 @@ const monthNames = [
   "Aralık",
 ];
 
-export { monthNames };
+const monthNamesURL = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
+
+export { monthNamesTR, monthNamesURL };

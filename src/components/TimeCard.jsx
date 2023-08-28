@@ -18,7 +18,7 @@ const StyledTimeCard = styled(Link)`
     if (startindex === 0) return 7;
     return startindex;
   }};
-
+  ${({ dayview }) => dayview && `pointer-events:none;`}
   gap: 0.5em;
   ${({ square }) => square || `aspect-ratio:1;`}
   &:hover {
@@ -77,6 +77,7 @@ function getRenderedComponents(children, shorten) {
         return <StyledDateNumber key={nanoid()}>{child}</StyledDateNumber>;
       return (
         <StyledTimeCardItem key={nanoid()}>
+          {console.log(children)}
           {...child.props.children}
         </StyledTimeCardItem>
       );
@@ -91,10 +92,16 @@ export default function TimeCard({
   day,
   startIndex: startindex,
   shorten,
+  dayView: dayview,
 }) {
   const components = getRenderedComponents(children, shorten);
   return (
-    <StyledTimeCard to={`${day}`} key={nanoid()} startindex={startindex}>
+    <StyledTimeCard
+      to={`${day}`}
+      key={nanoid()}
+      startindex={startindex}
+      dayview={dayview}
+    >
       {components}
     </StyledTimeCard>
   );

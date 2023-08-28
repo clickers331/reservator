@@ -42,7 +42,6 @@ async function getAllRendezvousFormatted(year, month) {
     Object.keys(rendezvous[year]).indexOf(month) + 1,
     0
   ).getDate();
-  console.log(monthDayCount);
   const rendezvousSelected = rendezvous[year][month]; //undefined for some reason
   if (!rendezvousSelected) return [];
   const formattedArr = [];
@@ -53,11 +52,13 @@ async function getAllRendezvousFormatted(year, month) {
       rendezvousSelected.filter((item) => new Date(item.date).getDate() === i)
     );
   }
-  console.log(formattedArr);
   return formattedArr;
 }
 
-console.log(allRandezvous["2023"]["february"]);
+async function getAllRendezvousDay(year, month, day) {
+  const rendezvous = await getAllRendezvousFormatted(year, month);
+  return rendezvous[day - 1];
+}
 
 /*
 [
@@ -82,4 +83,5 @@ export {
   getAllUsersWithDetails,
   getAllRendezvous,
   getAllRendezvousFormatted,
+  getAllRendezvousDay,
 };
