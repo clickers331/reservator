@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { getAllRendezvousDay } from "../../api";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
 import styled, { useTheme } from "styled-components";
+import { monthNamesTR, monthNamesURL } from "../../utils";
 
 async function loader({ params: { month, day } }) {
   return defer({ dayData: getAllRendezvousDay("2023", month, day) });
@@ -46,7 +47,7 @@ const StyledRendezvousItemContainer = styled.div`
 export default function Day() {
   const { dayData } = useLoaderData();
   const { month, day } = useParams();
-  const theme = useTheme();
+  const turkishMonthName = monthNamesTR[monthNamesURL.indexOf(month)];
   return (
     <Suspense fallback={<h1>Yukleniveriveriyor</h1>}>
       <Await resolve={dayData}>
@@ -54,24 +55,26 @@ export default function Day() {
           return (
             <StyledDay>
               <StyledDateHeader>
-                {day} {month}
+                {day} {turkishMonthName}
               </StyledDateHeader>
-              {dayData.map((day) => {
-                return (
-                  <div>
-                    <StyledHourHeader>
-                      {new Date(day[0].date).getHours()}:00
-                    </StyledHourHeader>
-                    <StyledRendezvousItemContainer>
-                      {day.map((rendezvous) => (
-                        <StyledRendezvousItem>
-                          {rendezvous.name}
-                        </StyledRendezvousItem>
-                      ))}
-                    </StyledRendezvousItemContainer>
-                  </div>
-                );
-              })}
+              {!dayData ? (
+                <h1>Bugün randevu yok</h1>
+              ) : (
+                Object.entries(dayData).map(([hour, rendezvousArr]) => {
+                  return (
+                    <div>
+                      <StyledHourHeader>{hour}:00</StyledHourHeader>
+                      <StyledRendezvousItemContainer>
+                        {rendezvousArr.map((rendezvous) => (
+                          <StyledRendezvousItem>
+                            {rendezvous.name}
+                          </StyledRendezvousItem>
+                        ))}
+                      </StyledRendezvousItemContainer>
+                    </div>
+                  );
+                })
+              )}
             </StyledDay>
           );
         }}
