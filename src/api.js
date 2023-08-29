@@ -60,13 +60,19 @@ async function getAllRendezvousFormatted(year, month) {
 async function getAllRendezvousDay(year, month, day) {
   const rendezvous = await getAllRendezvousFormatted(year, month);
   const rendezvousDay = rendezvous[day - 1];
-  const formattedDay = [[], [], [], []];
+
+  if (!Array.isArray(rendezvousDay)) return null;
+  const formattedDay = {};
   rendezvousDay.forEach((item) => {
-    const hour = new Date(item.date).getHours() - EARLIEST_HOUR;
-    formattedDay[hour].push(item);
+    const hour = new Date(item.date).getHours();
+    formattedDay[hour]
+      ? formattedDay[hour].push(item)
+      : (formattedDay[hour] = [item]);
   });
   return formattedDay;
 }
+
+console.log(await getAllRendezvousDay("2023", "january", 10));
 
 /*
 [
