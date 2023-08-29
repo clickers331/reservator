@@ -13,9 +13,9 @@ import { theme, GlobalStyle } from "./styledUtils.js";
 import Error from "./components/Error.jsx";
 import AllRendezvous from "./components/AllRendezvous.jsx";
 import Calendar from "./components/Calendar.jsx";
-import Month from "./components/randezvouz_views/Month";
-import Week from "./components/randezvouz_views/Week.jsx";
-import Day from "./components/randezvouz_views/Day.jsx";
+import Month from "./components/rendesvouz_views/Month.jsx";
+import Week from "./components/rendesvouz_views/Week.jsx";
+import Day from "./components/rendesvouz_views/Day.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
