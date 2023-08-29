@@ -68,6 +68,8 @@ async function getAllRendezvousDay(year, month, day) {
   return formattedDay;
 }
 
+console.log(await getAllRendezvousDay("2023", "january", 1));
+
 /*
 [
   {
