@@ -1,5 +1,7 @@
 import { users, userDetailData, allRandezvous } from "./data/mockDatabase.js";
 
+const EARLIEST_HOUR = 5;
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function getAllUsers() {
   await sleep(1000);
@@ -57,8 +59,16 @@ async function getAllRendezvousFormatted(year, month) {
 
 async function getAllRendezvousDay(year, month, day) {
   const rendezvous = await getAllRendezvousFormatted(year, month);
-  return rendezvous[day - 1];
+  const rendezvousDay = rendezvous[day - 1];
+  const formattedDay = [[], [], [], []];
+  rendezvousDay.forEach((item) => {
+    const hour = new Date(item.date).getHours() - EARLIEST_HOUR;
+    formattedDay[hour].push(item);
+  });
+  return formattedDay;
 }
+
+console.log(await getAllRendezvousDay("2023", "january", 1));
 
 /*
 [
