@@ -1,6 +1,5 @@
 import { users, userDetailData, allRandezvous } from "./data/mockDatabase.js";
-
-const EARLIEST_HOUR = 5;
+import { flattenObjectSimple } from "./utils.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function getAllUsers() {
@@ -35,6 +34,12 @@ async function getOneUser(uid) {
 async function getAllRendezvous() {
   await sleep(1000);
   return allRandezvous;
+}
+
+async function getAllRendezvousYearFlat(year) {
+  const rendezvous = await getAllRendezvous();
+  const yearRendezvous = rendezvous[year];
+  return flattenObjectSimple(yearRendezvous);
 }
 
 async function getAllRendezvousFormatted(year, month) {
@@ -72,7 +77,34 @@ async function getAllRendezvousDay(year, month, day) {
   return formattedDay;
 }
 
-console.log(await getAllRendezvousDay("2023", "january", 10));
+async function getAllRendezvousWeek(year) {
+  const rendezvous = await getAllRendezvousYearFlat(year);
+  // Generate an array of arrays arrays, each array representing a week, and each item in the array (which is an array) representing a day.
+  const weeks = [];
+  let week = [];
+  let day = [];
+  let dayOfTheWeek = 0;
+  let weekCount = 0;
+  for (let i = 0; i < rendezvous.length; i++) {
+    const currentDay = new Date(rendezvous[i].date).getDay();
+    if (i === 0) dayOfTheWeek = currentDay;
+    if (currentDay !== dayOfTheWeek) {
+      dayOfTheWeek = currentDay;
+      week.push(day);
+      day = [];
+    }
+    if (week.length === 7) {
+      weeks.push(week);
+      week = [];
+      weekCount++;
+    }
+    day.push(rendezvous[i]);
+  }
+  weeks.push(week);
+  return weeks;
+}
+
+console.log(await getAllRendezvousWeek("2023"));
 
 /*
 [

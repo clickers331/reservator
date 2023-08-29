@@ -28,4 +28,10 @@ const monthNamesURL = [
   "december",
 ];
 
-export { monthNamesTR, monthNamesURL };
+function flattenObjectSimple(object) {
+  const flattenedObject = [];
+  Object.values(object).map((value) => flattenedObject.push(...value));
+  return flattenedObject;
+}
+
+export { flattenObjectSimple, monthNamesTR, monthNamesURL };
