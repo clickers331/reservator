@@ -77,35 +77,35 @@ async function getAllRendezvousDay(year, month, day) {
   return formattedDay;
 }
 
-async function getAllRendezvousWeek(year) {
+async function getAllRendezvousWeek(year, weekNo = 1) {
   const rendezvous = await getAllRendezvousYearFlat(year);
   // Generate an array of arrays arrays, each array representing a week, and each item in the array (which is an array) representing a day.
   const weeks = [];
   let week = [];
   let day = [];
-  let dayOfTheWeek = 0;
+  let dayOfTheWeekPointer = 0;
   let weekCount = 0;
   for (let i = 0; i < rendezvous.length; i++) {
     const currentDay = new Date(rendezvous[i].date).getDay();
-    if (i === 0) dayOfTheWeek = currentDay;
-    if (currentDay !== dayOfTheWeek) {
-      dayOfTheWeek = currentDay;
+    if (i === 0) dayOfTheWeekPointer = currentDay;
+    if (currentDay !== dayOfTheWeekPointer) {
+      if (currentDay === 2) {
+        weeks.push(week);
+        week = [];
+        weekCount++;
+      }
+      dayOfTheWeekPointer = currentDay;
       week.push(day);
       day = [];
     }
-    if (week.length === 7) {
-      weeks.push(week);
-      week = [];
-      weekCount++;
-    }
+
     day.push(rendezvous[i]);
   }
   weeks.push(week);
-  return weeks;
+  return weeks[weekNo];
 }
 
-console.log(await getAllRendezvousWeek("2023"));
-
+console.log(await getAllRendezvousWeek("2023", 2));
 /*
 [
   {
@@ -130,4 +130,5 @@ export {
   getAllRendezvous,
   getAllRendezvousFormatted,
   getAllRendezvousDay,
+  getAllRendezvousWeek,
 };
