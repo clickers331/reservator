@@ -44,11 +44,7 @@ async function getAllRendezvousYearFlat(year) {
 
 async function getAllRendezvousFormatted(year, month) {
   const rendezvous = await getAllRendezvous();
-  const monthDayCount = new Date(
-    year,
-    Object.keys(rendezvous[year]).indexOf(month) + 1,
-    0
-  ).getDate();
+  const monthDayCount = new Date(year, month + 1, 0).getDate();
   const rendezvousSelected = rendezvous[year][month]; //undefined for some reason
   if (!rendezvousSelected) return [];
   const formattedArr = [];
@@ -102,10 +98,10 @@ async function getAllRendezvousWeek(year, weekNo = 1) {
     day.push(rendezvous[i]);
   }
   weeks.push(week);
-  return weeks[weekNo];
+
+  return weeks[weekNo] ? weeks[weekNo] : { error: "Week doesnt exist" };
 }
 
-console.log(await getAllRendezvousWeek("2023", 2));
 /*
 [
   {
