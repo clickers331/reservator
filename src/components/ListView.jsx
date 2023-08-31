@@ -8,9 +8,9 @@ import SearchNav from "../components/navs/SearchNav.jsx";
 import GuideRow from "../components/GuideRow.jsx";
 import TableRow from "../components/TableRow.jsx";
 
-import EditBtn from "../components/circle_buttons/EditBtn.jsx";
 import ActiveBtn from "../components/circle_buttons/ActiveBtn.jsx";
-import PassiveBtn from "../components/circle_buttons/PassiveBtn.jsx";
+import CancelBtn from "./circle_buttons/CancelBtn";
+import InfoBtn from "./circle_buttons/InfoBtn";
 
 const CircleButtonContainer = styled.div`
   display: flex;
@@ -42,13 +42,14 @@ export default function ListView() {
           >
             {(rendezvous) => {
               return rendezvous["2023"][0]
+                .reverse()
                 .slice(0, 9)
-                .map(({ cancelled, date, name, uid }) => {
+                .map(({ cancelled, date, name, uid }, idx) => {
                   const currentDate = new Date(date);
                   return (
                     <TableRow
-                      debug={true}
                       rowstate={!cancelled ? "" : "cancelled"}
+                      key={idx}
                     >
                       <p>{name}</p>
                       <p>
@@ -60,10 +61,10 @@ export default function ListView() {
                         {currentDate.getHours()}:00 -{" "}
                         {currentDate.getHours() + 1}:00
                       </p>
-                      <p>{!cancelled ? "Aktif" : "Pasif"}</p>
+                      <p>{!cancelled ? "Onaylı" : "İptal"}</p>
                       <CircleButtonContainer>
-                        {!cancelled ? <PassiveBtn /> : <ActiveBtn />}
-                        <EditBtn />
+                        {cancelled || <CancelBtn />}
+                        <InfoBtn />
                       </CircleButtonContainer>
                     </TableRow>
                   );

@@ -257,7 +257,12 @@ const userDetailData = {
 const allRandezvous = {
   2023: [
     [
-      { uid: "0105", name: "John Doe", date: "2023-01-01T02:00:00.000Z" },
+      {
+        uid: "0105",
+        cancelled: true,
+        name: "John Doe",
+        date: "2023-01-01T02:00:00.000Z",
+      },
       { uid: "0105", name: "John Doe", date: "2023-01-01T02:00:00.000Z" },
       { uid: "0106", name: "Emily Williams", date: "2023-01-01T03:00:00.000Z" },
       { uid: "0107", name: "David Brown", date: "2023-01-01T04:00:00.000Z" },

@@ -44,7 +44,6 @@ const StyledTableRow = styled.div`
 `;
 
 export default function TableRow({ children, rowstate, debug }) {
-  console.log(rowstate);
   return (
     <StyledTableRow rowstate={rowstate} debug={debug}>
       {children.map((child) => {

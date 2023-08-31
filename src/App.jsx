@@ -11,7 +11,7 @@ import Rendezvous from "./pages/Rendezvous.jsx";
 import Home from "./pages/Home.jsx";
 import { theme, GlobalStyle } from "./styledUtils.js";
 import Error from "./components/Error.jsx";
-import AllRendezvous from "./components/AllRendezvous.jsx";
+import ListView from "./components/ListView.jsx";
 import Calendar from "./components/Calendar.jsx";
 import Month from "./components/rendesvouz_views/Month.jsx";
 import Week from "./components/rendesvouz_views/Week.jsx";
@@ -26,7 +26,7 @@ const router = createBrowserRouter(
         element={<Rendezvous />}
         errorElement={<Error />}
       >
-        <Route path="list" element={<AllRendezvous />} />
+        <Route path="list" loader={ListView.loader} element={<ListView />} />
         <Route path="calendar" element={<Calendar />}>
           <Route
             path="month/:year/:month"

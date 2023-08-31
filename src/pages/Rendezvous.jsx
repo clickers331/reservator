@@ -11,7 +11,7 @@ export default function Rendezvous() {
     <Container>
       <ContainerNav backgroundColor={theme.colors.primaries[500]}>
         <NavLink to="calendar">takvim</NavLink>
-        <NavLink to="list">tüm randevular</NavLink>
+        <NavLink to="list">liste</NavLink>
       </ContainerNav>
       <Outlet />
     </Container>
