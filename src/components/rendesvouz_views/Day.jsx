@@ -47,7 +47,7 @@ const StyledRendezvousItemContainer = styled.div`
 export default function Day() {
   const { dayData } = useLoaderData();
   const { month, day } = useParams();
-  const turkishMonthName = monthNamesTR[monthNamesURL.indexOf(month)];
+  const turkishMonthName = monthNamesTR[month - 1];
   return (
     <Suspense fallback={<h1>Yukleniveriveriyor</h1>}>
       <Await resolve={dayData}>

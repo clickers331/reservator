@@ -77,7 +77,6 @@ function getRenderedComponents(children, shorten) {
         return <StyledDateNumber key={nanoid()}>{child}</StyledDateNumber>;
       return (
         <StyledTimeCardItem key={nanoid()}>
-          {console.log(children)}
           {...child.props.children}
         </StyledTimeCardItem>
       );
@@ -89,7 +88,7 @@ function getRenderedComponents(children, shorten) {
 
 export default function TimeCard({
   children,
-  day,
+  path,
   startIndex: startindex,
   shorten,
   dayView: dayview,
@@ -97,7 +96,7 @@ export default function TimeCard({
   const components = getRenderedComponents(children, shorten);
   return (
     <StyledTimeCard
-      to={`${day}`}
+      to={`../day/${path}`}
       key={nanoid()}
       startindex={startindex}
       dayview={dayview}

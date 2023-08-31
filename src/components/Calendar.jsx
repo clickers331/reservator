@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import ContainerNav from "./navs/ContainerNav";
 import { useTheme } from "styled-components";
-import { monthNamesURL as monthNames } from "../utils";
+import { monthNamesURL as monthNames, getWeekNo } from "../utils";
 //get all data
 //filter them out based on their week day (monday, tuesday, wednesday, ...)
 //map those to corresponding columns (monday, tuesday, wednesday, ...)
@@ -13,14 +13,17 @@ export default function Calendar() {
   return (
     <>
       <ContainerNav backgroundColor={theme.colors.primaries[500]}>
-        <NavLink to={`month/${monthNames[today.getMonth()]}`} end>
+        <NavLink
+          to={`month/${today.getFullYear()}/${today.getMonth() + 1}`}
+          end
+        >
           ay
         </NavLink>
-        <NavLink to="week">hafta</NavLink>
+        <NavLink to={`week/${getWeekNo(today)}`}>hafta</NavLink>
         <NavLink
-          to={`month/${monthNames[today.getMonth()]}/${today.getDate()}`}
+          to={`day/${today.getFullYear()}/${today.getMonth()}/${today.getDate()}`}
         >
-          gun
+          gün
         </NavLink>
       </ContainerNav>
       <Outlet />

@@ -255,8 +255,8 @@ const userDetailData = {
 };
 
 const allRandezvous = {
-  2023: {
-    january: [
+  2023: [
+    [
       { uid: "0105", name: "John Doe", date: "2023-01-01T02:00:00.000Z" },
       { uid: "0105", name: "John Doe", date: "2023-01-01T02:00:00.000Z" },
       { uid: "0106", name: "Emily Williams", date: "2023-01-01T03:00:00.000Z" },
@@ -482,7 +482,7 @@ const allRandezvous = {
       { uid: "3107", name: "John Doe", date: "2023-01-31T04:00:00.000Z" },
       { uid: "3108", name: "David Brown", date: "2023-01-31T05:00:00.000Z" },
     ],
-    february: [
+    [
       { uid: "0201", name: "Alice Johnson", date: "2023-02-01T05:00:00.000Z" },
       { uid: "0201", name: "Alice Johnson", date: "2023-02-01T06:00:00.000Z" },
       { uid: "0201", name: "Alice Johnson", date: "2023-02-01T07:00:00.000Z" },
@@ -620,7 +620,7 @@ const allRandezvous = {
       { uid: "0226", name: "Zane Davis", date: "2023-02-26T07:00:00.000Z" },
       { uid: "0226", name: "Zane Davis", date: "2023-02-26T08:00:00.000Z" },
     ],
-    march: [
+    [
       { uid: "0301", name: "Alice Johnson", date: "2023-03-01T05:00:00.000Z" },
       { uid: "0301", name: "Alice Johnson", date: "2023-03-01T06:00:00.000Z" },
       { uid: "0301", name: "Alice Johnson", date: "2023-03-01T07:00:00.000Z" },
@@ -758,7 +758,7 @@ const allRandezvous = {
       { uid: "0326", name: "Zane Davis", date: "2023-03-26T07:00:00.000Z" },
       { uid: "0326", name: "Zane Davis", date: "2023-03-26T08:00:00.000Z" },
     ],
-    april: [
+    [
       { uid: "0401", name: "Alice Johnson", date: "2023-04-01T05:00:00.000Z" },
       { uid: "0401", name: "Alice Johnson", date: "2023-04-01T06:00:00.000Z" },
       { uid: "0401", name: "Alice Johnson", date: "2023-04-01T07:00:00.000Z" },
@@ -896,7 +896,7 @@ const allRandezvous = {
       { uid: "0426", name: "Zane Davis", date: "2023-04-26T07:00:00.000Z" },
       { uid: "0426", name: "Zane Davis", date: "2023-04-26T08:00:00.000Z" },
     ],
-    may: [
+    [
       { uid: "0105", name: "John Doe", date: "2023-01-01T02:00:00.000Z" },
       { uid: "0105", name: "John Doe", date: "2023-01-01T02:00:00.000Z" },
       { uid: "0106", name: "Emily Williams", date: "2023-01-01T03:00:00.000Z" },
@@ -1122,7 +1122,7 @@ const allRandezvous = {
       { uid: "3107", name: "John Doe", date: "2023-01-31T04:00:00.000Z" },
       { uid: "3108", name: "David Brown", date: "2023-01-31T05:00:00.000Z" },
     ],
-  },
+  ],
 };
 
 export { users, userDetailData, allRandezvous };

@@ -69,8 +69,8 @@ export default function HomeLayout() {
         </StyledHeader>
         <LinkContainer>
           <NavLink to="/">ev</NavLink>
-          <NavLink to="/randevular">tüm randevular</NavLink>
-          <NavLink to="/uyeler">üyeler</NavLink>
+          <NavLink to="/rendezvous">tüm randevular</NavLink>
+          <NavLink to="/users">üyeler</NavLink>
         </LinkContainer>
         <LinkContainer>
           <Link to="/">çıkış</Link>

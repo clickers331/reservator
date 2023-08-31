@@ -30,9 +30,9 @@ const MonthGrid = styled.div`
   }
 `;
 
-async function loader({ params: { month } }) {
+async function loader({ params: { year, month } }) {
   return defer({
-    rendezvousData: getAllRendezvousFormatted("2023", month),
+    rendezvousData: getAllRendezvousFormatted(year, month),
   });
 }
 
@@ -42,18 +42,18 @@ export default function Month() {
   return (
     <>
       <MonthRow>
-        <MonthRowItem to="../month/january">ocak</MonthRowItem>
-        <MonthRowItem to="../month/february">şubat</MonthRowItem>
-        <MonthRowItem to="../month/march">mart</MonthRowItem>
-        <MonthRowItem to="../month/april">nisan</MonthRowItem>
-        <MonthRowItem to="../month/may">mayıs</MonthRowItem>
-        <MonthRowItem to="../month/june">haziran</MonthRowItem>
-        <MonthRowItem to="../month/july">temmuz</MonthRowItem>
-        <MonthRowItem to="../month/august">ağustos</MonthRowItem>
-        <MonthRowItem to="../month/september">eylül</MonthRowItem>
-        <MonthRowItem to="../month/october">ekim</MonthRowItem>
-        <MonthRowItem to="../month/november">kasım</MonthRowItem>
-        <MonthRowItem to="../month/december">aralık</MonthRowItem>
+        <MonthRowItem to="../month/2023/1">ocak</MonthRowItem>
+        <MonthRowItem to="../month/2023/2">şubat</MonthRowItem>
+        <MonthRowItem to="../month/2023/3">mart</MonthRowItem>
+        <MonthRowItem to="../month/2023/4">nisan</MonthRowItem>
+        <MonthRowItem to="../month/2023/5">mayıs</MonthRowItem>
+        <MonthRowItem to="../month/2023/6">haziran</MonthRowItem>
+        <MonthRowItem to="../month/2023/7">temmuz</MonthRowItem>
+        <MonthRowItem to="../month/2023/8">ağustos</MonthRowItem>
+        <MonthRowItem to="../month/2023/9">eylül</MonthRowItem>
+        <MonthRowItem to="../month/2023/10">ekim</MonthRowItem>
+        <MonthRowItem to="../month/2023/11">kasım</MonthRowItem>
+        <MonthRowItem to="../month/2023/12">aralık</MonthRowItem>
       </MonthRow>
       <WeekRow />
       <MonthGrid>
@@ -76,7 +76,9 @@ export default function Month() {
                 return (
                   <TimeCard
                     key={nanoid()}
-                    day={currentMonthDay}
+                    path={`${currentDate.getFullYear()}/${
+                      currentDate.getMonth() + 1
+                    }/${currentMonthDay}`}
                     startIndex={currentWeekDay}
                     shorten
                   >

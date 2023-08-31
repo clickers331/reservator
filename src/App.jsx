@@ -22,27 +22,27 @@ const router = createBrowserRouter(
     <Route element={<HomeLayout />}>
       <Route index element={<Home />} errorElement={<Error />} />
       <Route
-        path="randevular"
+        path="rendezvous"
         element={<Rendezvous />}
         errorElement={<Error />}
       >
-        <Route path="tum-randevular" element={<AllRendezvous />} />
-        <Route path="takvim" element={<Calendar />}>
+        <Route path="list" element={<AllRendezvous />} />
+        <Route path="calendar" element={<Calendar />}>
           <Route
-            path="month/:month"
+            path="month/:year/:month"
             loader={Month.loader}
             element={<Month />}
           />
-          <Route path="week" element={<Week />} />
+          <Route path="week/:weekNo" loader={Week.loader} element={<Week />} />
           <Route
-            path="month/:month/:day"
+            path="day/:year/:month/:day"
             loader={Day.loader}
             element={<Day />}
           />
         </Route>
       </Route>
       <Route
-        path="uyeler"
+        path="users"
         element={<AllMembers />}
         loader={AllMembers.loader}
         errorElement={<Error />}

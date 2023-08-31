@@ -44,8 +44,8 @@ async function getAllRendezvousYearFlat(year) {
 
 async function getAllRendezvousFormatted(year, month) {
   const rendezvous = await getAllRendezvous();
-  const monthDayCount = new Date(year, month + 1, 0).getDate();
-  const rendezvousSelected = rendezvous[year][month]; //undefined for some reason
+  const monthDayCount = new Date(year, month, 0).getDate();
+  const rendezvousSelected = rendezvous[year][month - 1]; //undefined for some reason
   if (!rendezvousSelected) return [];
   const formattedArr = [];
 
