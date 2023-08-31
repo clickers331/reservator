@@ -10,8 +10,8 @@ const StyledWeekView = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  border: solid red 1px;
   justify-content: space-between;
+  height: 100%;
 `;
 
 const StyledWeekGrid = styled.div`
@@ -26,7 +26,6 @@ const StyledWeekGrid = styled.div`
     width: 100%;
     text-align: center;
   }
-  border: solid red 1px;
 `;
 
 const CarouselArrow = styled(Link)`
@@ -34,6 +33,9 @@ const CarouselArrow = styled(Link)`
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  text-decoration: none;
+  color: ${({ theme }) => theme.colors.neutrals[100]};
+  background-color: ${({ theme }) => theme.colors.primaries[600]};
 `;
 
 async function loader({ params: { weekNo } }) {
