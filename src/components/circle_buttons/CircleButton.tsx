@@ -3,15 +3,15 @@ import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search_fill.svg";
 
 interface StyledCircleButtonProps {
-  size: string;
+  size?: string;
   backgroundColor: string;
 }
 
 interface StyledIconProps {
-  fill: string;
-  stroke: string;
-  size: string;
-  iconWidth: string;
+  fill: string | boolean;
+  stroke: string | boolean;
+  size?: string;
+  iconWidth?: string;
 }
 
 interface CircleButtonProps extends StyledIconProps, StyledCircleButtonProps {
@@ -40,21 +40,25 @@ const StyledIcon = styled.div<StyledIconProps>`
 `;
 const StyledText = styled.p``;
 
-export default function CircleButton(props: CircleButtonProps) {
-  const { icon, size, backgroundColor, iconColor, iconWidth, fill, stroke } =
-    props;
+export default function CircleButton({
+  icon,
+  size,
+  backgroundColor,
+  iconColor,
+  iconWidth,
+  fill,
+  stroke,
+  text,
+}: CircleButtonProps) {
   return (
-    <StyledCircleButton as={icon} size={size} backgroundColor={backgroundColor}>
-      {icon ? (
-        <StyledIcon
-          fill={fill ? iconColor : "none"}
-          stroke={stroke ? iconColor : "none"}
-          iconWidth={iconWidth}
-          size={size}
-        />
-      ) : (
-        <StyledText>{props.text}</StyledText>
-      )}
+    <StyledCircleButton size={size} backgroundColor={backgroundColor}>
+      <StyledIcon
+        as={icon}
+        fill={fill ? iconColor : "none"}
+        stroke={stroke ? iconColor : "none"}
+        iconWidth={iconWidth}
+        size={size}
+      />
     </StyledCircleButton>
   );
 }

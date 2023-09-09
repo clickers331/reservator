@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { getAllRendezvous } from "../api";
 import { monthNamesTR } from "../utils";
 import { defer, useLoaderData, Await } from "react-router-dom";
-import { TableContainer } from "../components/commonComponents.js";
-import SearchNav from "../components/navs/SearchNav.jsx";
-import GuideRow from "../components/GuideRow.jsx";
-import TableRow from "../components/TableRow.jsx";
+import { TableContainer } from "./commonComponents.js";
+import SearchNav from "./navs/SearchNav.jsx";
+import GuideRow from "./GuideRow.js";
+import TableRow from "./TableRow.jsx";
 
-import ActiveBtn from "../components/circle_buttons/ActiveBtn.jsx";
+import ActiveBtn from "./circle_buttons/ActiveBtn.jsx";
 import CancelBtn from "./circle_buttons/CancelBtn";
 import InfoBtn from "./circle_buttons/InfoBtn";
 

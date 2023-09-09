@@ -8,7 +8,7 @@ export default function InfoBtn() {
 
   return (
     <CircleButton
-      icon={InfoIcon}
+      icon={InfoBtn}
       backgroundColor={theme.colors.accents.blue[500]}
       stroke={false}
     />
