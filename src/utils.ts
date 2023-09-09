@@ -1,3 +1,6 @@
+import { AllRandezvous, Rendezvous } from "./data/mockDatabase";
+import Chance from "chance";
+
 const monthNamesTR = [
   "Ocak",
   "Şubat",
@@ -28,19 +31,53 @@ const monthNamesURL = [
   "december",
 ];
 
-function flattenObjectSimple(object) {
-  const flattenedObject = [];
+function flattenObjectSimple(object: object) {
+  const flattenedObject: any[] = [];
   Object.values(object).map((value) => flattenedObject.push(...value));
   return flattenedObject;
 }
 
-function getWeekNo(date) {
-  const currentDate = new Date(date);
-  const startDate = new Date(currentDate.getFullYear(), 0, 1);
-  const days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+function getWeekNo(date: string): number {
+  const currentDate: Date = new Date(date);
+  const startDate: Date = new Date(currentDate.getFullYear(), 0, 1);
+  const days: number = Math.floor(
+    (currentDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)
+  );
 
-  const weekNumber = Math.ceil(days / 7);
+  const weekNumber: number = Math.ceil(days / 7);
   return weekNumber;
 }
 
-export { getWeekNo, flattenObjectSimple, monthNamesTR, monthNamesURL };
+function createAllRendezvous(
+  startYear: number,
+  yearCount: number = 1
+): AllRandezvous {
+  let allRendezvous: AllRandezvous = {};
+  const chance = new Chance();
+  for (let i = 0; i < yearCount; i++) {
+    const currentFullYear: number = startYear + yearCount - 1;
+    const currentYear: Rendezvous[][] = [];
+    for (let j = 0; j < 12; i++) {
+      const currentMonth: Rendezvous[] = [];
+      for (let k = 0; k < new Date(currentFullYear, j, 0).getDate(); k++) {
+        currentMonth.push({
+          date: new Date(currentFullYear, j, k),
+          name: chance.name(),
+          cancelled: chance.bool(),
+          uid: chance.guid(),
+        });
+      }
+      currentYear.push(currentMonth);
+    }
+    allRendezvous[currentFullYear] = currentYear;
+  }
+  return allRendezvous;
+}
+
+export {
+  createAllRendezvous,
+  getWeekNo,
+  flattenObjectSimple,
+  monthNamesTR,
+  monthNamesURL,
+};

@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { TagButton } from "../commonComponents";
 import SearchIcon from "../../assets/icons/search_fill.svg";
@@ -13,7 +12,7 @@ const SearchIconImg = styled.div`
   aspect-ratio: 1;
 `;
 
-const SearchInput = styled.input`
+const SearchInput = styled.input<StyledProps>`
   background-color: ${({ theme }) => theme.colors.neutrals[100]};
   border: 3px solid ${({ theme }) => theme.colors.neutrals[400]};
   box-sizing: border-box;
@@ -34,7 +33,7 @@ const SearchInputContainer = styled.div`
   font-size: 1.2rem;
 `;
 
-const SearchNavContainer = styled.nav`
+const SearchNavContainer = styled.nav<StyledProps>`
   box-sizing: border-box;
   padding: 1em 2em;
   display: flex;

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { DefaultTheme, createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -36,7 +36,7 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-type ThemeObj = {
+export interface ThemeObj extends DefaultTheme {
   colors: {
     primaries: ColorPalette;
     neutrals: ColorPalette;
@@ -52,7 +52,7 @@ type ThemeObj = {
   animations: {
     transition: string;
   };
-};
+}
 
 type ColorPalette = {
   100: string;

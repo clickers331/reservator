@@ -1,9 +1,9 @@
 import CircleButton from "./CircleButton.jsx";
 import { ReactComponent as ActiveIcon } from "../../assets/icons/active_icon.svg";
-import { DefaultTheme, useTheme } from "styled-components";
+import { useTheme } from "styled-components";
 
 export default function ActiveBtn() {
-  const theme: DefaultTheme = useTheme();
+  const theme = useTheme() as ThemeObj;
 
   return (
     <CircleButton

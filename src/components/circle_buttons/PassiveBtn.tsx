@@ -2,9 +2,10 @@ import React from "react";
 import CircleButton from "./CircleButton.jsx";
 import { ReactComponent as PassiveIcon } from "../../assets/icons/passive_icon.svg";
 import { useTheme } from "styled-components";
+import { ThemeObj } from "../../styledUtils.js";
 
 export default function PassiveBtn() {
-  const theme = useTheme();
+  const theme = useTheme() as ThemeObj;
 
   return (
     <CircleButton
