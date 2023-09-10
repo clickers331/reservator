@@ -31,10 +31,10 @@ const monthNamesURL = [
   "december",
 ];
 
-function flattenObjectSimple(object: object) {
+function flattenObjectSimple<T>(object: object): T[] {
   const flattenedObject: any[] = [];
   Object.values(object).map((value) => flattenedObject.push(...value));
-  return flattenedObject;
+  return flattenedObject as T[];
 }
 
 function getWeekNo(date: string): number {

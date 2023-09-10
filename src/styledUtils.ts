@@ -36,7 +36,11 @@ const GlobalStyle = createGlobalStyle`
     }
 `;
 
-export interface ThemeObj extends DefaultTheme {
+export interface StyledProps {
+  theme: ThemeObj;
+}
+
+export interface ThemeObj {
   colors: {
     primaries: ColorPalette;
     neutrals: ColorPalette;
@@ -54,7 +58,7 @@ export interface ThemeObj extends DefaultTheme {
   };
 }
 
-type ColorPalette = {
+export type ColorPalette = {
   100: string;
   200?: string;
   300: string;
@@ -65,7 +69,6 @@ type ColorPalette = {
   800?: string;
   900: string;
 };
-
 const theme: ThemeObj = {
   colors: {
     primaries: {

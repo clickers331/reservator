@@ -60,7 +60,7 @@ const users: User[] = [
 ];
 
 type BloodType = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-interface UserDetail {
+export interface UserDetail {
   isAdmin: boolean;
   isActive: boolean;
   personalData: {
@@ -289,14 +289,16 @@ const userDetailData: UserDetailObj = {
 };
 
 export interface AllRandezvous {
-  [key: string | number]: Rendezvous[][];
+  [key: string]: Rendezvous[][];
 }
 
 export interface Rendezvous {
   uid: string | number;
   cancelled: boolean;
   name: string;
-  date: Date;
+  date: string;
 }
 
-export { users, userDetailData, allRendezvous };
+console.log(allRendezvous);
+
+export { users, userDetailData, allRendezvous as allRandezvous };

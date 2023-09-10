@@ -1,4 +1,3 @@
-import React from "react";
 import CircleButton from "./CircleButton.jsx";
 import { ReactComponent as EditIcon } from "../../assets/icons/edit_icon.svg";
 import { useTheme } from "styled-components";

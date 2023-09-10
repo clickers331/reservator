@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { TagButton } from "../commonComponents";
 import SearchIcon from "../../assets/icons/search_fill.svg";
+import type { StyledProps } from "../../styledUtils";
 
 const SearchIconImg = styled.div`
   position: absolute;

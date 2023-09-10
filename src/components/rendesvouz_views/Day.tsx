@@ -1,16 +1,16 @@
-import React, { Suspense } from "react";
-import TimeCard from "../TimeCard";
-import { nanoid } from "nanoid";
-import { getAllRendezvousDay } from "../../api";
+import styled from "styled-components";
+import { Suspense } from "react";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
-import styled, { useTheme } from "styled-components";
-import { monthNamesTR, monthNamesURL } from "../../utils";
+import { getAllRendezvousDay } from "../../api";
+import { monthNamesTR } from "../../utils";
+import { Params } from "./paramsInterfaces";
+import { StyledProps } from "../../styledUtils";
 
-async function loader({ params: { month, day } }) {
+async function loader({ params: { month, day } }: Params) {
   return defer({ dayData: getAllRendezvousDay("2023", month, day) });
 }
 
-const StyledDay = styled.div`
+const StyledDay = styled.div<StyledProps>`
   background-color: ${({ theme }) => theme.colors.neutrals[500]};
   text-align: center;
   padding: 2em;
@@ -21,16 +21,16 @@ const StyledDay = styled.div`
   color: ${({ theme }) => theme.colors.neutrals[100]};
 `;
 
-const StyledHourHeader = styled.h2`
+const StyledHourHeader = styled.h2<StyledProps>`
   font-size: 2rem;
 `;
 
-const StyledDateHeader = styled.h2`
+const StyledDateHeader = styled.h2<StyledProps>`
   color: ${({ theme }) => theme.colors.neutrals[200]};
   font-size: 1.4rem;
 `;
 
-const StyledRendezvousItem = styled.p`
+const StyledRendezvousItem = styled.p<StyledProps>`
   background-color: ${({ theme }) => theme.colors.primaries[800]};
   font-size: 1.4rem;
   padding: 0.5em;
@@ -38,7 +38,7 @@ const StyledRendezvousItem = styled.p`
   margin: 0;
 `;
 
-const StyledRendezvousItemContainer = styled.div`
+const StyledRendezvousItemContainer = styled.div<StyledProps>`
   display: flex;
   flex-direction: column;
   gap: 0.4em;

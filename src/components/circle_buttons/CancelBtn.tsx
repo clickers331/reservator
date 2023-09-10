@@ -1,8 +1,6 @@
-import React from "react";
 import CircleButton from "./CircleButton.jsx";
 import { ReactComponent as CancelIcon } from "../../assets/icons/close_ring.svg";
 import { DefaultTheme, useTheme } from "styled-components";
-import styled from "styled-components";
 import { ThemeObj } from "../../styledUtils.js";
 
 export default function CancelBtn() {
