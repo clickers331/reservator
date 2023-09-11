@@ -1,4 +1,4 @@
-import { AllRandezvous, Rendezvous } from "./data/mockDatabase";
+import type { AllRandezvous, Rendezvous } from "./data/mockDatabase";
 import Chance from "chance";
 
 const monthNamesTR = [

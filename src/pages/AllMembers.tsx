@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import styled, { useTheme } from "styled-components";
+import { Suspense } from "react";
+import styled from "styled-components";
 import { getAllUsersWithDetails } from "../api.js";
 import { defer, useLoaderData, Await } from "react-router-dom";
 import { Container, TableContainer } from "../components/commonComponents.js";
@@ -10,6 +10,7 @@ import TableRow from "../components/TableRow.jsx";
 import EditBtn from "../components/circle_buttons/EditBtn.jsx";
 import ActiveBtn from "../components/circle_buttons/ActiveBtn.jsx";
 import PassiveBtn from "../components/circle_buttons/PassiveBtn.jsx";
+import { UserDetail } from "../data/mockDatabase.js";
 
 const CircleButtonContainer = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ async function loader() {
 }
 
 export default function AllMembers() {
-  const { users } = useLoaderData();
+  const { users } = useLoaderData() as { users: UserDetail[] };
   return (
     <Container>
       <SearchNav />
@@ -29,7 +30,7 @@ export default function AllMembers() {
       <TableContainer>
         <GuideRow>
           <p>İsim</p>
-          <p itemwidth="50%">E-Posta</p>
+          <p style={{ width: "50%" }}>E-Posta</p>
           <p>Durum</p>
           <p>İşlemler</p>
         </GuideRow>
@@ -40,13 +41,20 @@ export default function AllMembers() {
           >
             {(users) => {
               return users.map(
-                ({ isActive, email, personalData: { name, surname } }) => {
+                ({
+                  isActive,
+                  email,
+                  personalData: { name, surname },
+                }: UserDetail) => {
                   return (
-                    <TableRow debug={true} rowstate={isActive ? "" : "passive"}>
+                    <TableRow
+                      debug={true}
+                      rowState={isActive ? "active" : "passive"}
+                    >
                       <p>
                         {name} {surname}
                       </p>
-                      <p itemwidth="50%">{email}</p>
+                      <p>{email}</p>
                       <p>{isActive ? "Aktif" : "Pasif"}</p>
                       <CircleButtonContainer>
                         {isActive ? <PassiveBtn /> : <ActiveBtn />}

@@ -79,6 +79,8 @@ export interface UserDetail {
       pastLessons: Date[];
     };
   };
+  email?: string;
+  uid?: string;
 }
 
 export interface UserDetailObj {
@@ -296,7 +298,7 @@ export interface Rendezvous {
   uid: string | number;
   cancelled: boolean;
   name: string;
-  date: string;
+  date: string | Date;
 }
 
 console.log(allRendezvous);

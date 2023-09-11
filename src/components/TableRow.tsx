@@ -14,13 +14,6 @@ interface TableRowContainerProps {
 
 const TableItemContainer = styled.div<{ children: JSX.Element }>`
   min-width: fit-content;
-  ${({
-    children: {
-      props: { itemwidth },
-    },
-  }) => {
-    return itemwidth && `width:${itemwidth} !important`;
-  }}
 `;
 
 const StyledTableRow = styled.div<

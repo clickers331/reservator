@@ -1,4 +1,3 @@
-import { RedirectFunction } from "react-router-dom";
 import {
   users,
   userDetailData,
