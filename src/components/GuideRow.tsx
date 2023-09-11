@@ -9,10 +9,10 @@ const StyledGuideRow = styled(StyledTableRow)`
   background: ${({ theme }) => theme.colors.neutrals[700]};
 `;
 
-export default function GuideRow({ children }) {
+export default function GuideRow({ children }: { children: JSX.Element[] }) {
   return (
     <StyledGuideRow>
-      {children.map((child) => (
+      {children?.map((child) => (
         <TableItemContainer key={nanoid()}>{child}</TableItemContainer>
       ))}
     </StyledGuideRow>

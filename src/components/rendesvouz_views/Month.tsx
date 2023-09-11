@@ -1,21 +1,15 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import styled, { useTheme } from "styled-components";
 import TimeCard from "../TimeCard";
-import ContainerNav from "../navs/ContainerNav";
 import Error from "../Error";
 import WeekRow from "../WeekRow";
 import { defer, Await, useLoaderData, NavLink } from "react-router-dom";
-import { getAllRendezvousFormatted } from "../../api";
+import { Rendezvous2D, getAllRendezvousFormatted } from "../../api";
 import { nanoid } from "nanoid";
-
-const MonthRow = styled(ContainerNav)`
-  padding-left: 0;
-  padding-right: 0;
-`;
-
-const MonthRowItem = styled(NavLink)`
-  color: black;
-`;
+import { DateParams } from "./paramsInterfaces";
+import { StyledProps, ThemeObj } from "../../styledUtils";
+import { Rendezvous } from "../../data/mockDatabase";
+import MonthNav from "../navs/MonthNav";
 
 const MonthGrid = styled.div`
   display: grid;
@@ -30,92 +24,97 @@ const MonthGrid = styled.div`
   }
 `;
 
-async function loader({ params: { year, month } }) {
+const HourText = styled.span<StyledProps>`
+  width: 30%;
+  text-align: right;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.neutrals[200]};
+  font-size: 1em;
+  padding: 0.2em;
+`;
+
+const NameText = styled.span<StyledProps>`
+  width: 70%;
+  text-align: left;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.neutrals[100]};
+  font-size: 1.2em;
+  padding: 0.2em;
+`;
+
+async function loader({ params: { year, month } }: DateParams) {
   return defer({
     rendezvousData: getAllRendezvousFormatted(year, month),
+    dates: { year, month },
   });
 }
 
 export default function Month() {
-  const { rendezvousData } = useLoaderData();
-  const theme = useTheme();
+  const { rendezvousData, dates } = useLoaderData() as {
+    rendezvousData: Rendezvous2D;
+    dates: { year: string; month: string };
+  };
+  const theme = useTheme() as ThemeObj;
   return (
     <>
-      <MonthRow>
-        <MonthRowItem to="../month/2023/1">ocak</MonthRowItem>
-        <MonthRowItem to="../month/2023/2">şubat</MonthRowItem>
-        <MonthRowItem to="../month/2023/3">mart</MonthRowItem>
-        <MonthRowItem to="../month/2023/4">nisan</MonthRowItem>
-        <MonthRowItem to="../month/2023/5">mayıs</MonthRowItem>
-        <MonthRowItem to="../month/2023/6">haziran</MonthRowItem>
-        <MonthRowItem to="../month/2023/7">temmuz</MonthRowItem>
-        <MonthRowItem to="../month/2023/8">ağustos</MonthRowItem>
-        <MonthRowItem to="../month/2023/9">eylül</MonthRowItem>
-        <MonthRowItem to="../month/2023/10">ekim</MonthRowItem>
-        <MonthRowItem to="../month/2023/11">kasım</MonthRowItem>
-        <MonthRowItem to="../month/2023/12">aralık</MonthRowItem>
-      </MonthRow>
+      <MonthNav />
       <WeekRow />
       <MonthGrid>
         <Suspense fallback={<h1>Takvim Yükleniyor...</h1>}>
           <Await resolve={rendezvousData} errorElement={<Error />}>
-            {(rendezvousData) => {
+            {(rendezvousData: Rendezvous2D) => {
               if (rendezvousData.length == 0)
                 return <h1>Bu ay hiçbir randevu yok</h1>;
-              return rendezvousData.map((data, idx) => {
-                if (data.length == 0)
+              return rendezvousData.map(
+                (data: Rendezvous[] | [], idx: number) => {
+                  const currentDate = new Date(
+                    new Date(+dates.year, +dates.month - 1, idx + 1)
+                  );
+                  const currentWeekDay = currentDate.getDay();
+                  const currentMonthDay = currentDate.getDate();
+                  if (data.length == 0)
+                    return (
+                      <TimeCard
+                        key={nanoid()}
+                        startIndex={currentWeekDay}
+                        dayOfMonth={currentMonthDay}
+                      >
+                        <p>Bugün kürekçi yok</p>
+                      </TimeCard>
+                    );
                   return (
-                    <TimeCard key={nanoid()} day={idx + 1}>
-                      <p>{idx + 1}</p>
-                      <p>Bugün kürekçi yok</p>
+                    <TimeCard
+                      key={nanoid()}
+                      path={`${currentDate.getFullYear()}/${
+                        currentDate.getMonth() + 1
+                      }/${currentMonthDay}`}
+                      dayOfMonth={currentMonthDay}
+                      startIndex={currentWeekDay}
+                      shorten
+                    >
+                      {...data.map(({ name, date }) => {
+                        return (
+                          <p key={nanoid()}>
+                            <HourText>{new Date(date).getHours()}:00</HourText>
+                            <NameText
+                              style={{
+                                width: "70%",
+                                textAlign: "left",
+                                fontWeight: "700",
+                                color: theme.colors.neutrals[100],
+                                fontSize: "1.2em",
+                                padding: "0.2em",
+                              }}
+                            >
+                              {name}
+                            </NameText>
+                          </p>
+                        );
+                      })}
                     </TimeCard>
                   );
-                const currentDate = new Date(data[0].date);
-                const currentWeekDay = currentDate.getDay();
-                const currentMonthDay = currentDate.getDate();
-                return (
-                  <TimeCard
-                    key={nanoid()}
-                    path={`${currentDate.getFullYear()}/${
-                      currentDate.getMonth() + 1
-                    }/${currentMonthDay}`}
-                    startIndex={currentWeekDay}
-                    shorten
-                  >
-                    <p>{idx + 1}</p>
-                    {...data.map(({ name, date }) => {
-                      return (
-                        <p key={nanoid()}>
-                          <span
-                            style={{
-                              width: "30%",
-                              textAlign: "right",
-                              fontWeight: "700",
-                              color: theme.colors.neutrals[200],
-                              fontSize: "1em",
-                              padding: "0.2em",
-                            }}
-                          >
-                            {new Date(date).getHours()}:00
-                          </span>
-                          <span
-                            style={{
-                              width: "70%",
-                              textAlign: "left",
-                              fontWeight: "700",
-                              color: theme.colors.neutrals[100],
-                              fontSize: "1.2em",
-                              padding: "0.2em",
-                            }}
-                          >
-                            {name}
-                          </span>
-                        </p>
-                      );
-                    })}
-                  </TimeCard>
-                );
-              });
+                }
+              );
             }}
           </Await>
         </Suspense>

@@ -1,9 +1,18 @@
-import React from "react";
 import styled from "styled-components";
 import { nanoid } from "nanoid";
+import { StyledProps } from "../styledUtils";
 
-const TableItemContainer = styled.div`
-  ${({ debug }) => debug && "border: 1px solid red;"}
+interface TableRowProps {
+  children: JSX.Element[];
+  rowState?: "cancelled" | "passive" | "active";
+  debug?: boolean;
+}
+
+interface TableRowContainerProps {
+  $rowState?: "cancelled" | "passive" | "active";
+}
+
+const TableItemContainer = styled.div<{ children: JSX.Element }>`
   min-width: fit-content;
   ${({
     children: {
@@ -14,7 +23,9 @@ const TableItemContainer = styled.div`
   }}
 `;
 
-const StyledTableRow = styled.div`
+const StyledTableRow = styled.div<
+  TableRowContainerProps & StyledProps & { children: JSX.Element[] }
+>`
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -23,8 +34,8 @@ const StyledTableRow = styled.div`
   padding: 0.5em 1em;
   width: 100%;
   border-radius: 15px;
-  background-color: ${({ rowstate, theme }) => {
-    switch (rowstate) {
+  background-color: ${({ $rowState, theme }) => {
+    switch ($rowState) {
       case "cancelled":
         return theme.colors.accents.red[300];
       case "passive":
@@ -43,9 +54,9 @@ const StyledTableRow = styled.div`
   }
 `;
 
-export default function TableRow({ children, rowstate, debug }) {
+export default function TableRow({ children, rowState }: TableRowProps) {
   return (
-    <StyledTableRow rowstate={rowstate} debug={debug}>
+    <StyledTableRow $rowState={rowState}>
       {children.map((child) => {
         return <TableItemContainer key={nanoid()}>{child}</TableItemContainer>;
       })}

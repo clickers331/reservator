@@ -10,15 +10,15 @@ import {
 } from "./data/mockDatabase.js";
 import { flattenObjectSimple } from "./utils.js";
 
-interface ErrorObject {
+export interface ErrorObject {
   error: string | number;
 }
 
-interface FormattedDay {
+export interface FormattedDay {
   [key: `${number}` | number]: Rendezvous[];
 }
 
-type Rendezvous2D = Rendezvous[][];
+export type Rendezvous2D = Rendezvous[][];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function getAllUsers(): Promise<User[]> {
@@ -65,12 +65,13 @@ async function getAllRendezvousFormatted(
   year: string,
   month: string
 ): Promise<Rendezvous2D | ErrorObject> {
+  console.log("Month is: ", month, "on line 156 in api.ts");
   const monthInt: number = parseInt(month);
   const yearInt: number = parseInt(year);
   const date: Date = new Date(yearInt, monthInt, 0);
   const rendezvous: AllRandezvous = await getAllRendezvous();
   const monthDayCount: number = date.getDate();
-  const rendezvousSelected = rendezvous[year][parseInt(month) - 1];
+  const rendezvousSelected = rendezvous[year][monthInt - 1];
   if (!rendezvousSelected)
     return { error: "Month doesnt exist" } as ErrorObject;
   const formattedArr = [];

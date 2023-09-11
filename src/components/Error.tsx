@@ -7,6 +7,6 @@ const ErrorMessage = styled.h2`
 `;
 
 export default function Error() {
-  const error = useRouteError();
-  return <ErrorMessage>{error?.message || JSON.stringify(error)}</ErrorMessage>;
+  const error = useRouteError() as { message: string | undefined };
+  return <ErrorMessage>{error.message || JSON.stringify(error)}</ErrorMessage>;
 }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import type { ThemeObj } from "../../styledUtils";
 
 interface ContainerNavProps {
-  backgroundColor: string;
+  backgroundColor?: string;
   children: JSX.Element[];
 }
 

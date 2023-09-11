@@ -1,10 +1,12 @@
-import React, { Suspense, useState } from "react";
+import { Suspense } from "react";
 import styled, { useTheme } from "styled-components";
 import TimeCard from "../TimeCard";
 import WeekRow from "../WeekRow";
 import { defer, Await, Link, useLoaderData, useParams } from "react-router-dom";
-import { getAllRendezvousWeek } from "../../api";
+import { ErrorObject, Rendezvous2D, getAllRendezvousWeek } from "../../api";
 import { nanoid } from "nanoid";
+import { WeekParams } from "./paramsInterfaces";
+import { StyledProps } from "../../styledUtils";
 
 const StyledWeekView = styled.div`
   display: flex;
@@ -38,78 +40,72 @@ const CarouselArrow = styled(Link)`
   background-color: ${({ theme }) => theme.colors.primaries[600]};
 `;
 
-async function loader({ params: { weekNo } }) {
+const HourText = styled.span<StyledProps>`
+  width: 30%;
+  text-align: right;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.neutrals[200]};
+  font-size: 1em;
+  padding: 0.2em;
+`;
+
+const NameText = styled.span<StyledProps>`
+  width: 70%;
+  text-align: left;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.neutrals[100]};
+  font-size: 1.2em;
+  padding: 0.2em;
+`;
+async function loader({ params: { weekNo } }: WeekParams) {
   console.log("kakak");
-  return defer({ weekData: getAllRendezvousWeek("2023", weekNo) });
+  return defer({ weekData: getAllRendezvousWeek("2023", +weekNo) });
 }
 
 export default function Week() {
-  let { weekNo } = useParams();
+  let { weekNo } = useParams() as WeekParams["params"];
   weekNo = weekNo || 0;
-  const { weekData } = useLoaderData();
+  const { weekData } = useLoaderData() as {
+    weekData: Rendezvous2D | ErrorObject;
+  };
   const theme = useTheme();
 
   return (
     <>
       <WeekRow />
       <StyledWeekView>
-        <CarouselArrow to={`../week/${parseInt(weekNo) - 1}`}>
-          {" "}
-          {`<`}{" "}
+        <CarouselArrow to={`../week/${parseInt(weekNo.toString()) - 1}`}>
+          {`<`}
         </CarouselArrow>
         <StyledWeekGrid>
           <Suspense fallback={<h1>loding</h1>}>
             <Await resolve={weekData}>
-              {(weekData) => {
+              {(weekData: Rendezvous2D | ErrorObject) => {
+                if ("error" in weekData) return <h1>{weekData.error}</h1>;
                 if (weekData.length == 0)
                   return <h1>Bu ay hiçbir randevu yok</h1>;
-                if (weekData.error) return <h1>{weekData.error}</h1>;
                 return weekData.map((data, idx) => {
                   if (data.length == 0)
                     return (
-                      <TimeCard key={nanoid()} day={idx + 1}>
+                      <TimeCard key={nanoid()} dayOfMonth={idx + 1}>
                         <p>{idx + 1}</p>
                         <p>Bugün kürekçi yok</p>
                       </TimeCard>
                     );
                   const currentDate = new Date(data[0].date);
-                  const currentWeekDay = currentDate.getDay();
                   const currentMonthDay = currentDate.getDate();
                   return (
                     <TimeCard
                       key={nanoid()}
-                      day={currentMonthDay}
-                      startIndex={currentWeekDay}
+                      path={`${currentDate.getFullYear()}/${currentDate.getMonth()}/${currentMonthDay}`}
+                      dayOfMonth={currentMonthDay}
                       shorten
                     >
-                      <p>{currentMonthDay}</p>
                       {...data.map(({ name, date }) => {
                         return (
                           <p key={nanoid()}>
-                            <span
-                              style={{
-                                width: "30%",
-                                textAlign: "right",
-                                fontWeight: "700",
-                                color: theme.colors.neutrals[200],
-                                fontSize: "1em",
-                                padding: "0.2em",
-                              }}
-                            >
-                              {new Date(date).getHours()}:00
-                            </span>
-                            <span
-                              style={{
-                                width: "70%",
-                                textAlign: "left",
-                                fontWeight: "700",
-                                color: theme.colors.neutrals[100],
-                                fontSize: "1.2em",
-                                padding: "0.2em",
-                              }}
-                            >
-                              {name}
-                            </span>
+                            <HourText>{new Date(date).getHours()}:00</HourText>
+                            <NameText>{name}</NameText>
                           </p>
                         );
                       })}
@@ -120,7 +116,7 @@ export default function Week() {
             </Await>
           </Suspense>
         </StyledWeekGrid>
-        <CarouselArrow to={`../week/${parseInt(weekNo) + 1}`}>
+        <CarouselArrow to={`../week/${parseInt(weekNo.toString()) + 1}`}>
           {">"}
         </CarouselArrow>
       </StyledWeekView>

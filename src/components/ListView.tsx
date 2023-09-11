@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import styled from "styled-components";
 import { getAllRendezvous } from "../api";
 import { monthNamesTR } from "../utils";
@@ -7,10 +7,9 @@ import { TableContainer } from "./commonComponents.js";
 import SearchNav from "./navs/SearchNav.jsx";
 import GuideRow from "./GuideRow.js";
 import TableRow from "./TableRow.jsx";
-
-import ActiveBtn from "./circle_buttons/ActiveBtn.jsx";
 import CancelBtn from "./circle_buttons/CancelBtn";
 import InfoBtn from "./circle_buttons/InfoBtn";
+import { type AllRandezvous } from "../data/mockDatabase";
 
 const CircleButtonContainer = styled.div`
   display: flex;
@@ -22,7 +21,7 @@ async function loader() {
 }
 
 export default function ListView() {
-  const { rendezvous } = useLoaderData();
+  const { rendezvous } = useLoaderData() as { rendezvous: AllRandezvous };
   return (
     <>
       <SearchNav />
@@ -40,7 +39,7 @@ export default function ListView() {
             resolve={rendezvous}
             errorElement={<div>Could not load users 😬</div>}
           >
-            {(rendezvous) => {
+            {(rendezvous: AllRandezvous) => {
               return rendezvous["2023"][0]
                 .reverse()
                 .slice(0, 9)
@@ -48,7 +47,7 @@ export default function ListView() {
                   const currentDate = new Date(date);
                   return (
                     <TableRow
-                      rowstate={!cancelled ? "" : "cancelled"}
+                      rowState={!cancelled ? "active" : "cancelled"}
                       key={idx}
                     >
                       <p>{name}</p>

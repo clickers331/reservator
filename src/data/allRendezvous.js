@@ -33,7 +33,7 @@ function createAllRendezvous(startYear, yearCount) {
         console.log("Day: ", k);
         for (let m = 0; m < 4; m++) {
           currentMonth.push({
-            date: new Date(currentFullYear, j, k, m),
+            date: new Date(currentFullYear, j, k, m + 4),
             name: chance.name(),
             cancelled: chance.bool(),
             uid: chance.guid(),

@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import ContainerNav from "./navs/ContainerNav";
 import { useTheme } from "styled-components";
@@ -30,11 +29,3 @@ export default function Calendar() {
     </>
   );
 }
-
-// DATA STRUCTURE
-/*
-    {
-        uid: String,
-        date: Date
-    }
-*/

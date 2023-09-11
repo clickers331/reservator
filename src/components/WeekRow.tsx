@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import ContainerNav from "./navs/ContainerNav";
 

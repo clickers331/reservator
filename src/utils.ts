@@ -37,7 +37,7 @@ function flattenObjectSimple<T>(object: object): T[] {
   return flattenedObject as T[];
 }
 
-function getWeekNo(date: string): number {
+function getWeekNo(date: string | Date): number {
   const currentDate: Date = new Date(date);
   const startDate: Date = new Date(currentDate.getFullYear(), 0, 1);
   const days: number = Math.floor(

@@ -2,8 +2,15 @@ import { nanoid } from "nanoid";
 import React from "react";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
+import { StyledProps } from "../styledUtils";
 
-const StyledTimeCard = styled(Link)`
+interface StyledTimeCardProps extends StyledProps {
+  $startIndex?: number;
+  $dayView?: boolean;
+  square?: boolean;
+}
+
+const StyledTimeCard = styled(Link)<StyledTimeCardProps>`
   text-decoration: none;
   transition: transform 0.2s ease-in-out;
   display: flex;
@@ -14,20 +21,21 @@ const StyledTimeCard = styled(Link)`
   background-color: ${({ theme }) => theme.colors.neutrals[500]};
   padding: 0.7em;
   box-sizing: border-box;
-  grid-column-start: ${({ startindex }) => {
-    if (startindex === 0) return 7;
-    return startindex;
+  grid-column-start: ${({ $startIndex }) => {
+    if (!$startIndex) return "span(1)";
+    if ($startIndex === 0) return 7;
+    return $startIndex;
   }};
-  ${({ dayview }) => dayview && `pointer-events:none;`}
+  ${({ $dayView }) => $dayView && `pointer-events:none;`}
   gap: 0.5em;
-  ${({ square }) => square || `aspect-ratio:1;`}
+  ${({ square }) => (square ? "aspect-ratio:1;" : "")}
   &:hover {
     transform: scale(1.05);
     cursor: pointer;
   }
 `;
 
-const StyledTimeCardItem = styled.div`
+const StyledTimeCardItem = styled.div<StyledProps>`
   box-sizing: border-box;
   border-radius: 5px;
   padding: 0.5em;
@@ -43,19 +51,23 @@ const StyledDateNumber = styled.div`
   font-size: 1rem;
 `;
 
-const StyledMoreInfo = styled.p`
+const StyledMoreInfo = styled.p<StyledProps>`
   font-size: 1rem;
   padding: 0;
   margin: 0;
   color: ${({ theme }) => theme.colors.neutrals[700]};
 `;
 
-function getRenderedComponents(children, shorten) {
+function getRenderedComponents(
+  children: JSX.Element | JSX.Element[] | undefined,
+  shorten: boolean | undefined,
+  dayOfMonth: number
+) {
   if (!children) return <StyledTimeCardItem>no children</StyledTimeCardItem>;
   else if (Array.isArray(children)) {
     if (shorten && children.length > 5) {
       const items = [<StyledDateNumber>{children[0]}</StyledDateNumber>];
-      for (let i = 1; i < 5; i++) {
+      for (let i = 0; i < 5; i++) {
         const child = children[i];
 
         items.push(
@@ -72,9 +84,7 @@ function getRenderedComponents(children, shorten) {
         ,
       ];
     }
-    return children.map((child, idx) => {
-      if (idx === 0)
-        return <StyledDateNumber key={nanoid()}>{child}</StyledDateNumber>;
+    return children.map((child: JSX.Element, idx: number) => {
       return (
         <StyledTimeCardItem key={nanoid()}>
           {...child.props.children}
@@ -86,30 +96,33 @@ function getRenderedComponents(children, shorten) {
   }
 }
 
+interface TimeCardProps {
+  children: JSX.Element | JSX.Element[];
+  path?: string;
+  startIndex?: number;
+  dayOfMonth: number;
+  shorten?: boolean;
+  dayView?: boolean;
+}
+
 export default function TimeCard({
   children,
   path,
-  startIndex: startindex,
+  startIndex,
+  dayOfMonth,
   shorten,
-  dayView: dayview,
-}) {
-  const components = getRenderedComponents(children, shorten);
+  dayView,
+}: TimeCardProps) {
+  const components = getRenderedComponents(children, shorten, dayOfMonth);
   return (
     <StyledTimeCard
       to={`../day/${path}`}
       key={nanoid()}
-      startindex={startindex}
-      dayview={dayview}
+      $startIndex={startIndex}
+      $dayView={dayView}
     >
+      <StyledDateNumber>{dayOfMonth}</StyledDateNumber>
       {components}
     </StyledTimeCard>
   );
 }
-
-//{!Array.isArray(children) ? (
-//<StyledTimeCardItem key={nanoid()}>{children}</StyledTimeCardItem>
-//) : (
-//children?.map((child) => (
-//<StyledTimeCardItem key={nanoid()}>{child}</StyledTimeCardItem>
-//))
-//)}

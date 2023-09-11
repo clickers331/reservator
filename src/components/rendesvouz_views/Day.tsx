@@ -3,10 +3,12 @@ import { Suspense } from "react";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
 import { getAllRendezvousDay } from "../../api";
 import { monthNamesTR } from "../../utils";
-import { Params } from "./paramsInterfaces";
+import { DateParams } from "./paramsInterfaces";
 import { StyledProps } from "../../styledUtils";
+import { type FormattedDay } from "../../api";
+import { Rendezvous } from "../../data/mockDatabase";
 
-async function loader({ params: { month, day } }: Params) {
+async function loader({ params: { month, day } }: DateParams) {
   return defer({ dayData: getAllRendezvousDay("2023", month, day) });
 }
 
@@ -44,14 +46,16 @@ const StyledRendezvousItemContainer = styled.div<StyledProps>`
   gap: 0.4em;
 `;
 
+type DayDataKeyValue = [string, Rendezvous[]];
+
 export default function Day() {
-  const { dayData } = useLoaderData();
-  const { month, day } = useParams();
-  const turkishMonthName = monthNamesTR[month - 1];
+  const { dayData } = useLoaderData() as { dayData: FormattedDay };
+  const { month, day } = (useParams() as DateParams["params"])!;
+  const turkishMonthName = monthNamesTR[+month - 1];
   return (
     <Suspense fallback={<h1>Yukleniveriveriyor</h1>}>
       <Await resolve={dayData}>
-        {(dayData) => {
+        {(dayData: FormattedDay) => {
           return (
             <StyledDay>
               <StyledDateHeader>
@@ -60,20 +64,22 @@ export default function Day() {
               {!dayData ? (
                 <h1>Bugün randevu yok</h1>
               ) : (
-                Object.entries(dayData).map(([hour, rendezvousArr]) => {
-                  return (
-                    <div>
-                      <StyledHourHeader>{hour}:00</StyledHourHeader>
-                      <StyledRendezvousItemContainer>
-                        {rendezvousArr.map((rendezvous) => (
-                          <StyledRendezvousItem>
-                            {rendezvous.name}
-                          </StyledRendezvousItem>
-                        ))}
-                      </StyledRendezvousItemContainer>
-                    </div>
-                  );
-                })
+                Object.entries(dayData).map(
+                  ([hour, rendezvousArr]: DayDataKeyValue) => {
+                    return (
+                      <div>
+                        <StyledHourHeader>{hour}:00</StyledHourHeader>
+                        <StyledRendezvousItemContainer>
+                          {rendezvousArr.map((rendezvous: Rendezvous) => (
+                            <StyledRendezvousItem>
+                              {rendezvous.name}
+                            </StyledRendezvousItem>
+                          ))}
+                        </StyledRendezvousItemContainer>
+                      </div>
+                    );
+                  }
+                )
               )}
             </StyledDay>
           );
