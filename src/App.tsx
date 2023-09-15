@@ -4,6 +4,7 @@ import {
   createBrowserRouter,
   Route,
   RouterProvider,
+  LoaderFunction,
 } from "react-router-dom";
 import HomeLayout from "./pages/HomeLayout.jsx";
 import AllMembers from "./pages/AllMembers.jsx";
@@ -30,13 +31,17 @@ const router = createBrowserRouter(
         <Route path="calendar" element={<Calendar />}>
           <Route
             path="month/:year/:month"
-            loader={Month.loader}
+            loader={Month.loader as any}
             element={<Month />}
           />
-          <Route path="week/:weekNo" loader={Week.loader} element={<Week />} />
+          <Route
+            path="week/:weekNo"
+            loader={Week.loader as any}
+            element={<Week />}
+          />
           <Route
             path="day/:year/:month/:day"
-            loader={Day.loader}
+            loader={Day.loader as any}
             element={<Day />}
           />
         </Route>
