@@ -1,0 +1,84 @@
+import { FieldHookConfig, useField } from "formik";
+import React from "react";
+import styled, { useTheme } from "styled-components";
+import { ReactComponent as TestIcon } from "../../../assets/icons/info_icon.svg";
+import { StyledProps, ThemeObj } from "../../../styledUtils";
+
+const StyledIconInput = styled.div<StyledProps>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  background-color: ${({ theme }) => theme.colors.neutrals[200]};
+  * {
+    padding: 0.4em;
+  }
+`;
+const StyledField = styled.input<StyledProps>`
+  height: 100%;
+  width: 100%;
+  font-size: inherit;
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.colors.neutrals[800]};
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.neutrals[600]};
+  }
+`;
+interface StyledIcon {
+  $clickable?: boolean;
+}
+
+const StyledIcon = styled(TestIcon)<StyledIcon>`
+  width: 1.3em;
+  height: 1.3em;
+  transition-duration: 100ms;
+  ${StyledField}:hover {
+    fill: white;
+    width: 1.5em;
+    height: 1.5em;
+  }
+  cursor: ${({ $clickable }: StyledIcon) => $clickable && "pointer"};
+`;
+
+interface IconObj {
+  fill?: boolean;
+  stroke?: boolean;
+  clickHandler?: Function;
+  icon: React.FC;
+}
+
+interface IconInputProps {
+  iconRight?: IconObj;
+  iconLeft: IconObj;
+}
+
+export default function IconInput({
+  iconData: { iconRight, iconLeft },
+  ...props
+}: {
+  iconData: IconInputProps;
+} & any) {
+  const [field, meta, helpers] = useField(props);
+  const theme: ThemeObj = useTheme() as ThemeObj;
+  return (
+    <StyledIconInput>
+      <StyledIcon
+        fill={iconLeft.fill ? theme.colors.neutrals[400] : "none"}
+        stroke={iconLeft.stroke ? theme.colors.neutrals[400] : "none"}
+        as={iconLeft.icon}
+      />
+      <StyledField {...field} {...props} />
+      {iconRight && (
+        <StyledIcon
+          $clickable
+          fill={iconRight.fill ? theme.colors.neutrals[400] : "none"}
+          stroke={iconRight.stroke ? theme.colors.neutrals[400] : "none"}
+          as={iconRight.icon}
+          onClick={iconRight.clickHandler || function () {}}
+        />
+      )}
+    </StyledIconInput>
+  );
+}
