@@ -1,7 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import { NavLink, Link, Outlet } from "react-router-dom";
-//Build me a simple nav bar with styled compenents
 
 const Nav = styled.nav`
   box-sizing: border-box;
@@ -12,6 +9,7 @@ const Nav = styled.nav`
   color: #fff;
   padding: 3em;
   margin: 0;
+  width: 100%;
   height: ${({ theme }) => theme.sizes.navHeight};
   a {
     color: ${({ theme }) => theme.colors.neutrals[200]};
@@ -44,10 +42,6 @@ const LinkContainer = styled.div`
   gap: 1em;
 `;
 
-const BodyContainer = styled.div`
-  min-height: 100vh;
-`;
-
 const OutletContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -55,30 +49,18 @@ const OutletContainer = styled.div`
   justify-content: center;
   min-height: calc(100vh - 50px);
   width: 100%;
-  background: ${({ theme }) => theme.colors.neutrals[100]};
   margin: 0;
   padding: 0;
 `;
-
-export default function HomeLayout() {
-  return (
-    <BodyContainer>
-      <Nav>
-        <StyledHeader>
-          BKK <LightText>Randevu</LightText>
-        </StyledHeader>
-        <LinkContainer>
-          <NavLink to="/">ev</NavLink>
-          <NavLink to="/rendezvous">tüm randevular</NavLink>
-          <NavLink to="/users">üyeler</NavLink>
-        </LinkContainer>
-        <LinkContainer>
-          <Link to="/">çıkış</Link>
-        </LinkContainer>
-      </Nav>
-      <OutletContainer>
-        <Outlet />
-      </OutletContainer>
-    </BodyContainer>
-  );
+export default function RootNav({
+  children,
+}: {
+  children: JSX.Element[] | JSX.Element;
+}) {
+  return <Nav>{children}</Nav>;
 }
+
+RootNav.Header = StyledHeader;
+RootNav.LightText = LightText;
+RootNav.LinkContainer = LinkContainer;
+RootNav.OutletContainer = OutletContainer;
