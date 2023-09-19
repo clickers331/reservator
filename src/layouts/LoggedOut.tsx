@@ -9,7 +9,7 @@ export default function LoggedOut() {
         BKK <LightText>Randevu</LightText>
       </Header>
       <LinkContainer>
-        <NavLink to="/login">giriş yap</NavLink>
+        <NavLink to="/signin">giriş yap</NavLink>
         <NavLink to="/signup">hesap oluştur</NavLink>
       </LinkContainer>
     </RootNav>

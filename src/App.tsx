@@ -16,14 +16,14 @@ import Calendar from "./components/Calendar.jsx";
 import Month from "./components/rendesvouz_views/Month.jsx";
 import Week from "./components/rendesvouz_views/Week.jsx";
 import Day from "./components/rendesvouz_views/Day.jsx";
-import LogIn from "./pages/auth/LogIn.jsx";
+import SignIn from "./pages/auth/SignIn.js";
 import SignUp from "./pages/auth/SignUp.js";
 import ProtectedRoute from "./pages/ProtectedRoute.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<RootLayout />}>
-      <Route path="/login" element={<LogIn />} />
+      <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route index element={<Home />} errorElement={<Error />} />

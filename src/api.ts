@@ -181,6 +181,7 @@ async function createNewAccount(values: AuthFormValues) {
     );
     if (user) {
       await setDoc(doc(db, `users/${user.user.uid}`), {
+        email: values.email,
         fullName: values.fullName,
         phone: values.phone,
         birthDate: Timestamp.fromDate(new Date(values.birthDate as string)),

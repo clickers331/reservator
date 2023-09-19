@@ -6,7 +6,7 @@ export default function ProtectedRoute() {
   const [user, loading, error] = useAuthState(auth);
   return (
     <>
-      {!user && <Navigate to="/login" />}
+      {!user && <Navigate to="/signin" />}
       <Outlet />
     </>
   );

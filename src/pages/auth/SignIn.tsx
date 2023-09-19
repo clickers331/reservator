@@ -1,4 +1,5 @@
-import { Form, Formik, Field } from "formik";
+import { Formik, Field } from "formik";
+import Form from "./Form";
 import { auth } from "../../firebaseObjects";
 import styled from "styled-components";
 import { signOut } from "firebase/auth";
@@ -22,7 +23,7 @@ const StyledForm = styled(Form)<StyledProps>`
   max-width: 1000px;
 `;
 
-export default function LogIn() {
+export default function SignIn() {
   const [user] = useAuthState(auth);
   return (
     <>
@@ -38,11 +39,11 @@ export default function LogIn() {
             }}
             onSubmit={signIn}
           >
-            <StyledForm>
+            <Form>
               <EmailInput />
               <PasswordInput />
               <AuthBtn onClick={() => signOut(auth)}>Giriş Yap</AuthBtn>
-            </StyledForm>
+            </Form>
           </Formik>
         </>
       )}

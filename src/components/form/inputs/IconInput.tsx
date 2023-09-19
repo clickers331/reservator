@@ -42,14 +42,14 @@ const StyledIcon = styled(TestIcon)<StyledIcon>`
   cursor: ${({ $clickable }: StyledIcon) => $clickable && "pointer"};
 `;
 
-interface IconObj {
+export interface IconObj {
   fill?: boolean;
   stroke?: boolean;
   clickHandler?: Function;
   icon: React.FC;
 }
 
-interface IconInputProps {
+export interface IconData {
   iconRight?: IconObj;
   iconLeft: IconObj;
 }
@@ -58,7 +58,7 @@ export default function IconInput({
   iconData: { iconRight, iconLeft },
   ...props
 }: {
-  iconData: IconInputProps;
+  iconData: IconData;
 } & any) {
   const [field, meta, helpers] = useField(props);
   const theme: ThemeObj = useTheme() as ThemeObj;

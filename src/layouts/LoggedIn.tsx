@@ -21,7 +21,7 @@ export default function LoggedIn() {
       </LinkContainer>
       <LinkContainer>
         <Link
-          to="/login"
+          to="/signin"
           onClick={(e) => {
             signOut(auth);
           }}
