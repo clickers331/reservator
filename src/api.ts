@@ -1,4 +1,11 @@
 import {
+  onAuthStateChanged,
+  type User as FirebaseUser,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { setDoc, doc, Timestamp } from "firebase/firestore";
+import {
   users,
   userDetailData,
   allRandezvous,
@@ -8,6 +15,7 @@ import {
   Rendezvous,
 } from "./data/mockDatabase.js";
 import { flattenObjectSimple } from "./utils.js";
+import { db, auth } from "./firebaseObjects.js";
 
 export interface ErrorObject {
   error: string | number;
@@ -142,7 +150,69 @@ async function getAllRendezvousWeek(
     : ({ error: "Week doesnt exist" } as ErrorObject);
 }
 
+async function getUser() {
+  let returnedUser: FirebaseUser | null = null;
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      returnedUser = user;
+    } else {
+      returnedUser = null;
+    }
+  });
+  return returnedUser;
+}
+
+export interface AuthFormValues {
+  email: string;
+  fullName?: string;
+  phone?: string;
+  bloodType?: string;
+  birthPlace?: string;
+  birthDate?: string;
+  tcid: string;
+}
+
+async function createNewAccount(values: AuthFormValues) {
+  try {
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      values.email,
+      values.tcid
+    );
+    if (user) {
+      await setDoc(doc(db, `users/${user.user.uid}`), {
+        email: values.email,
+        fullName: values.fullName,
+        phone: values.phone,
+        birthDate: Timestamp.fromDate(new Date(values.birthDate as string)),
+        birthPlace: values.birthPlace,
+        bloodType: values.bloodType,
+      });
+    }
+  } catch (err: any) {
+    console.log(err.message);
+    //TODO
+    //[ ] Automatically log in if the email exists and the credentials are correct.
+  }
+}
+
+async function signIn(values: AuthFormValues) {
+  try {
+    const user = await signInWithEmailAndPassword(
+      auth,
+      values.email,
+      values.tcid
+    );
+    console.log(user.user.uid);
+  } catch (err: any) {
+    console.log(err.message);
+  }
+}
+
 export {
+  signIn,
+  createNewAccount,
+  getUser,
   getAllUsers,
   getOneUser,
   getAllUsersWithDetails,
