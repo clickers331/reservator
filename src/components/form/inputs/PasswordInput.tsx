@@ -17,7 +17,7 @@ export default function PasswordInput({
   const iconData = {
     iconLeft: {
       icon: id ? IDIcon : PasswordIcon,
-      fill: true,
+      fill: false,
       stroke: true,
     },
     iconRight: {
@@ -33,7 +33,7 @@ export default function PasswordInput({
     <IconInput
       type={passwordVisibility ? "text" : "password"}
       name="tcid"
-      placeholder={id ? "TC Kimlik No" : "Sifre"}
+      placeholder={id ? "TC Kimlik No." : "Şifre"}
       iconData={iconData}
     />
   );

@@ -10,6 +10,8 @@ import EmailInput from "../../components/form/inputs/EmailInput";
 import PasswordInput from "../../components/form/inputs/PasswordInput";
 import AuthBtn from "../../components/form/AuthBtn";
 import { StyledProps } from "../../styledUtils";
+import { object, string } from "yup";
+import ValidationMessage from "../../components/form/ValidationMessage";
 
 const StyledForm = styled(Form)<StyledProps>`
   display: flex;
@@ -22,6 +24,15 @@ const StyledForm = styled(Form)<StyledProps>`
   width: 70%;
   max-width: 1000px;
 `;
+
+const SignInFormSchema = object({
+  email: string()
+    .email("Emailinizi doğru giriniz")
+    .required("Emailiniz gereklidir"),
+  tcid: string()
+    .length(11, "11 Karakter Olmalı")
+    .required("Şifreniz gereklidir"),
+});
 
 export default function SignIn() {
   const [user] = useAuthState(auth);
@@ -37,13 +48,18 @@ export default function SignIn() {
               email: "",
               tcid: "",
             }}
+            validationSchema={SignInFormSchema}
             onSubmit={signIn}
           >
-            <Form>
-              <EmailInput />
-              <PasswordInput />
-              <AuthBtn onClick={() => signOut(auth)}>Giriş Yap</AuthBtn>
-            </Form>
+            {({ errors, touched }) => {
+              return (
+                <Form>
+                  <EmailInput />
+                  <PasswordInput />
+                  <AuthBtn onClick={() => signOut(auth)}>Giriş Yap</AuthBtn>
+                </Form>
+              );
+            }}
           </Formik>
         </>
       )}

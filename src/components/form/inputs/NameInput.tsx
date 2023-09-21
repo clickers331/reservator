@@ -6,7 +6,7 @@ export default function NameInput() {
     <IconInput
       type="text"
       name="fullName"
-      placeholder="Isim Soyisim"
+      placeholder="İsim Soyisim"
       iconData={{
         iconLeft: {
           icon: UserIcon,

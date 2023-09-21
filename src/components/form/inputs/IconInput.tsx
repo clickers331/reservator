@@ -3,6 +3,14 @@ import React from "react";
 import styled, { useTheme } from "styled-components";
 import { ReactComponent as TestIcon } from "../../../assets/icons/info_icon.svg";
 import { StyledProps, ThemeObj } from "../../../styledUtils";
+import ValidationMessage from "../ValidationMessage";
+
+const StyledFieldContainer = styled.div`
+  display: flex;
+  gap: 0.3em;
+
+  flex-direction: column;
+`;
 
 const StyledIconInput = styled.div<StyledProps>`
   display: flex;
@@ -63,22 +71,27 @@ export default function IconInput({
   const [field, meta, helpers] = useField(props);
   const theme: ThemeObj = useTheme() as ThemeObj;
   return (
-    <StyledIconInput>
-      <StyledIcon
-        fill={iconLeft.fill ? theme.colors.neutrals[400] : "none"}
-        stroke={iconLeft.stroke ? theme.colors.neutrals[400] : "none"}
-        as={iconLeft.icon}
-      />
-      <StyledField {...field} {...props} />
-      {iconRight && (
+    <StyledFieldContainer>
+      <StyledIconInput>
         <StyledIcon
-          $clickable
-          fill={iconRight.fill ? theme.colors.neutrals[400] : "none"}
-          stroke={iconRight.stroke ? theme.colors.neutrals[400] : "none"}
-          as={iconRight.icon}
-          onClick={iconRight.clickHandler || function () {}}
+          fill={iconLeft.fill ? theme.colors.neutrals[400] : "none"}
+          stroke={iconLeft.stroke ? theme.colors.neutrals[400] : "none"}
+          as={iconLeft.icon}
         />
-      )}
-    </StyledIconInput>
+        <StyledField {...field} {...props} />
+        {iconRight && (
+          <StyledIcon
+            $clickable
+            fill={iconRight.fill ? theme.colors.neutrals[400] : "none"}
+            stroke={iconRight.stroke ? theme.colors.neutrals[400] : "none"}
+            as={iconRight.icon}
+            onClick={iconRight.clickHandler || function () {}}
+          />
+        )}
+      </StyledIconInput>
+      {meta.error && meta.touched ? (
+        <ValidationMessage>{meta.error}</ValidationMessage>
+      ) : null}
+    </StyledFieldContainer>
   );
 }

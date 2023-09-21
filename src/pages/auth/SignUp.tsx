@@ -1,7 +1,6 @@
-import { Formik, Field } from "formik";
-import { db, auth } from "../../firebaseObjects";
+import { Formik } from "formik";
+import { auth } from "../../firebaseObjects";
 import styled from "styled-components";
-import { signOut } from "firebase/auth";
 import { createNewAccount } from "../../api";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate } from "react-router-dom";
@@ -15,33 +14,37 @@ import { ReactComponent as NavIcon } from "../../assets/icons/location_icon.svg"
 import AuthBtn from "../../components/form/AuthBtn";
 import Form from "./Form";
 import PhoneInput from "../../components/form/inputs/PhoneInput";
-import IconInput from "../../components/form/inputs/IconInput";
 import NameInput from "../../components/form/inputs/NameInput";
+import { object, string } from "yup";
 
-const StyledForm = styled(Form)<StyledProps>`
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  border: 5px solid;
-  border-color: ${({ theme }) => theme.colors.neutrals[400]};
-  padding: 1em;
-  border-radius: 20px;
-  border: red solid 1px;
-  width: 1000px;
-`;
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const StyledFormSection = styled.div`
-  border: red solid 1px;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.5em;
+  gap: 0.7em;
   align-items: stretch;
+  border-bottom: gray solid 1px;
+  padding-bottom: 1em;
 `;
 const StyledFormSectionHeader = styled.div`
   font-size: 1.3em;
 `;
+
+const SignUpFormSchema = object({
+  email: string()
+    .email("Geçersiz e-posta adresi")
+    .required("E-posta adresi zorunludur"),
+  fullName: string(),
+  phone: string().matches(phoneRegExp, "Telefon numarası geçersiz"),
+  birthDate: string(),
+  tcid: string()
+    .length(11, "TC Kimlik Numaranız 11 sayıdan oluşmalıdır")
+    .required("TC Kimlik Numarası zorunludur"),
+});
 
 export default function SignUp() {
   const [user] = useAuthState(auth);
@@ -50,8 +53,8 @@ export default function SignUp() {
       {user ? (
         <Navigate to="/" />
       ) : (
-        <div>
-          <h1>Sign Up</h1>
+        <>
+          <h1>Hesap Oluştur</h1>
           <Formik
             initialValues={{
               email: "",
@@ -62,6 +65,7 @@ export default function SignUp() {
               birthDate: "",
               tcid: "",
             }}
+            validationSchema={SignUpFormSchema}
             onSubmit={createNewAccount}
           >
             <Form>
@@ -197,7 +201,7 @@ export default function SignUp() {
               <AuthBtn>Kayıt Ol</AuthBtn>
             </Form>
           </Formik>
-        </div>
+        </>
       )}
     </>
   );
