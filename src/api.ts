@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { setDoc, doc, Timestamp } from "firebase/firestore";
+import { setDoc, doc, Timestamp, getDoc } from "firebase/firestore";
 import {
   users,
   userDetailData,
@@ -16,6 +16,9 @@ import {
 } from "./data/mockDatabase.js";
 import { flattenObjectSimple } from "./utils.js";
 import { db, auth } from "./firebaseObjects.js";
+import { updateUserDetails } from "./redux/user/userActions.js";
+import { UserState } from "./redux/user/userReducer.js";
+import store from "./redux/store.js";
 
 export interface ErrorObject {
   error: string | number;
@@ -202,6 +205,19 @@ async function signIn(values: AuthFormValues) {
       auth,
       values.email,
       values.tcid
+    );
+    let userDetails: any; //Change it from any
+    try {
+      const docSnap = await getDoc(doc(db, "users", user.user.uid));
+      userDetails = docSnap.data();
+    } catch (err: any) {
+      console.log(err);
+    }
+    store.dispatch(
+      updateUserDetails({
+        uid: user.user.uid,
+        ...userDetails,
+      })
     );
     console.log(user.user.uid);
   } catch (err: any) {

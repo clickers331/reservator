@@ -2,7 +2,10 @@ import { Formik } from "formik";
 import { auth } from "../../firebaseObjects";
 import styled from "styled-components";
 import { createNewAccount } from "../../api";
-import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import { Navigate } from "react-router-dom";
 import EmailInput from "../../components/form/inputs/EmailInput";
 import PasswordInput from "../../components/form/inputs/PasswordInput";
@@ -15,7 +18,8 @@ import AuthBtn from "../../components/form/AuthBtn";
 import Form from "./Form";
 import PhoneInput from "../../components/form/inputs/PhoneInput";
 import NameInput from "../../components/form/inputs/NameInput";
-import { object, string } from "yup";
+import { ValidationError, object, string } from "yup";
+import ValidationMessage from "../../components/form/ValidationMessage";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -46,7 +50,15 @@ const SignUpFormSchema = object({
     .required("TC Kimlik Numarası zorunludur"),
 });
 
+const firebaseErrorMessages = {
+  "auth/email-already-in-use": "Bu emaili kullanan bir hesap var.",
+  "auth/invalid-password": "Şifreniz yanlış",
+};
+
 export default function SignUp() {
+  const [createUserWithEmailAndPassword, newUser, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+
   const [user] = useAuthState(auth);
   return (
     <>
@@ -66,9 +78,16 @@ export default function SignUp() {
               tcid: "",
             }}
             validationSchema={SignUpFormSchema}
-            onSubmit={createNewAccount}
+            onSubmit={(values) => {
+              createUserWithEmailAndPassword(values.email, values.tcid);
+            }}
           >
             <Form>
+              {error && (
+                <ValidationMessage>
+                  {firebaseErrorMessages[error.code] || "Bir hata gerçekleşti"}
+                </ValidationMessage>
+              )}
               <StyledFormSection>
                 <StyledFormSectionHeader>
                   Kişisel Bilgiler

@@ -18,7 +18,8 @@ import Week from "./components/rendesvouz_views/Week.jsx";
 import Day from "./components/rendesvouz_views/Day.jsx";
 import SignIn from "./pages/auth/SignIn.js";
 import SignUp from "./pages/auth/SignUp.js";
-import ProtectedRoute from "./pages/ProtectedRoute.js";
+import ProtectedRoute from "./pages/protected_routes/ProtectedRoute.js";
+import AdminProtectedRoute from "./pages/protected_routes/AdminProtectedRoute.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,36 +28,42 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route index element={<Home />} errorElement={<Error />} />
-        <Route
-          path="rendezvous"
-          element={<Rendezvous />}
-          errorElement={<Error />}
-        >
-          <Route path="list" loader={ListView.loader} element={<ListView />} />
-          <Route path="calendar" element={<Calendar />}>
+        <Route path="admin" element={<AdminProtectedRoute />}>
+          <Route
+            path="rendezvous"
+            element={<Rendezvous />}
+            errorElement={<Error />}
+          >
             <Route
-              path="month/:year/:month"
-              loader={Month.loader as any}
-              element={<Month />}
+              path="list"
+              loader={ListView.loader}
+              element={<ListView />}
             />
-            <Route
-              path="week/:weekNo"
-              loader={Week.loader as any}
-              element={<Week />}
-            />
-            <Route
-              path="day/:year/:month/:day"
-              loader={Day.loader as any}
-              element={<Day />}
-            />
+            <Route path="calendar" element={<Calendar />}>
+              <Route
+                path="month/:year/:month"
+                loader={Month.loader as any}
+                element={<Month />}
+              />
+              <Route
+                path="week/:weekNo"
+                loader={Week.loader as any}
+                element={<Week />}
+              />
+              <Route
+                path="day/:year/:month/:day"
+                loader={Day.loader as any}
+                element={<Day />}
+              />
+            </Route>
           </Route>
+          <Route
+            path="users"
+            element={<AllMembers />}
+            loader={AllMembers.loader}
+            errorElement={<Error />}
+          />
         </Route>
-        <Route
-          path="users"
-          element={<AllMembers />}
-          loader={AllMembers.loader}
-          errorElement={<Error />}
-        />
       </Route>
     </Route>
   )

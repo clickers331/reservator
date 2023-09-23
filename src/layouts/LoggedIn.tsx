@@ -1,14 +1,10 @@
-import styled from "styled-components";
 import RootNav from "../components/navs/RootNav";
 import { NavLink, Link, Outlet } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebaseObjects";
 
-const BodyContainer = styled.div`
-  min-height: 100vh;
-`;
 export default function LoggedIn() {
-  const { Header, LightText, LinkContainer, OutletContainer } = RootNav;
+  const { Header, LightText, LinkContainer } = RootNav;
   return (
     <RootNav>
       <Header>
@@ -16,8 +12,8 @@ export default function LoggedIn() {
       </Header>
       <LinkContainer>
         <NavLink to="/">ev</NavLink>
-        <NavLink to="/rendezvous">tüm randevular</NavLink>
-        <NavLink to="/users">üyeler</NavLink>
+        <NavLink to="/admin/rendezvous">tüm randevular</NavLink>
+        <NavLink to="/admin/users">üyeler</NavLink>
       </LinkContainer>
       <LinkContainer>
         <Link
