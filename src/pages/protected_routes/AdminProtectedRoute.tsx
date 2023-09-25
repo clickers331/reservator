@@ -10,7 +10,7 @@ export default function AdminProtectedRoute() {
   console.log(userData.isAdmin);
   return (
     <>
-      {userData.isAdmin ? null : <Navigate to="/" />}
+      {userData.admin ? null : <Navigate to="/" />}
       <Outlet />
     </>
   );

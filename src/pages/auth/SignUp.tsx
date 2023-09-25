@@ -20,6 +20,7 @@ import PhoneInput from "../../components/form/inputs/PhoneInput";
 import NameInput from "../../components/form/inputs/NameInput";
 import { ValidationError, object, string } from "yup";
 import ValidationMessage from "../../components/form/ValidationMessage";
+import { useState } from "react";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -56,10 +57,8 @@ const firebaseErrorMessages = {
 };
 
 export default function SignUp() {
-  const [createUserWithEmailAndPassword, newUser, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
-
   const [user] = useAuthState(auth);
+  const [error, setError] = useState({});
   return (
     <>
       {user ? (
@@ -79,15 +78,10 @@ export default function SignUp() {
             }}
             validationSchema={SignUpFormSchema}
             onSubmit={(values) => {
-              createUserWithEmailAndPassword(values.email, values.tcid);
+              setError(createNewAccount(values));
             }}
           >
             <Form>
-              {error && (
-                <ValidationMessage>
-                  {firebaseErrorMessages[error.code] || "Bir hata gerçekleşti"}
-                </ValidationMessage>
-              )}
               <StyledFormSection>
                 <StyledFormSectionHeader>
                   Kişisel Bilgiler

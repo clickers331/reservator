@@ -35,6 +35,11 @@ const LightText = styled.span`
   font-weight: 200;
 `;
 
+const SecondaryText = styled.span`
+  font-family: "IBM Plex Mono";
+  font-weight: 500;
+`;
+
 const LinkContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -64,3 +69,4 @@ RootNav.Header = StyledHeader;
 RootNav.LightText = LightText;
 RootNav.LinkContainer = LinkContainer;
 RootNav.OutletContainer = OutletContainer;
+RootNav.SecondaryText = SecondaryText;

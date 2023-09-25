@@ -20,6 +20,7 @@ import SignIn from "./pages/auth/SignIn.js";
 import SignUp from "./pages/auth/SignUp.js";
 import ProtectedRoute from "./pages/protected_routes/ProtectedRoute.js";
 import AdminProtectedRoute from "./pages/protected_routes/AdminProtectedRoute.js";
+import UserDetail from "./pages/UserDetail.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,6 +64,7 @@ const router = createBrowserRouter(
             loader={AllMembers.loader}
             errorElement={<Error />}
           />
+          <Route path="users/:uid" element={<UserDetail />} />
         </Route>
       </Route>
     </Route>

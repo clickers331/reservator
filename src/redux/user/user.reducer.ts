@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { resetUser, updateUserDetails } from "./userActions";
+import { resetUser, updateUserDetails } from "./user.actions";
 
 export interface UserState {
   email: string;

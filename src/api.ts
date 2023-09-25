@@ -4,7 +4,18 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { setDoc, doc, Timestamp, getDoc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  Timestamp,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  startAfter,
+} from "firebase/firestore";
 import {
   users,
   userDetailData,
@@ -16,9 +27,10 @@ import {
 } from "./data/mockDatabase.js";
 import { flattenObjectSimple } from "./utils.js";
 import { db, auth } from "./firebaseObjects.js";
-import { updateUserDetails } from "./redux/user/userActions.js";
-import { UserState } from "./redux/user/userReducer.js";
 import store from "./redux/store.js";
+import { updateUserDetails } from "./redux/user/user.actions.js";
+import { UserState } from "./redux/user/user.reducer.js";
+import { addToUsers } from "./redux/users/users.actions.js";
 
 export interface ErrorObject {
   error: string | number;
@@ -31,9 +43,18 @@ export interface FormattedDay {
 export type Rendezvous2D = Rendezvous[][];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-async function getAllUsers(): Promise<User[]> {
-  await sleep(1000);
-  return await users;
+async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
+  const q = query(
+    collection(db, "users"),
+    orderBy("birthDate"),
+    startAfter(lastRef || 0),
+    limit(lim)
+  );
+  const userData = await getDocs(q);
+  const usersObj: User[] = [];
+  userData.forEach((user) => (usersObj[user.id] = user as any));
+  store.dispatch(addToUsers(usersObj));
+  return userData;
 }
 
 async function getAllUsersWithDetails() {
@@ -64,7 +85,6 @@ async function getAllRendezvous(): Promise<AllRandezvous> {
   await sleep(1000);
   return allRandezvous as AllRandezvous;
 }
-
 async function getAllRendezvousYearFlat(year: string | number) {
   const rendezvous: AllRandezvous = await getAllRendezvous();
   const yearRendezvous: Rendezvous[][] = rendezvous[year];
@@ -190,10 +210,13 @@ async function createNewAccount(values: AuthFormValues) {
         birthDate: Timestamp.fromDate(new Date(values.birthDate as string)),
         birthPlace: values.birthPlace,
         bloodType: values.bloodType,
+        active: false,
+        lessonCount: 0,
       });
     }
   } catch (err: any) {
     console.log(err.message);
+    return err;
     //TODO
     //[ ] Automatically log in if the email exists and the credentials are correct.
   }
@@ -206,19 +229,6 @@ async function signIn(values: AuthFormValues) {
       values.email,
       values.tcid
     );
-    let userDetails: any; //Change it from any
-    try {
-      const docSnap = await getDoc(doc(db, "users", user.user.uid));
-      userDetails = docSnap.data();
-    } catch (err: any) {
-      console.log(err);
-    }
-    store.dispatch(
-      updateUserDetails({
-        uid: user.user.uid,
-        ...userDetails,
-      })
-    );
     console.log(user.user.uid);
   } catch (err: any) {
     console.log(err.message);
@@ -229,7 +239,7 @@ export {
   signIn,
   createNewAccount,
   getUser,
-  getAllUsers,
+  getPaginatedUsers,
   getOneUser,
   getAllUsersWithDetails,
   getAllRendezvous,
