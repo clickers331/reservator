@@ -21,6 +21,7 @@ import SignUp from "./pages/auth/SignUp.js";
 import ProtectedRoute from "./pages/protected_routes/ProtectedRoute.js";
 import AdminProtectedRoute from "./pages/protected_routes/AdminProtectedRoute.js";
 import UserDetail from "./pages/UserDetail.js";
+import MyRendezvous from "./pages/MyRendezvous.js";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<ProtectedRoute />}>
         <Route index element={<Home />} errorElement={<Error />} />
+        <Route path="my-rendezvous" element={<MyRendezvous />} />
         <Route path="admin" element={<AdminProtectedRoute />}>
           <Route
             path="rendezvous"

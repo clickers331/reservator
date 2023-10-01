@@ -31,9 +31,7 @@ const userReducer = createReducer(initialState, (builder) => {
       });
     })
     .addCase(resetUser, (state, action) => {
-      Object.entries(initialState).forEach(([key, value]) => {
-        state[key] = value;
-      });
+      state = initialState;
     });
 });
 

@@ -46,7 +46,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
   const q = query(
     collection(db, "users"),
-    orderBy("birthDate"),
+    orderBy("fullName"),
     startAfter(lastRef || 0),
     limit(lim)
   );
