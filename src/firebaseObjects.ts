@@ -27,11 +27,11 @@ onAuthStateChanged(auth, async (user) => {
     } catch (err: any) {
       console.log(err);
     }
+    userDetails.birthDate = userDetails.birthDate.seconds;
     store.dispatch(
       updateUserDetails({
         uid: user.uid,
         email: user.email,
-        birthDate: userDetails.birthDate.seconds,
         ...userDetails,
       })
     );

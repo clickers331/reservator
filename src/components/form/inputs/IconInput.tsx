@@ -24,6 +24,16 @@ const StyledIconInput = styled.div<StyledProps>`
   }
 `;
 const StyledField = styled.input<StyledProps>`
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  -moz-appearance: textfield;
+
   height: 100%;
   width: 100%;
   font-size: inherit;

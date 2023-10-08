@@ -1,8 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { addToUsers, resetUsers, setUsers } from "./users.actions";
+import {
+  addToUserLesson,
+  addToUsers,
+  resetUsers,
+  setUsers,
+} from "./users.actions";
 import { User } from "../../data/mockDatabase";
 
-interface UsersState {
+export interface UsersState {
   allUsers: {
     [key: string]: User[];
   };
@@ -15,6 +20,7 @@ const initialState = {
 const usersReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(setUsers, (state, action) => {
+      //Don't think I need it, can be replaced by "addToUsers"
       if (action.payload) console.log("yeyeye");
       //action.payload.forEach((user: User) => state.allUsers.push(user));
       else {
@@ -23,13 +29,17 @@ const usersReducer = createReducer(initialState, (builder) => {
     })
     .addCase(addToUsers, (state, action) => {
       if (action.payload)
-        state.allUsers = { ...state.allUsers, ...action.payload };
+        state.allUsers = { ...state.allUsers, ...action.payload } as any;
       else {
-        console.error("Action payload doesn't exist on 'setUsers'");
+        console.error("Action payload doesn't exist on 'addToUsers'");
       }
     })
     .addCase(resetUsers, (state, action) => {
       state.allUsers = {};
+    })
+    .addCase(addToUserLesson, (state, action) => {
+      state.allUsers[action.payload.uid].lessonCount =
+        state.allUsers[action.payload.uid].lessonCount + action.payload.amount;
     });
 });
 

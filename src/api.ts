@@ -15,6 +15,11 @@ import {
   orderBy,
   limit,
   startAfter,
+  updateDoc,
+  arrayUnion,
+  addDoc,
+  where,
+  startAt,
 } from "firebase/firestore";
 import {
   users,
@@ -28,9 +33,20 @@ import {
 import { flattenObjectSimple } from "./utils.js";
 import { db, auth } from "./firebaseObjects.js";
 import store from "./redux/store.js";
-import { updateUserDetails } from "./redux/user/user.actions.js";
+import {
+  updateUserDetails,
+  decreaseLessonCount,
+  increaseLessonCount,
+} from "./redux/user/user.actions.js";
 import { UserState } from "./redux/user/user.reducer.js";
-import { addToUsers } from "./redux/users/users.actions.js";
+import { addToUserLesson, addToUsers } from "./redux/users/users.actions.js";
+import {
+  addRendezvousAct,
+  cancelRendezvousAct,
+  addUserDetailRendezvous,
+  setRendezvous,
+  setUserDetailRendezvous,
+} from "./redux/rendezvous/rendezvous.actions.js";
 
 export interface ErrorObject {
   error: string | number;
@@ -51,8 +67,15 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     limit(lim)
   );
   const userData = await getDocs(q);
-  const usersObj: User[] = [];
-  userData.forEach((user) => (usersObj[user.id] = user as any));
+  const usersObj: User[] = {};
+  userData.forEach((user) => {
+    const userObj = {
+      uid: user.id,
+      ...user.data(),
+    };
+    userObj.birthDate = userObj.birthDate.seconds;
+    usersObj[user.id] = userObj;
+  });
   store.dispatch(addToUsers(usersObj));
   return userData;
 }
@@ -79,6 +102,44 @@ async function getOneUser(uid: string | number) {
     uid: user.uid,
     ...userDetail,
   };
+}
+
+async function getAllRendezvousFB() {
+  const q = query(
+    collection(db, "rendezvous"),
+    orderBy("date"),
+    startAt(Date.now())
+  );
+  const rendezvous = await getDocs(q);
+  const serializableRendezvous = rendezvous.docs.map((rend) => rend.data());
+  store.dispatch(setRendezvous(serializableRendezvous));
+
+  return rendezvous.docs;
+}
+
+async function getAllRendezvousUser(uid?: string) {
+  try {
+    const userID = uid || store.getState().user.uid;
+    const q = query(
+      collection(db, "rendezvous"),
+      where("date", ">=", Timestamp.fromDate(new Date(Date.now()))),
+      where("uid", "==", userID),
+      orderBy("date")
+    );
+    const userRendezvous = await getDocs(q);
+
+    const serializableRendezvous = userRendezvous.docs.map((rend) => {
+      const data = rend.data();
+      data.date = data.date.seconds;
+      data.id = rend.id;
+      return data;
+    });
+    console.log(serializableRendezvous);
+    store.dispatch(setUserDetailRendezvous(serializableRendezvous));
+    return userRendezvous.docs;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getAllRendezvous(): Promise<AllRandezvous> {
@@ -235,6 +296,69 @@ async function signIn(values: AuthFormValues) {
   }
 }
 
+async function decreaseLessonAmount(amount = 1) {
+  store.dispatch(decreaseLessonCount(amount));
+  const user = store.getState().user;
+
+  try {
+    await updateDoc(doc(db, "users", user.uid), {
+      lessonCount: user.lessonCount,
+    });
+  } catch (err) {
+    console.error("Error while decreasing the error amount: ", err);
+  }
+}
+
+async function addRendezvous(date: Date) {
+  try {
+    const user = store.getState().user;
+    const rendezvousObj = {
+      name: user.fullName,
+      cancelled: false,
+      date: Timestamp.fromDate(new Date(date)),
+      uid: user.uid,
+      completed: false,
+    };
+    await decreaseLessonAmount();
+    const rendezvousRef = await addDoc(
+      collection(db, "rendezvous"),
+      rendezvousObj
+    );
+    rendezvousObj.date = rendezvousObj.date.seconds;
+    rendezvousObj.id = rendezvousRef.id;
+    store.dispatch(addUserDetailRendezvous(rendezvousObj));
+    await updateDoc(doc(db, "users", user.uid), {
+      rendezvous: arrayUnion(rendezvousRef.id),
+    });
+    console.log("Successfully added rendezvous: ", rendezvousRef.id);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function addClass(uid, amount = 1) {
+  const user = store.getState().users.allUsers[uid];
+  try {
+    await updateDoc(doc(db, "users", uid), {
+      lessonCount: user.lessonCount + amount,
+    });
+    store.dispatch(addToUserLesson({ uid, amount }));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function cancelRendezvous(rendId) {
+  try {
+    await updateDoc(doc(db, "rendezvous", rendId), {
+      cancelled: true,
+    });
+    store.dispatch(cancelRendezvousAct(rendId));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 export {
   signIn,
   createNewAccount,
@@ -246,4 +370,10 @@ export {
   getAllRendezvousFormatted,
   getAllRendezvousDay,
   getAllRendezvousWeek,
+  decreaseLessonAmount,
+  addRendezvous,
+  getAllRendezvousFB,
+  getAllRendezvousUser,
+  cancelRendezvous,
+  addClass,
 };

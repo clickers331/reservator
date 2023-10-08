@@ -9,8 +9,11 @@ const Container = styled.div`
   border-radius: 30px;
   border: 5px solid ${({ theme }) => theme.colors.primaries[600]};
   width: 90%;
-  max-width: 1700px;
   min-height: 50vh;
+  border: solid 1px red;
+  * {
+    border: solid 1px black;
+  }
 `;
 
 const TagButton = styled.button`
@@ -32,7 +35,6 @@ const TableContainer = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   width: 100%;
-  padding: 2em;
 `;
 
 export { Container, TagButton, TableContainer };

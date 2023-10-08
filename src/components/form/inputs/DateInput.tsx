@@ -8,12 +8,11 @@ const StyledDateInput = styled(IconInput)`
   color: ${({ theme }) => theme.colors.neutrals[400]};
 `;
 
-export default function DateInput() {
+export default function DateInput({ name = "birthDate" }) {
   return (
     <StyledDateInput
       type="date"
-      name="birthDate"
-      onFocus='(this.type = "date")'
+      name={name}
       iconData={{
         iconLeft: {
           icon: CalendarIcon,

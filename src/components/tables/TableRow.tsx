@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { nanoid } from "nanoid";
-import { StyledProps } from "../styledUtils";
+import { StyledProps } from "../../styledUtils";
 import { Link } from "react-router-dom";
 
 interface TableRowProps {
   children: JSX.Element[];
-  to: string;
+  to?: string;
   rowState?: "cancelled" | "passive" | "active";
   debug?: boolean;
 }
@@ -18,7 +18,7 @@ const TableItemContainer = styled.div<{ children: JSX.Element }>`
   min-width: fit-content;
 `;
 
-const StyledTableRow = styled(Link)<
+const StyledTableRow: any = styled(Link)<
   TableRowContainerProps & StyledProps & { children: JSX.Element[] }
 >`
   text-decoration: none;
@@ -52,11 +52,25 @@ const StyledTableRow = styled(Link)<
 
 export default function TableRow({ children, rowState, to }: TableRowProps) {
   return (
-    <StyledTableRow to={to} $rowState={rowState}>
-      {children.map((child) => {
-        return <TableItemContainer key={nanoid()}>{child}</TableItemContainer>;
-      })}
-    </StyledTableRow>
+    <>
+      {to ? (
+        <StyledTableRow to={to} $rowState={rowState}>
+          {children.map((child) => {
+            return (
+              <TableItemContainer key={nanoid()}>{child}</TableItemContainer>
+            );
+          })}
+        </StyledTableRow>
+      ) : (
+        <StyledTableRow as="div" to="" $rowState={rowState}>
+          {children.map((child) => {
+            return (
+              <TableItemContainer key={nanoid()}>{child}</TableItemContainer>
+            );
+          })}
+        </StyledTableRow>
+      )}
+    </>
   );
 }
 

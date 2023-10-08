@@ -1,5 +1,10 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { resetUser, updateUserDetails } from "./user.actions";
+import {
+  resetUser,
+  updateUserDetails,
+  decreaseLessonCount,
+  increaseLessonCount,
+} from "./user.actions";
 
 export interface UserState {
   email: string;
@@ -10,6 +15,7 @@ export interface UserState {
   bloodType: string;
   fullName: string;
   phone: string;
+  lessonCount: string | number;
 }
 
 const initialState = {
@@ -32,6 +38,12 @@ const userReducer = createReducer(initialState, (builder) => {
     })
     .addCase(resetUser, (state, action) => {
       state = initialState;
+    })
+    .addCase(decreaseLessonCount, (state, action) => {
+      state.lessonCount = parseInt(state.lessonCount) - (action.payload || 1);
+    })
+    .addCase(increaseLessonCount, (state, action) => {
+      state.lessonCount = parseInt(state.lessonCount) + (action.payload || 1);
     });
 });
 

@@ -301,6 +301,4 @@ export interface Rendezvous {
   date: string | Date;
 }
 
-console.log(allRendezvous);
-
 export { users, userDetailData, allRendezvous as allRandezvous };

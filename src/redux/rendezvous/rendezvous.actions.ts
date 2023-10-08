@@ -1,7 +1,18 @@
 import { createAction } from "@reduxjs/toolkit";
+import { DocumentData } from "firebase/firestore";
 
-const setRendezvous = createAction('rendezvous/set')
+const setRendezvous = createAction("rendezvous/set");
+const setUserDetailRendezvous = createAction<DocumentData>(
+  "rendezvous/userDetail/set"
+);
+const addUserDetailRendezvous = createAction("rendezvous/userDetail/add");
+const addRendezvousAct = createAction("rendezvous/add");
+const cancelRendezvousAct = createAction("rendezvous/cancel");
 
 export {
-    setRendezvous
-}
+  setRendezvous,
+  addRendezvousAct,
+  setUserDetailRendezvous,
+  addUserDetailRendezvous,
+  cancelRendezvousAct,
+};

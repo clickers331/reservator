@@ -1,7 +1,15 @@
-import rendezvousReducer from "./rendezvous/rendezvous.reducer";
-import userReducer from "./user/user.reducer";
+import rendezvousReducer, {
+  RendezvousState,
+} from "./rendezvous/rendezvous.reducer";
+import userReducer, { UserState } from "./user/user.reducer";
 import { combineReducers } from "@reduxjs/toolkit";
-import usersReducer from "./users/users.reducer";
+import usersReducer, { UsersState } from "./users/users.reducer";
+
+export interface ReduxState {
+  user: UserState;
+  users: UsersState;
+  rendezvous: RendezvousState;
+}
 
 const rootReducer = combineReducers({
   user: userReducer,
