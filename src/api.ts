@@ -39,7 +39,11 @@ import {
   increaseLessonCount,
 } from "./redux/user/user.actions.js";
 import { UserState } from "./redux/user/user.reducer.js";
-import { addToUserLesson, addToUsers } from "./redux/users/users.actions.js";
+import {
+  activateUserAct,
+  addToUserLesson,
+  addToUsers,
+} from "./redux/users/users.actions.js";
 import {
   addRendezvousAct,
   cancelRendezvousAct,
@@ -105,16 +109,60 @@ async function getOneUser(uid: string | number) {
 }
 
 async function getAllRendezvousFB() {
-  const q = query(
-    collection(db, "rendezvous"),
-    orderBy("date"),
-    startAt(Date.now())
-  );
-  const rendezvous = await getDocs(q);
-  const serializableRendezvous = rendezvous.docs.map((rend) => rend.data());
-  store.dispatch(setRendezvous(serializableRendezvous));
+  try {
+    const q = query(
+      collection(db, "rendezvous"),
+      orderBy("date"),
+      startAt(Date.now())
+    );
+    const rendezvous = await getDocs(q);
 
-  return rendezvous.docs;
+    const serializableRendezvous = rendezvous.docs.map((rend) => {
+      const data = rend.data();
+      data.id = rend.id;
+      data.date = data.date.seconds;
+      return data;
+    });
+    store.dispatch(setRendezvous(serializableRendezvous));
+
+    return rendezvous.docs;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function activateUser(uid) {
+  const user = store.getState().users.allUsers[uid];
+  try {
+    await updateDoc(doc(db, "users", uid), {
+      active: !user.active,
+    });
+    store.dispatch(activateUserAct(uid));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getRendezvousDayFB(date) {
+  const newDate = new Date(date);
+  const currentDay = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth(),
+    newDate.getDate()
+  );
+  const dayAfterCurrentDay = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth(),
+    newDate.getDate() + 1
+  );
+  try {
+    const q = query(
+      collection(db, "rendezvous"),
+      where("date", ">=", currentDay),
+      where("date", "<", dayAfterCurrentDay)
+    );
+    const docs = await getDocs(q);
+  } catch (err) {}
 }
 
 async function getAllRendezvousUser(uid?: string) {
@@ -134,7 +182,6 @@ async function getAllRendezvousUser(uid?: string) {
       data.id = rend.id;
       return data;
     });
-    console.log(serializableRendezvous);
     store.dispatch(setUserDetailRendezvous(serializableRendezvous));
     return userRendezvous.docs;
   } catch (error) {
@@ -376,4 +423,5 @@ export {
   getAllRendezvousUser,
   cancelRendezvous,
   addClass,
+  activateUser,
 };

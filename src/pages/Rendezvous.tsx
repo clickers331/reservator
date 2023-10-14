@@ -6,13 +6,17 @@ import { useTheme } from "styled-components";
 
 export default function Rendezvous() {
   const theme = useTheme();
-
+  const today = new Date(Date.now());
   return (
     <>
       <h1>Randevular</h1>
       <Container>
         <ContainerNav backgroundColor={theme.colors.primaries[500]}>
-          <NavLink to="calendar">takvim</NavLink>
+          <NavLink
+            to={`calendar/day/${today.getFullYear()}/${today.getMonth()}/${today.getDate()}`}
+          >
+            gun
+          </NavLink>
           <NavLink to="list">liste</NavLink>
         </ContainerNav>
         <Outlet />

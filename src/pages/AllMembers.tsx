@@ -15,6 +15,7 @@ import { UserDetail, User } from "../data/mockDatabase.js";
 import { useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../redux/rootReducer.js";
+import { nanoid } from "nanoid";
 
 const CircleButtonContainer = styled.div`
   display: flex;
@@ -54,6 +55,7 @@ export default function AllMembers() {
 
                 return (
                   <TableRow
+                    key={nanoid()}
                     to={`/admin/users/${uid}`}
                     debug={true}
                     rowState={active ? "active" : "passive"}

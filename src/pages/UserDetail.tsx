@@ -6,7 +6,7 @@ import { StyledProps } from "../styledUtils";
 import Container from "../components/Container";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseObjects";
-import { addClass, getAllRendezvousUser } from "../api";
+import { activateUser, addClass, getAllRendezvousUser } from "../api";
 import UserRendezvous from "../components/UserRendezvous";
 import { ReduxState } from "../redux/rootReducer";
 import { Form, Formik } from "formik";
@@ -58,10 +58,22 @@ const DetailContainer = styled.div<StyledProps>`
   text-align: left;
 `;
 
+const ActivateButton = styled.button<StyledProps>`
+  font-size: 1.2rem;
+  border: none;
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.colors.accents.yellow[100] : theme.colors.primaries[400]};
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 0.3em;
+  cursor: pointer;
+`;
+
 const Flex = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: ${({ $jc }) => $jc || "flex-start"};
   gap: 1em;
 `;
 
@@ -83,7 +95,16 @@ export default function UserDetail() {
         <Container.Content>
           <button onClick={() => navigate(-1)}>Back</button>
           <div>
-            <h1>Detaylar</h1>
+            <Flex $jc={"space-between"}>
+              <h1>Detaylar</h1>
+              <ActivateButton
+                onClick={() => {
+                  activateUser(uid);
+                }}
+              >
+                {userData.active ? "Pasifleştir" : "Aktifleştir"}
+              </ActivateButton>
+            </Flex>
             <DetailsGrid>
               <DetailCategory style={{ gridArea: "pi" }}>
                 <DetailHeader>Kişisel Bilgiler</DetailHeader>
@@ -133,8 +154,9 @@ export default function UserDetail() {
               initialValues={{
                 classAmount: 0,
               }}
-              onSubmit={(values) => {
+              onSubmit={(values, { resetForm }) => {
                 addClass(uid, values.classAmount);
+                resetForm();
               }}
             >
               <Form>

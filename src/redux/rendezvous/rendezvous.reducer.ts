@@ -33,13 +33,24 @@ const rendezvousReducer = createReducer(initialState, (builder) => {
       state.userDetailRendezvousArr.push(action.payload);
     })
     .addCase(cancelRendezvousAct, (state, action) => {
-      const rendIndex = state.userDetailRendezvousArr.findIndex(
+      const rendIndexUserDetails = state.userDetailRendezvousArr.findIndex(
         (rend) => rend.id === action.payload
       );
-      state.userDetailRendezvousArr[rendIndex] = {
-        ...state.userDetailRendezvousArr[rendIndex],
-        cancelled: true,
-      };
+      const rendIndexGeneral = state.rendezvousArr.findIndex(
+        (rend) => rend.id === action.payload
+      );
+      if (rendIndexUserDetails >= 0) {
+        state.userDetailRendezvousArr[rendIndexUserDetails] = {
+          ...state.userDetailRendezvousArr[rendIndexUserDetails],
+          cancelled: true,
+        };
+      }
+      if (rendIndexGeneral >= 0) {
+        state.rendezvousArr[rendIndexGeneral] = {
+          ...state.rendezvousArr[rendIndexGeneral],
+          cancelled: true,
+        };
+      }
     });
 });
 

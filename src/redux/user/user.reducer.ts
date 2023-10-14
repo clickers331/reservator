@@ -37,7 +37,9 @@ const userReducer = createReducer(initialState, (builder) => {
       });
     })
     .addCase(resetUser, (state, action) => {
-      state = initialState;
+      for (const key in state) {
+        delete state[key];
+      }
     })
     .addCase(decreaseLessonCount, (state, action) => {
       state.lessonCount = parseInt(state.lessonCount) - (action.payload || 1);

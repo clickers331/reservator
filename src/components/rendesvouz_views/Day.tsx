@@ -46,6 +46,8 @@ const StyledRendezvousItemContainer = styled.div<StyledProps>`
   gap: 0.4em;
 `;
 
+const CancelDayBtn = styled.button``;
+
 type DayDataKeyValue = [string, Rendezvous[]];
 
 export default function Day() {
@@ -61,6 +63,7 @@ export default function Day() {
               <StyledDateHeader>
                 {day} {turkishMonthName}
               </StyledDateHeader>
+              <CancelDayBtn> Günü İptal Et</CancelDayBtn>
               {!dayData ? (
                 <h1>Bugün randevu yok</h1>
               ) : (
