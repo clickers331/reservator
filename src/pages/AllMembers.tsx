@@ -36,7 +36,7 @@ export default function AllMembers() {
   useEffect(() => {
     if (inView) {
       if (usersData[0]) {
-        getPaginatedUsers(usersData[usersData.length - 1]);
+        getPaginatedUsers(usersData[(usersData.length as any) - 1]);
       } else {
         getPaginatedUsers();
       }
