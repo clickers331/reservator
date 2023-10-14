@@ -10,7 +10,7 @@ import { User } from "../../data/mockDatabase";
 
 export interface UsersState {
   allUsers: {
-    [key: string]: User[];
+    [key: string]: User;
   };
 }
 
@@ -38,11 +38,11 @@ const usersReducer = createReducer(initialState, (builder) => {
     .addCase(resetUsers, (state, action) => {
       state.allUsers = {};
     })
-    .addCase(addToUserLesson, (state, action) => {
+    .addCase(addToUserLesson, (state: any, action: any) => {
       state.allUsers[action.payload.uid].lessonCount =
         state.allUsers[action.payload.uid].lessonCount + action.payload.amount;
     })
-    .addCase(activateUserAct, (state, action) => {
+    .addCase(activateUserAct, (state: any, action: any) => {
       state.allUsers[action.payload].active =
         !state.allUsers[action.payload].active;
     });

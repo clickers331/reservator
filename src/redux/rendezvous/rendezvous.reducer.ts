@@ -20,24 +20,24 @@ const initialState = {
 
 const rendezvousReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(setRendezvous, (state, action) => {
+    .addCase(setRendezvous, (state: any, action) => {
       state.rendezvousArr = action.payload;
     })
-    .addCase(addRendezvousAct, (state, action) => {
-      state.rendezvousArr.push(action.payload);
+    .addCase(addRendezvousAct, (state, action: any) => {
+      state.rendezvousArr.push(action.payload as never);
     })
-    .addCase(setUserDetailRendezvous, (state, action) => {
+    .addCase(setUserDetailRendezvous, (state: any, action) => {
       state.userDetailRendezvousArr = action.payload;
     })
     .addCase(addUserDetailRendezvous, (state, action) => {
-      state.userDetailRendezvousArr.push(action.payload);
+      state.userDetailRendezvousArr.push(action.payload as never);
     })
-    .addCase(cancelRendezvousAct, (state, action) => {
+    .addCase(cancelRendezvousAct, (state: any, action) => {
       const rendIndexUserDetails = state.userDetailRendezvousArr.findIndex(
-        (rend) => rend.id === action.payload
+        (rend: any) => rend.id === action.payload
       );
       const rendIndexGeneral = state.rendezvousArr.findIndex(
-        (rend) => rend.id === action.payload
+        (rend: any) => rend.id === action.payload
       );
       if (rendIndexUserDetails >= 0) {
         state.userDetailRendezvousArr[rendIndexUserDetails] = {
