@@ -18,7 +18,7 @@ const Seperator = styled.span`
 
 export default function LoggedIn() {
   const { Header, LightText, LinkContainer, SecondaryText } = RootNav;
-  const userData = useSelector((state) => state.user);
+  const userData = useSelector((state: any) => state.user);
   return (
     <RootNav>
       <Header>

@@ -9,7 +9,7 @@ const StyledContainer = styled.div`
   border-radius: 30px;
   border: 5px solid ${({ theme }) => theme.colors.primaries[600]};
   width: 90%;
-  max-width: ${({ $maxWidth }) => $maxWidth || "1700px"};
+  max-width: ${({ $maxWidth }: any) => $maxWidth || "1700px"};
   min-height: 50vh;
 `;
 
@@ -24,7 +24,7 @@ interface ContainerProps {
 }
 
 export default function Container({ children, maxWidth }: ContainerProps) {
-  return <StyledContainer $maxWidth={maxWidth}>{children}</StyledContainer>;
+  return <StyledContainer>{children}</StyledContainer>;
 }
 
 Container.Content = ContainerContent;

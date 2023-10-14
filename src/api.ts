@@ -71,12 +71,12 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     limit(lim)
   );
   const userData = await getDocs(q);
-  const usersObj: User[] = {};
+  const usersObj: any = {};
   userData.forEach((user) => {
     const userObj = {
       uid: user.id,
       ...user.data(),
-    };
+    } as any;
     userObj.birthDate = userObj.birthDate.seconds;
     usersObj[user.id] = userObj;
   });
@@ -131,8 +131,8 @@ async function getAllRendezvousFB() {
   }
 }
 
-async function activateUser(uid) {
-  const user = store.getState().users.allUsers[uid];
+async function activateUser(uid: any) {
+  const user = store.getState().users.allUsers[uid] as any;
   try {
     await updateDoc(doc(db, "users", uid), {
       active: !user.active,
@@ -143,7 +143,7 @@ async function activateUser(uid) {
   }
 }
 
-async function getRendezvousDayFB(date) {
+async function getRendezvousDayFB(date: any) {
   const newDate = new Date(date);
   const currentDay = new Date(
     newDate.getFullYear(),
@@ -365,13 +365,13 @@ async function addRendezvous(date: Date) {
       date: Timestamp.fromDate(new Date(date)),
       uid: user.uid,
       completed: false,
-    };
+    } as any;
     await decreaseLessonAmount();
     const rendezvousRef = await addDoc(
       collection(db, "rendezvous"),
       rendezvousObj
     );
-    rendezvousObj.date = rendezvousObj.date.seconds;
+    rendezvousObj.date = rendezvousObj.date.seconds as any;
     rendezvousObj.id = rendezvousRef.id;
     store.dispatch(addUserDetailRendezvous(rendezvousObj));
     await updateDoc(doc(db, "users", user.uid), {
@@ -383,8 +383,8 @@ async function addRendezvous(date: Date) {
   }
 }
 
-async function addClass(uid, amount = 1) {
-  const user = store.getState().users.allUsers[uid];
+async function addClass(uid: any, amount = 1) {
+  const user = store.getState().users.allUsers[uid] as any;
   try {
     await updateDoc(doc(db, "users", uid), {
       lessonCount: user.lessonCount + amount,
@@ -395,7 +395,7 @@ async function addClass(uid, amount = 1) {
   }
 }
 
-async function cancelRendezvous(rendId) {
+async function cancelRendezvous(rendId: any) {
   try {
     await updateDoc(doc(db, "rendezvous", rendId), {
       cancelled: true,

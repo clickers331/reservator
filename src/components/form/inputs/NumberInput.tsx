@@ -1,7 +1,7 @@
 import IconInput from "./IconInput";
 import { ReactComponent as FileAddIcon } from "../../../assets/icons/file_add.svg";
 
-export default function NumberInput({ name, placeholder }) {
+export default function NumberInput({ name, placeholder }: any) {
   return (
     <IconInput
       type="number"

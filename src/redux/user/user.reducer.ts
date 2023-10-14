@@ -31,20 +31,20 @@ const initialState = {
 
 const userReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(updateUserDetails, (state, action) => {
+    .addCase(updateUserDetails, (state: any, action) => {
       Object.entries(action.payload).forEach(([key, value]) => {
         state[key] = value;
       });
     })
-    .addCase(resetUser, (state, action) => {
+    .addCase(resetUser, (state: any, action) => {
       for (const key in state) {
         delete state[key];
       }
     })
-    .addCase(decreaseLessonCount, (state, action) => {
+    .addCase(decreaseLessonCount, (state: any, action) => {
       state.lessonCount = parseInt(state.lessonCount) - (action.payload || 1);
     })
-    .addCase(increaseLessonCount, (state, action) => {
+    .addCase(increaseLessonCount, (state: any, action) => {
       state.lessonCount = parseInt(state.lessonCount) + (action.payload || 1);
     });
 });

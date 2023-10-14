@@ -32,7 +32,6 @@ const StyledField = styled.input<StyledProps>`
   }
 
   /* Firefox */
-  -moz-appearance: textfield;
 
   height: 100%;
   width: 100%;
