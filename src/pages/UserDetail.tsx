@@ -58,7 +58,7 @@ const DetailContainer = styled.div<StyledProps>`
   text-align: left;
 `;
 
-const ActivateButton = styled.button<StyledProps>`
+const ActivateButton = styled.button<any>`
   font-size: 1.2rem;
   border: none;
   background-color: ${({ $active, theme }) =>
@@ -69,7 +69,7 @@ const ActivateButton = styled.button<StyledProps>`
   cursor: pointer;
 `;
 
-const Flex = styled.div`
+const Flex = styled.div<any>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -82,7 +82,7 @@ export default function UserDetail() {
   getAllRendezvousUser(uid);
   const userData = useSelector(
     (state: ReduxState) => state.users.allUsers[uid]
-  );
+  ) as any;
 
   const birthDate = new Date(userData.birthDate * 1000);
   const birthDateString = `${birthDate.getDate()}/${
