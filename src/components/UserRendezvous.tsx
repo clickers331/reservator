@@ -43,8 +43,9 @@ export default function UserRendezvous() {
                 <CircleButtonContainer>
                   {cancelled || (
                     <CancelBtn
-                      clickHandler={(e) => {
-                        cancelRendezvous(id);
+                      clickHandler={async (e) => {
+                        const err = await cancelRendezvous(id);
+                        if (err) console.log(err.error);
                       }}
                     />
                   )}

@@ -11,10 +11,11 @@ import Container from "../components/Container";
 import { Formik, Field, Form } from "formik";
 import { ReduxState } from "../redux/rootReducer";
 import styled, { useTheme } from "styled-components";
-import DateInput from "../components/form/inputs/DateInput";
+import { ReactComponent as CalendarIcon } from "../assets/icons/calendar_icon.svg";
 import SelectInput from "../components/form/inputs/SelectInput";
 import { ReactComponent as TimeIcon } from "../assets/icons/time.svg";
 import AddBtn from "../components/buttons/circle_buttons/AddBtn";
+import { dayNamesTR } from "../utils";
 
 const StyledLessonCountText = styled.p`
   font-size: 1.5rem;
@@ -32,6 +33,22 @@ async function loader() {
 
 export default function MyRendezvous() {
   const user = useSelector((state: ReduxState) => state.user);
+  const today = new Date(Date.now());
+  const todayPlusOne = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + 10
+  );
+  const todayPlusTwo = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + 2
+  );
+  const todayPlusThree = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate() + 3
+  );
 
   return (
     <Container maxWidth="1400px">
@@ -42,25 +59,72 @@ export default function MyRendezvous() {
         </StyledLessonCountText>
         <Formik
           initialValues={{
-            date: new Date(Date.now()),
+            date: today,
             hour: "7",
           }}
           onSubmit={(values) => {
-            console.log(values);
-            console.log("eysluye");
-            const valueDate = new Date(values.date);
-            const newDate = new Date(
-              valueDate.getFullYear(),
-              valueDate.getMonth(),
-              valueDate.getDate(),
-              parseInt(values.hour)
-            );
-            addRendezvous(newDate);
+            if (parseInt(user.lessonCount as string) > 0) {
+              console.log(values);
+
+              const valueDate = new Date(values.date);
+              const newDate = new Date(
+                valueDate.getFullYear(),
+                valueDate.getMonth(),
+                valueDate.getDate(),
+                parseInt(values.hour)
+              );
+              console.log(newDate);
+              addRendezvous(newDate);
+            }
           }}
         >
           <Form>
             <InputRow>
-              <DateInput name="date" />
+              <SelectInput
+                name="date"
+                placeholder=""
+                iconData={{
+                  iconLeft: {
+                    icon: CalendarIcon,
+                    fill: true,
+                    stroke: true,
+                  },
+                }}
+              >
+                <option
+                  value={`${today.getFullYear()}-${today.getMonth() + 1}-${
+                    today.getDate() + 1
+                  }`}
+                >
+                  {dayNamesTR[today.getDay()]}
+                </option>
+                <option
+                  value={`${today.getFullYear()}-${today.getMonth() + 1}-${
+                    today.getDate() + 2
+                  }`}
+                >
+                  {
+                    dayNamesTR[
+                      today.getDay() + 1 > 6
+                        ? today.getDay() - 6
+                        : today.getDay() + 1
+                    ]
+                  }
+                </option>
+                <option
+                  value={`${today.getFullYear()}-${today.getMonth() + 1}-${
+                    today.getDate() + 3
+                  }`}
+                >
+                  {
+                    dayNamesTR[
+                      today.getDay() + 2 > 6
+                        ? today.getDay() - 5
+                        : today.getDay() + 2
+                    ]
+                  }
+                </option>
+              </SelectInput>
               <SelectInput
                 name="hour"
                 placeholder=""

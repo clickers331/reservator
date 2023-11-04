@@ -29,7 +29,7 @@ const SignInFormSchema = object({
   email: string()
     .email("Emailinizi doğru giriniz")
     .required("Emailiniz gereklidir"),
-  tcid: string()
+  password: string()
     .length(11, "11 Karakter Olmalı")
     .required("Şifreniz gereklidir"),
 });

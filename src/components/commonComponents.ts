@@ -1,21 +1,5 @@
 import styled from "styled-components";
 
-const Container = styled.div`
-  overflow: hidden;
-  margin: 3em 0;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  border-radius: 30px;
-  border: 5px solid ${({ theme }) => theme.colors.primaries[600]};
-  width: 90%;
-  min-height: 50vh;
-  border: solid 1px red;
-  * {
-    border: solid 1px black;
-  }
-`;
-
 const TagButton = styled.button`
   padding: 1em;
   background-color: ${({ theme }) => theme.colors.neutrals[700]};
@@ -37,4 +21,4 @@ const TableContainer = styled.div`
   width: 100%;
 `;
 
-export { Container, TagButton, TableContainer };
+export { TagButton, TableContainer };

@@ -48,7 +48,7 @@ const StyledIconButton = styled.button<StyledIconButtonProps>`
   cursor: pointer;
   background: ${({ $backgroundColor }) => $backgroundColor};
 `;
-const StyledIcon = styled.div<StyledIconProps>`
+const StyledIcon = styled.svg<StyledIconProps>`
   width: ${({ $iconWidth, $size }) => $iconWidth || $size};
   height: ${({ $iconWidth, $size }) => $iconWidth || $size};
 `;

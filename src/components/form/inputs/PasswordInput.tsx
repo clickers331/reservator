@@ -32,7 +32,7 @@ export default function PasswordInput({
   return (
     <IconInput
       type={passwordVisibility ? "text" : "password"}
-      name="tcid"
+      name="password"
       placeholder={id ? "TC Kimlik No." : "Şifre"}
       iconData={iconData}
     />

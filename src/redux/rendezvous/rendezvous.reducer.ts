@@ -6,7 +6,6 @@ import {
   setRendezvous,
   setUserDetailRendezvous,
 } from "./rendezvous.actions";
-import { Action } from "@remix-run/router";
 
 export interface RendezvousState {
   rendezvousArr: any[];

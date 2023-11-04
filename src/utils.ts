@@ -16,6 +16,16 @@ const monthNamesTR = [
   "Aralık",
 ];
 
+const dayNamesTR = [
+  "Pazartesi",
+  "Salı",
+  "Çarşamba",
+  "Perşembe",
+  "Cuma",
+  "Cumartesi",
+  "Pazar",
+];
+
 const monthNamesURL = [
   "january",
   "february",
@@ -80,4 +90,5 @@ export {
   flattenObjectSimple,
   monthNamesTR,
   monthNamesURL,
+  dayNamesTR,
 };

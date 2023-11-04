@@ -300,7 +300,7 @@ export interface AuthFormValues {
   bloodType?: string;
   birthPlace?: string;
   birthDate?: string;
-  tcid: string;
+  password: string;
 }
 
 async function createNewAccount(values: AuthFormValues) {
@@ -308,7 +308,7 @@ async function createNewAccount(values: AuthFormValues) {
     const user = await createUserWithEmailAndPassword(
       auth,
       values.email,
-      values.tcid
+      values.password
     );
     if (user) {
       await setDoc(doc(db, `users/${user.user.uid}`), {
@@ -316,7 +316,6 @@ async function createNewAccount(values: AuthFormValues) {
         fullName: values.fullName,
         phone: values.phone,
         birthDate: Timestamp.fromDate(new Date(values.birthDate as string)),
-        birthPlace: values.birthPlace,
         bloodType: values.bloodType,
         active: false,
         lessonCount: 0,
@@ -335,7 +334,7 @@ async function signIn(values: AuthFormValues) {
     const user = await signInWithEmailAndPassword(
       auth,
       values.email,
-      values.tcid
+      values.password
     );
     console.log(user.user.uid);
   } catch (err: any) {
@@ -396,14 +395,30 @@ async function addClass(uid: any, amount = 1) {
 }
 
 async function cancelRendezvous(rendId: any) {
+  const currentTimeData = await getCurrentTime();
+  const dateNow = new Date(currentTimeData.datetime);
+  console.log(dateNow);
   try {
-    await updateDoc(doc(db, "rendezvous", rendId), {
-      cancelled: true,
-    });
-    store.dispatch(cancelRendezvousAct(rendId));
+    if (dateNow.getHours() < 18) {
+      await updateDoc(doc(db, "rendezvous", rendId), {
+        cancelled: true,
+      });
+      store.dispatch(cancelRendezvousAct(rendId));
+    } else {
+      throw Error("The time is past 7pm");
+    }
   } catch (err) {
     console.error(err);
+    return {
+      error: err,
+    };
   }
+}
+
+async function getCurrentTime() {
+  const res = await fetch("http://worldtimeapi.org/api/timezone/Turkey");
+  const data = await res.json();
+  return data;
 }
 
 export {
@@ -424,4 +439,5 @@ export {
   cancelRendezvous,
   addClass,
   activateUser,
+  getCurrentTime,
 };
