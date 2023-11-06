@@ -7,7 +7,7 @@ import {
   getAllRendezvousUser,
 } from "../api";
 import UserRendezvous from "../components/UserRendezvous";
-import Container from "../components/Container";
+import Container from "../containers/Container";
 import { Formik, Field, Form } from "formik";
 import { ReduxState } from "../redux/rootReducer";
 import styled, { useTheme } from "styled-components";
@@ -32,23 +32,10 @@ async function loader() {
 }
 
 export default function MyRendezvous() {
+  const today = new Date(); // get today's date
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
   const user = useSelector((state: ReduxState) => state.user);
-  const today = new Date(Date.now());
-  const todayPlusOne = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + 10
-  );
-  const todayPlusTwo = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + 2
-  );
-  const todayPlusThree = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + 3
-  );
 
   return (
     <Container maxWidth="1400px">
@@ -62,7 +49,7 @@ export default function MyRendezvous() {
             date: today,
             hour: "7",
           }}
-          onSubmit={(values) => {
+          onSubmit={(values, { setSubmitting }) => {
             if (parseInt(user.lessonCount as string) > 0) {
               console.log(values);
 
@@ -74,76 +61,79 @@ export default function MyRendezvous() {
                 parseInt(values.hour)
               );
               console.log(newDate);
-              addRendezvous(newDate);
+
+              addRendezvous(newDate).then(() => setSubmitting(false));
             }
           }}
         >
-          <Form>
-            <InputRow>
-              <SelectInput
-                name="date"
-                placeholder=""
-                iconData={{
-                  iconLeft: {
-                    icon: CalendarIcon,
-                    fill: true,
-                    stroke: true,
-                  },
-                }}
-              >
-                <option
-                  value={`${today.getFullYear()}-${today.getMonth() + 1}-${
-                    today.getDate() + 1
-                  }`}
+          {(props) => (
+            <Form>
+              <InputRow>
+                <SelectInput
+                  name="date"
+                  placeholder=""
+                  iconData={{
+                    iconLeft: {
+                      icon: CalendarIcon,
+                      fill: true,
+                      stroke: true,
+                    },
+                  }}
                 >
-                  {dayNamesTR[today.getDay()]}
-                </option>
-                <option
-                  value={`${today.getFullYear()}-${today.getMonth() + 1}-${
-                    today.getDate() + 2
-                  }`}
+                  <option
+                    value={`${today.getFullYear()}-${today.getMonth() + 1}-${
+                      today.getDate() + 1
+                    }`}
+                  >
+                    {dayNamesTR[today.getDay()]}
+                  </option>
+                  <option
+                    value={`${today.getFullYear()}-${today.getMonth() + 1}-${
+                      today.getDate() + 2
+                    }`}
+                  >
+                    {
+                      dayNamesTR[
+                        today.getDay() + 1 > 6
+                          ? today.getDay() - 6
+                          : today.getDay() + 1
+                      ]
+                    }
+                  </option>
+                  <option
+                    value={`${today.getFullYear()}-${today.getMonth() + 1}-${
+                      today.getDate() + 3
+                    }`}
+                  >
+                    {
+                      dayNamesTR[
+                        today.getDay() + 2 > 6
+                          ? today.getDay() - 5
+                          : today.getDay() + 2
+                      ]
+                    }
+                  </option>
+                </SelectInput>
+                <SelectInput
+                  name="hour"
+                  placeholder=""
+                  iconData={{
+                    iconLeft: {
+                      icon: TimeIcon,
+                      stroke: true,
+                      fill: false,
+                    },
+                  }}
                 >
-                  {
-                    dayNamesTR[
-                      today.getDay() + 1 > 6
-                        ? today.getDay() - 6
-                        : today.getDay() + 1
-                    ]
-                  }
-                </option>
-                <option
-                  value={`${today.getFullYear()}-${today.getMonth() + 1}-${
-                    today.getDate() + 3
-                  }`}
-                >
-                  {
-                    dayNamesTR[
-                      today.getDay() + 2 > 6
-                        ? today.getDay() - 5
-                        : today.getDay() + 2
-                    ]
-                  }
-                </option>
-              </SelectInput>
-              <SelectInput
-                name="hour"
-                placeholder=""
-                iconData={{
-                  iconLeft: {
-                    icon: TimeIcon,
-                    stroke: true,
-                    fill: false,
-                  },
-                }}
-              >
-                <option value="5">5:00</option>
-                <option value="6">6:00</option>
-                <option value="7">7:00</option>
-                <option value="8">8:00</option>
-              </SelectInput>
-              <AddBtn />
-            </InputRow>
-          </Form>
+                  <option value="5">5:00</option>
+                  <option value="6">6:00</option>
+                  <option value="7">7:00</option>
+                  <option value="8">8:00</option>
+                </SelectInput>
+                <AddBtn disabled={props.isSubmitting} />
+              </InputRow>
+            </Form>
+          )}
         </Formik>
         <h1>Randevularım</h1>
         <UserRendezvous />

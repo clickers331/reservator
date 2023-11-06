@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { StyledProps } from "../styledUtils";
-import Container from "../components/Container";
+import Container from "../containers/Container";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseObjects";
 import { activateUser, addClass, getAllRendezvousUser } from "../api";
@@ -67,6 +67,11 @@ const ActivateButton = styled.button<any>`
   padding: 0.5em 1em;
   border-radius: 0.3em;
   cursor: pointer;
+  transition: ${({ theme }) => theme.animations.transition};
+  &:disabled {
+    color: #bbbbbb;
+    background-color: gray;
+  }
 `;
 
 const Flex = styled.div<any>`
@@ -98,8 +103,11 @@ export default function UserDetail() {
             <Flex $jc={"space-between"}>
               <h1>Detaylar</h1>
               <ActivateButton
-                onClick={() => {
-                  activateUser(uid);
+                onClick={(e) => {
+                  e.target.disabled = true;
+                  activateUser(uid).then(() => {
+                    e.target.disabled = false;
+                  });
                 }}
               >
                 {userData.active ? "Pasifleştir" : "Aktifleştir"}
@@ -154,17 +162,22 @@ export default function UserDetail() {
               initialValues={{
                 classAmount: 0,
               }}
-              onSubmit={(values, { resetForm }) => {
-                addClass(uid, values.classAmount);
+              onSubmit={(values, { resetForm, setSubmitting }) => {
+                setSubmitting(true);
+                addClass(uid, values.classAmount).then(() => {
+                  setSubmitting(false);
+                });
                 resetForm();
               }}
             >
-              <Form>
-                <Flex>
-                  <NumberInput name="classAmount" placeholder={"10"} />
-                  <AddBtn />
-                </Flex>
-              </Form>
+              {(props) => (
+                <Form>
+                  <Flex>
+                    <NumberInput name="classAmount" placeholder={"10"} />
+                    <AddBtn disabled={props.isSubmitting} />
+                  </Flex>
+                </Form>
+              )}
             </Formik>
           </div>
           <div>

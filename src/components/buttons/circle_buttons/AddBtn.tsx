@@ -4,7 +4,7 @@ import { useTheme } from "styled-components";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../../redux/rootReducer";
 
-export default function AddBtn() {
+export default function AddBtn(props) {
   const theme = useTheme();
   const user = useSelector((state: ReduxState) => state.user);
   return (
@@ -15,7 +15,7 @@ export default function AddBtn() {
       borderRadius="10px"
       fill={false}
       stroke={true}
-      disabled={user.lessonCount <= 0}
+      disabled={user.lessonCount <= 0 || props.disabled}
     />
   );
 }

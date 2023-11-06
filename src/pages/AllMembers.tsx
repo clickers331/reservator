@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { getPaginatedUsers } from "../api.js";
 import { defer, useLoaderData, Await } from "react-router-dom";
 import TableContainer from "../components/tables/TableContainer.js";
-import Container from "../components/Container.js";
+import Container from "../containers/Container.js";
 import SearchNav from "../components/navs/SearchNav.jsx";
 import GuideRow from "../components/tables/GuideRow.js";
 import TableRow from "../components/tables/TableRow.js";

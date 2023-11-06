@@ -1,5 +1,5 @@
 import React from "react";
-import Container from "../components/Container";
+import Container from "../containers/Container";
 import ContainerNav from "../components/navs/ContainerNav";
 import { NavLink, Outlet } from "react-router-dom";
 import { useTheme } from "styled-components";

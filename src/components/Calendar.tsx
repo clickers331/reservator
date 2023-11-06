@@ -13,14 +13,9 @@ export default function Calendar() {
     <>
       <ContainerNav backgroundColor={theme.colors.primaries[500]}>
         <NavLink
-          to={`month/${today.getFullYear()}/${today.getMonth() + 1}`}
-          end
-        >
-          ay
-        </NavLink>
-        <NavLink to={`week/${getWeekNo(today)}`}>hafta</NavLink>
-        <NavLink
-          to={`day/${today.getFullYear()}/${today.getMonth()}/${today.getDate()}`}
+          to={`day/${today.getFullYear()}/${
+            today.getMonth() + 1
+          }/${today.getDate()}`}
         >
           gün
         </NavLink>
@@ -29,3 +24,11 @@ export default function Calendar() {
     </>
   );
 }
+
+//<NavLink
+//to={`month/${today.getFullYear()}/${today.getMonth() + 1}`}
+//end
+//>
+//ay
+//</NavLink>
+//<NavLink to={`week/${getWeekNo(today)}`}>hafta</NavLink>

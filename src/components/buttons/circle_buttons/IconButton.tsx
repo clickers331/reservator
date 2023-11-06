@@ -32,6 +32,7 @@ interface IconButtonProps {
   clickHandler?: MouseEventHandler<HTMLButtonElement> | undefined;
   type?: string;
   borderRadius?: string;
+  disabled?: boolean;
 }
 
 const StyledIconButton = styled.button<StyledIconButtonProps>`
@@ -47,15 +48,19 @@ const StyledIconButton = styled.button<StyledIconButtonProps>`
   align-items: center;
   cursor: pointer;
   background: ${({ $backgroundColor }) => $backgroundColor};
+  &:disabled {
+    background: gray;
+  }
 `;
 const StyledIcon = styled.svg<StyledIconProps>`
+  pointer-events: none;
   width: ${({ $iconWidth, $size }) => $iconWidth || $size};
   height: ${({ $iconWidth, $size }) => $iconWidth || $size};
 `;
 
 export default function IconButton({
   icon = SearchIcon,
-  size = "48px",
+  size = "3rem",
   backgroundColor = "gray",
   iconColor = "white",
   fill = true,
@@ -64,12 +69,13 @@ export default function IconButton({
   clickHandler = () => {},
   type = "submit",
   borderRadius = "50%",
-  text,
+  disabled = false,
 }: IconButtonProps) {
   return (
     <StyledIconButton
       type={type}
       onClick={clickHandler}
+      disabled={disabled}
       $size={size}
       $backgroundColor={backgroundColor}
       $borderRadius={borderRadius}

@@ -22,6 +22,8 @@ import ProtectedRoute from "./pages/protected_routes/ProtectedRoute.js";
 import AdminProtectedRoute from "./pages/protected_routes/AdminProtectedRoute.js";
 import UserDetail from "./pages/UserDetail.js";
 import MyRendezvous from "./pages/MyRendezvous.js";
+import { ReactNotifications } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -79,10 +81,13 @@ const router = createBrowserRouter(
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <>
+      <ReactNotifications />
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </>
   );
 }
 

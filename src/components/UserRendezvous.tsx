@@ -6,6 +6,7 @@ import CancelBtn from "./buttons/circle_buttons/CancelBtn";
 import { useSelector } from "react-redux";
 import { cancelRendezvous } from "../api";
 import { ReduxState } from "../redux/rootReducer";
+import { Store } from "react-notifications-component";
 
 const CircleButtonContainer = styled.div`
   display: flex;
@@ -44,8 +45,10 @@ export default function UserRendezvous() {
                   {cancelled || (
                     <CancelBtn
                       clickHandler={async (e) => {
-                        const err = await cancelRendezvous(id);
-                        if (err) console.log(err.error);
+                        e.target.disabled = true;
+                        cancelRendezvous(id).then(
+                          () => (e.target.disabled = false)
+                        );
                       }}
                     />
                   )}

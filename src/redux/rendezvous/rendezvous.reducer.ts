@@ -3,6 +3,7 @@ import {
   addRendezvousAct,
   addUserDetailRendezvous,
   cancelRendezvousAct,
+  setDayRendezvous,
   setRendezvous,
   setUserDetailRendezvous,
 } from "./rendezvous.actions";
@@ -15,12 +16,16 @@ export interface RendezvousState {
 const initialState = {
   rendezvousArr: [],
   userDetailRendezvousArr: [],
+  dayRendezvousArr: [],
 };
 
 const rendezvousReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(setRendezvous, (state: any, action) => {
       state.rendezvousArr = action.payload;
+    })
+    .addCase(setDayRendezvous, (state: any, action) => {
+      state.dayRendezvousArr = action.payload;
     })
     .addCase(addRendezvousAct, (state, action: any) => {
       state.rendezvousArr.push(action.payload as never);

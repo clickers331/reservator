@@ -50,7 +50,11 @@ import {
   addUserDetailRendezvous,
   setRendezvous,
   setUserDetailRendezvous,
+  setDayRendezvous,
 } from "./redux/rendezvous/rendezvous.actions.js";
+import { Store } from "react-notifications-component";
+
+const SYSTEM_CLOSE_TIME = 19;
 
 export interface ErrorObject {
   error: string | number;
@@ -143,14 +147,16 @@ async function activateUser(uid: any) {
   }
 }
 
-async function getRendezvousDayFB(date: any) {
-  const newDate = new Date(date);
-  const currentDay = new Date(
+async function getRendezvousDayFB(date: string) {
+  console.log("function running");
+  const newDate = new Date(date) || new Date();
+  console.log(newDate);
+  const today = new Date(
     newDate.getFullYear(),
     newDate.getMonth(),
     newDate.getDate()
   );
-  const dayAfterCurrentDay = new Date(
+  const tomorrow = new Date(
     newDate.getFullYear(),
     newDate.getMonth(),
     newDate.getDate() + 1
@@ -158,11 +164,61 @@ async function getRendezvousDayFB(date: any) {
   try {
     const q = query(
       collection(db, "rendezvous"),
-      where("date", ">=", currentDay),
-      where("date", "<", dayAfterCurrentDay)
+      where("date", ">=", Timestamp.fromDate(today)),
+      where("date", "<", Timestamp.fromDate(tomorrow))
     );
     const docs = await getDocs(q);
-  } catch (err) {}
+    const rendezvous = {};
+    docs.forEach((doc) => {
+      const data = doc.data();
+      data.date = new Date(data.date.seconds * 1000);
+      if (rendezvous[data.date.getHours()]) {
+        rendezvous[data.date.getHours()].push(data);
+      } else {
+        rendezvous[data.date.getHours()] = [data];
+      }
+    });
+    store.dispatch(setDayRendezvous(rendezvous));
+    return rendezvous;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function cancelDayFB(date: string) {
+  console.log("function running");
+  const newDate = new Date(Date.now());
+  console.log(newDate);
+  const today = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth(),
+    newDate.getDate()
+  );
+  const tomorrow = new Date(
+    newDate.getFullYear(),
+    newDate.getMonth(),
+    newDate.getDate() + 1
+  );
+  try {
+    const q = query(
+      collection(db, "rendezvous"),
+      where("date", ">=", Timestamp.fromDate(today)),
+      where("date", "<", Timestamp.fromDate(tomorrow))
+    );
+    const docs = await getDocs(q);
+    const rendezvous = {};
+    docs.forEach(async (rendDoc) => {
+      const docData = rendDoc.data();
+      await updateDoc(doc(db, "rendezvous", rendDoc.id), {
+        cancelled: true,
+      });
+      addClass(docData.uid, 1);
+    });
+    store.dispatch(setDayRendezvous(rendezvous));
+    return rendezvous;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 async function getAllRendezvousUser(uid?: string) {
@@ -356,29 +412,45 @@ async function decreaseLessonAmount(amount = 1) {
 }
 
 async function addRendezvous(date: Date) {
+  const currentTimeData = await getCurrentTime();
+  const dateNow = new Date(currentTimeData.datetime);
+  console.log(dateNow.getHours());
   try {
-    const user = store.getState().user;
-    const rendezvousObj = {
-      name: user.fullName,
-      cancelled: false,
-      date: Timestamp.fromDate(new Date(date)),
-      uid: user.uid,
-      completed: false,
-    } as any;
-    await decreaseLessonAmount();
-    const rendezvousRef = await addDoc(
-      collection(db, "rendezvous"),
-      rendezvousObj
-    );
-    rendezvousObj.date = rendezvousObj.date.seconds as any;
-    rendezvousObj.id = rendezvousRef.id;
-    store.dispatch(addUserDetailRendezvous(rendezvousObj));
-    await updateDoc(doc(db, "users", user.uid), {
-      rendezvous: arrayUnion(rendezvousRef.id),
+    if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
+      const user = store.getState().user;
+      const rendezvousObj = {
+        name: user.fullName,
+        cancelled: false,
+        date: Timestamp.fromDate(new Date(date)),
+        uid: user.uid,
+        completed: false,
+      } as any;
+      await decreaseLessonAmount();
+      const rendezvousRef = await addDoc(
+        collection(db, "rendezvous"),
+        rendezvousObj
+      );
+      rendezvousObj.date = rendezvousObj.date.seconds as any;
+      rendezvousObj.id = rendezvousRef.id;
+      store.dispatch(addUserDetailRendezvous(rendezvousObj));
+      await updateDoc(doc(db, "users", user.uid), {
+        rendezvous: arrayUnion(rendezvousRef.id),
+      });
+      console.log("Successfully added rendezvous: ", rendezvousRef.id);
+    } else {
+      throw new Error("Sistem 19:00'dan sonra kapanır");
+    }
+  } catch (err: any) {
+    Store.addNotification({
+      title: "Hata",
+      message: err.message,
+      type: "danger",
+      container: "bottom-right",
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
     });
-    console.log("Successfully added rendezvous: ", rendezvousRef.id);
-  } catch (err) {
-    console.error(err);
   }
 }
 
@@ -399,19 +471,25 @@ async function cancelRendezvous(rendId: any) {
   const dateNow = new Date(currentTimeData.datetime);
   console.log(dateNow);
   try {
-    if (dateNow.getHours() < 18) {
+    if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
       await updateDoc(doc(db, "rendezvous", rendId), {
         cancelled: true,
       });
       store.dispatch(cancelRendezvousAct(rendId));
     } else {
-      throw Error("The time is past 7pm");
+      throw Error("Saat 19:00'dan sonra sistem kapanır.");
     }
-  } catch (err) {
-    console.error(err);
-    return {
-      error: err,
-    };
+  } catch (err: any) {
+    Store.addNotification({
+      title: "Hata",
+      message: err.message,
+      type: "danger",
+      container: "bottom-right",
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
   }
 }
 
@@ -435,9 +513,11 @@ export {
   decreaseLessonAmount,
   addRendezvous,
   getAllRendezvousFB,
+  getRendezvousDayFB,
   getAllRendezvousUser,
   cancelRendezvous,
   addClass,
   activateUser,
   getCurrentTime,
+  cancelDayFB,
 };

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TagButton } from "../commonComponents";
+import TagButton from "../buttons/TagButton";
 import SearchIcon from "../../assets/icons/search_fill.svg";
 import type { StyledProps } from "../../styledUtils";
 

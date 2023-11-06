@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { Suspense } from "react";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
-import { getAllRendezvousDay } from "../../api";
+import {
+  cancelDayFB,
+  getAllRendezvousDay,
+  getRendezvousDayFB,
+} from "../../api";
 import { monthNamesTR } from "../../utils";
 import { DateParams } from "./paramsInterfaces";
 import { StyledProps } from "../../styledUtils";
@@ -9,7 +13,9 @@ import { type FormattedDay } from "../../api";
 import { Rendezvous } from "../../data/mockDatabase";
 
 async function loader({ params: { month, day } }: DateParams) {
-  return defer({ dayData: getAllRendezvousDay("2023", month, day) });
+  return defer({
+    dayData: getRendezvousDayFB(`2023-${month}-${day}`),
+  });
 }
 
 const StyledDay = styled.div<StyledProps>`
@@ -53,9 +59,9 @@ type DayDataKeyValue = [string, Rendezvous[]];
 export default function Day() {
   const { dayData } = useLoaderData() as { dayData: FormattedDay };
   const { month, day } = (useParams() as DateParams["params"])!;
-  const turkishMonthName = monthNamesTR[+month - 1];
+  const turkishMonthName = monthNamesTR[+month];
   return (
-    <Suspense fallback={<h1>Yukleniveriveriyor</h1>}>
+    <Suspense fallback={<h1>Yükleniyor...</h1>}>
       <Await resolve={dayData}>
         {(dayData: FormattedDay) => {
           return (
@@ -63,7 +69,15 @@ export default function Day() {
               <StyledDateHeader>
                 {day} {turkishMonthName}
               </StyledDateHeader>
-              <CancelDayBtn> Günü İptal Et</CancelDayBtn>
+              <CancelDayBtn
+                onClick={(e) => {
+                  console.log("clicked!");
+                  e.target.disabled = true;
+                  cancelDayFB("").then(() => (e.target.disabled = false));
+                }}
+              >
+                Günü İptal Et
+              </CancelDayBtn>
               {!dayData ? (
                 <h1>Bugün randevu yok</h1>
               ) : (
