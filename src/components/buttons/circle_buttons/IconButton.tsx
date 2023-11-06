@@ -47,9 +47,11 @@ const StyledIconButton = styled.button<StyledIconButtonProps>`
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background: ${({ $backgroundColor }) => $backgroundColor};
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
+  transition: ${({ theme }) => theme.animations.transition};
   &:disabled {
-    background: gray;
+    background-color: gray;
+    cursor: not-allowed;
   }
 `;
 const StyledIcon = styled.svg<StyledIconProps>`

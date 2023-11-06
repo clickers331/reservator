@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
 import {
   cancelDayFB,
+  cancelRendezvous,
   getAllRendezvousDay,
   getRendezvousDayFB,
 } from "../../api";
@@ -11,6 +12,8 @@ import { DateParams } from "./paramsInterfaces";
 import { StyledProps } from "../../styledUtils";
 import { type FormattedDay } from "../../api";
 import { Rendezvous } from "../../data/mockDatabase";
+import OriginalCancelBtn from "../buttons/circle_buttons/CancelBtn";
+import { nanoid } from "nanoid";
 
 async function loader({ params: { month, day } }: DateParams) {
   return defer({
@@ -39,9 +42,13 @@ const StyledDateHeader = styled.h2<StyledProps>`
 `;
 
 const StyledRendezvousItem = styled.p<StyledProps>`
-  background-color: ${({ theme }) => theme.colors.primaries[800]};
+  background-color: ${({ theme, $cancelled }) =>
+    !$cancelled ? theme.colors.primaries[800] : theme.colors.accents.red[900]};
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 1.4rem;
-  padding: 0.5em;
+  padding: 0.5em 1em;
   border-radius: 10px;
   margin: 0;
 `;
@@ -52,14 +59,27 @@ const StyledRendezvousItemContainer = styled.div<StyledProps>`
   gap: 0.4em;
 `;
 
-const CancelDayBtn = styled.button``;
+const CancelBtn = styled(OriginalCancelBtn)`
+  background-color: white !important;
+  font-size: 10px !important;
+`;
+
+const CancelDayBtn = styled.button`
+  color: white;
+  background-color: ${({ theme }) => theme.colors.accents.red[900]};
+  border: solid ${({ theme }) => theme.colors.accents.red[700]} 5px;
+  font-size: 1rem;
+  padding: 1em 2em;
+  border-radius: 1em;
+  cursor: pointer;
+`;
 
 type DayDataKeyValue = [string, Rendezvous[]];
 
 export default function Day() {
   const { dayData } = useLoaderData() as { dayData: FormattedDay };
   const { month, day } = (useParams() as DateParams["params"])!;
-  const turkishMonthName = monthNamesTR[+month];
+  const turkishMonthName = monthNamesTR[+month - 1];
   return (
     <Suspense fallback={<h1>Yükleniyor...</h1>}>
       <Await resolve={dayData}>
@@ -84,12 +104,25 @@ export default function Day() {
                 Object.entries(dayData).map(
                   ([hour, rendezvousArr]: DayDataKeyValue) => {
                     return (
-                      <div>
+                      <div key={nanoid()}>
                         <StyledHourHeader>{hour}:00</StyledHourHeader>
                         <StyledRendezvousItemContainer>
                           {rendezvousArr.map((rendezvous: Rendezvous) => (
-                            <StyledRendezvousItem>
+                            <StyledRendezvousItem
+                              key={nanoid()}
+                              $cancelled={rendezvous.cancelled}
+                            >
                               {rendezvous.name}
+                              {rendezvous.cancelled || (
+                                <CancelBtn
+                                  clickHandler={async (e: any) => {
+                                    e.target.disabled = true;
+                                    cancelRendezvous(rendezvous.id).then(
+                                      () => (e.target.disabled = false)
+                                    );
+                                  }}
+                                />
+                              )}
                             </StyledRendezvousItem>
                           ))}
                         </StyledRendezvousItemContainer>

@@ -6,12 +6,12 @@ import { Link } from "react-router-dom";
 interface TableRowProps {
   children: JSX.Element[];
   to?: string;
-  rowState?: "cancelled" | "passive" | "active";
+  state?: "cancelled" | "passive" | "active";
   debug?: boolean;
 }
 
 interface TableRowContainerProps {
-  $rowState?: "cancelled" | "passive" | "active";
+  $state?: "cancelled" | "passive" | "active";
 }
 
 const TableItemContainer = styled.div<{ children: JSX.Element }>`
@@ -30,8 +30,8 @@ const StyledTableRow: any = styled(Link)<
   padding: 0.5em 1em;
   width: 100%;
   border-radius: 15px;
-  background-color: ${({ $rowState, theme }) => {
-    switch ($rowState) {
+  background-color: ${({ $state, theme }) => {
+    switch ($state) {
       case "cancelled":
         return theme.colors.accents.red[300];
       case "passive":
@@ -50,11 +50,11 @@ const StyledTableRow: any = styled(Link)<
   }
 `;
 
-export default function TableRow({ children, rowState, to }: TableRowProps) {
+export default function TableRow({ children, state, to }: TableRowProps) {
   return (
     <>
       {to ? (
-        <StyledTableRow to={to} $rowState={rowState}>
+        <StyledTableRow to={to} $state={state}>
           {children.map((child) => {
             return (
               <TableItemContainer key={nanoid()}>{child}</TableItemContainer>
@@ -62,7 +62,7 @@ export default function TableRow({ children, rowState, to }: TableRowProps) {
           })}
         </StyledTableRow>
       ) : (
-        <StyledTableRow as="div" to="" $rowState={rowState}>
+        <StyledTableRow as="div" to="" $state={state}>
           {children.map((child) => {
             return (
               <TableItemContainer key={nanoid()}>{child}</TableItemContainer>

@@ -41,7 +41,8 @@ const StyledTimeCardItem = styled.div<StyledProps>`
   padding: 0.5em;
   width: 100%;
   text-align: center;
-  background-color: ${({ theme }) => theme.colors.primaries[800]};
+  background-color: ${({ theme, $cancelled }) =>
+    $cancelled ? theme.colors.primaries[800] : theme.colors.accents.red[500]};
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
@@ -63,7 +64,7 @@ function getRenderedComponents(
   shorten: boolean | undefined,
   dayOfMonth: number
 ) {
-  if (!children) return <StyledTimeCardItem>no children</StyledTimeCardItem>;
+  if (!children) return <StyledTimeCardItem>Randevu Yok</StyledTimeCardItem>;
   else if (Array.isArray(children)) {
     if (shorten && children.length > 5) {
       const items = [<StyledDateNumber>{children[0]}</StyledDateNumber>];

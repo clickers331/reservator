@@ -81,9 +81,9 @@ export default function MyRendezvous() {
                   }}
                 >
                   <option
-                    value={`${today.getFullYear()}-${today.getMonth() + 1}-${
-                      today.getDate() + 1
-                    }`}
+                    value={`${today.getFullYear()}-${
+                      today.getMonth() + 1
+                    }-${today.getDate()}`}
                   >
                     {dayNamesTR[today.getDay()]}
                   </option>
@@ -130,7 +130,7 @@ export default function MyRendezvous() {
                   <option value="7">7:00</option>
                   <option value="8">8:00</option>
                 </SelectInput>
-                <AddBtn disabled={props.isSubmitting} />
+                <AddBtn disabled={props.isSubmitting || !user.active} />
               </InputRow>
             </Form>
           )}

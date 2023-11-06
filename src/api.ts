@@ -54,7 +54,7 @@ import {
 } from "./redux/rendezvous/rendezvous.actions.js";
 import { Store } from "react-notifications-component";
 
-const SYSTEM_CLOSE_TIME = 19;
+const SYSTEM_CLOSE_TIME = 23;
 
 export interface ErrorObject {
   error: string | number;
@@ -171,11 +171,13 @@ async function getRendezvousDayFB(date: string) {
     const rendezvous = {};
     docs.forEach((doc) => {
       const data = doc.data();
-      data.date = new Date(data.date.seconds * 1000);
-      if (rendezvous[data.date.getHours()]) {
-        rendezvous[data.date.getHours()].push(data);
+      data.id = doc.id;
+      data.date = data.date.seconds * 1000;
+      const date = new Date(data.date);
+      if (rendezvous[date.getHours()]) {
+        rendezvous[date.getHours()].push(data);
       } else {
-        rendezvous[data.date.getHours()] = [data];
+        rendezvous[date.getHours()] = [data];
       }
     });
     store.dispatch(setDayRendezvous(rendezvous));

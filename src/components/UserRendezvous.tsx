@@ -26,13 +26,10 @@ export default function UserRendezvous() {
           <h2>Randevu Yok</h2>
         ) : (
           userRendezvous.map((rend, idx) => {
-            const { name, date, cancelled, id } = rend;
+            const { date, cancelled, id } = rend;
             const currentDate = new Date(date * 1000);
             return (
-              <TableRow
-                rowState={!cancelled ? "active" : "cancelled"}
-                key={idx}
-              >
+              <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
                 <p>
                   {currentDate.getDate()} {monthNamesTR[currentDate.getMonth()]}{" "}
                   {currentDate.getFullYear()}
@@ -44,7 +41,7 @@ export default function UserRendezvous() {
                 <CircleButtonContainer>
                   {cancelled || (
                     <CancelBtn
-                      clickHandler={async (e) => {
+                      clickHandler={async (e: any) => {
                         e.target.disabled = true;
                         cancelRendezvous(id).then(
                           () => (e.target.disabled = false)

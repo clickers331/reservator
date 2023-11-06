@@ -13,9 +13,11 @@ export default function Rendezvous() {
       <Container>
         <ContainerNav backgroundColor={theme.colors.primaries[500]}>
           <NavLink
-            to={`calendar/day/${today.getFullYear()}/${today.getMonth()}/${today.getDate()}`}
+            to={`calendar/day/${today.getFullYear()}/${
+              today.getMonth() + 1
+            }/${today.getDate()}`}
           >
-            gun
+            gün
           </NavLink>
           <NavLink to="list">liste</NavLink>
         </ContainerNav>
