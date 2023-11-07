@@ -151,16 +151,10 @@ async function getRendezvousDayFB(date: string) {
   console.log("function running");
   const newDate = new Date(date) || new Date();
   console.log(newDate);
-  const today = new Date(
-    newDate.getFullYear(),
-    newDate.getMonth(),
-    newDate.getDate()
-  );
-  const tomorrow = new Date(
-    newDate.getFullYear(),
-    newDate.getMonth(),
-    newDate.getDate() + 1
-  );
+  const today = new Date(newDate);
+  today.setHours(0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
   try {
     const q = query(
       collection(db, "rendezvous"),
