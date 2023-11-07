@@ -87,7 +87,7 @@ function getRenderedComponents(
     }
     return children.map((child: JSX.Element, idx: number) => {
       return (
-        <StyledTimeCardItem key={nanoid()}>
+        <StyledTimeCardItem key={nanoid()} $cancelled={child.props.cancelled}>
           {...child.props.children}
         </StyledTimeCardItem>
       );

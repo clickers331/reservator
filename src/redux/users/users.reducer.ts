@@ -3,7 +3,6 @@ import {
   addToUserLesson,
   addToUsers,
   resetUsers,
-  setUsers,
   activateUserAct,
 } from "./users.actions";
 import { User } from "../../data/mockDatabase";
@@ -20,14 +19,6 @@ const initialState = {
 
 const usersReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(setUsers, (state, action) => {
-      //Don't think I need it, can be replaced by "addToUsers"
-      if (action.payload) console.log("yeyeye");
-      //action.payload.forEach((user: User) => state.allUsers.push(user));
-      else {
-        console.error("Action payload doesn't exist on 'setUsers'");
-      }
-    })
     .addCase(addToUsers, (state, action) => {
       if (action.payload)
         state.allUsers = { ...state.allUsers, ...action.payload } as any;

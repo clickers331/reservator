@@ -50,7 +50,8 @@ const StyledTableRow: any = styled(Link)<
   }
 `;
 
-export default function TableRow({ children, state, to }: TableRowProps) {
+export default function TableRow(props: TableRowProps) {
+  const { children, state, to } = props;
   return (
     <>
       {to ? (

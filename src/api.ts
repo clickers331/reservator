@@ -84,6 +84,7 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     userObj.birthDate = userObj.birthDate.seconds;
     usersObj[user.id] = userObj;
   });
+  console.log(usersObj);
   store.dispatch(addToUsers(usersObj));
   return userData;
 }
@@ -182,7 +183,6 @@ async function getRendezvousDayFB(date: string) {
 }
 
 async function cancelDayFB(date: string) {
-  console.log("function running");
   const newDate = new Date(Date.now());
   console.log(newDate);
   const today = new Date(
@@ -202,21 +202,44 @@ async function cancelDayFB(date: string) {
       where("date", "<", Timestamp.fromDate(tomorrow))
     );
     const docs = await getDocs(q);
-    const rendezvous = {};
     docs.forEach(async (rendDoc) => {
       const docData = rendDoc.data();
-      await updateDoc(doc(db, "rendezvous", rendDoc.id), {
-        cancelled: true,
-      });
-      addClass(docData.uid, 1);
+      if (!docData.cancelled) {
+        cancelRendezvous(rendDoc.id);
+      }
     });
-    store.dispatch(setDayRendezvous(rendezvous));
-    return rendezvous;
   } catch (err) {
     console.error(err);
   }
 }
 
+async function cancelRendezvous(rendId: any) {
+  const currentTimeData = await getCurrentTime();
+  const dateNow = new Date(currentTimeData.datetime);
+  console.log(dateNow);
+  try {
+    if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
+      await updateDoc(doc(db, "rendezvous", rendId), {
+        cancelled: true,
+      });
+      await addClass(rendId, 1);
+      store.dispatch(cancelRendezvousAct(rendId));
+    } else {
+      throw Error("Saat 19:00'dan sonra sistem kapanır.");
+    }
+  } catch (err: any) {
+    Store.addNotification({
+      title: "Hata",
+      message: err.message,
+      type: "danger",
+      container: "bottom-right",
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
+  }
+}
 async function getAllRendezvousUser(uid?: string) {
   try {
     const userID = uid || store.getState().user.uid;
@@ -345,6 +368,11 @@ async function getUser() {
   return returnedUser;
 }
 
+async function getUserWithUID(uid: string) {
+  const user = await getDoc(doc(db, "users", uid));
+  return user.data();
+}
+
 export interface AuthFormValues {
   email: string;
   fullName?: string;
@@ -451,7 +479,16 @@ async function addRendezvous(date: Date) {
 }
 
 async function addClass(uid: any, amount = 1) {
-  const user = store.getState().users.allUsers[uid] as any;
+  let user = store.getState().users.allUsers[uid] as any;
+  if (!user) {
+    try {
+      const newUser = await getUserWithUID(uid);
+      user = newUser;
+      store.dispatch(addToUsers([user]));
+    } catch (err: any) {
+      console.error(err);
+    }
+  }
   try {
     await updateDoc(doc(db, "users", uid), {
       lessonCount: user.lessonCount + amount,
@@ -459,33 +496,6 @@ async function addClass(uid: any, amount = 1) {
     store.dispatch(addToUserLesson({ uid, amount }));
   } catch (err) {
     console.error(err);
-  }
-}
-
-async function cancelRendezvous(rendId: any) {
-  const currentTimeData = await getCurrentTime();
-  const dateNow = new Date(currentTimeData.datetime);
-  console.log(dateNow);
-  try {
-    if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
-      await updateDoc(doc(db, "rendezvous", rendId), {
-        cancelled: true,
-      });
-      store.dispatch(cancelRendezvousAct(rendId));
-    } else {
-      throw Error("Saat 19:00'dan sonra sistem kapanır.");
-    }
-  } catch (err: any) {
-    Store.addNotification({
-      title: "Hata",
-      message: err.message,
-      type: "danger",
-      container: "bottom-right",
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-      },
-    });
   }
 }
 

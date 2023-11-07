@@ -23,25 +23,14 @@ const CircleButtonContainer = styled.div`
   gap: 1rem;
 `;
 async function loader() {
-  return defer({ users: "YEYEYYEYE" });
+  await getPaginatedUsers();
+  return null;
 }
 
 //Load 10 users at the end of every scroll
 
 export default function AllMembers() {
-  const { ref, inView, entry } = useInView({
-    threshold: 1,
-  });
   const usersData = useSelector((state: ReduxState) => state.users.allUsers);
-  useEffect(() => {
-    if (inView) {
-      if (usersData[0]) {
-        getPaginatedUsers(usersData[(usersData.length as any) - 1]);
-      } else {
-        getPaginatedUsers();
-      }
-    }
-  }, [inView]);
   return (
     <>
       <h1>Üyeler</h1>
@@ -58,7 +47,7 @@ export default function AllMembers() {
                     key={nanoid()}
                     to={`/admin/users/${uid}`}
                     debug={true}
-                    rowState={active ? "active" : "passive"}
+                    state={active ? "active" : "passive"}
                   >
                     <p>{fullName}</p>
                     <p>{email}</p>
@@ -68,7 +57,6 @@ export default function AllMembers() {
               })}
             </Suspense>
           </TableContainer>
-          <div ref={ref}>MORE STUFF</div>
         </Container.Content>
       </Container>
     </>

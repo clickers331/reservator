@@ -11,12 +11,13 @@ import {
 export interface RendezvousState {
   rendezvousArr: any[];
   userDetailRendezvousArr: any[];
+  dayRendezvous: any;
 }
 
 const initialState = {
   rendezvousArr: [],
   userDetailRendezvousArr: [],
-  dayRendezvousArr: [],
+  dayRendezvous: [],
 };
 
 const rendezvousReducer = createReducer(initialState, (builder) => {
@@ -25,7 +26,7 @@ const rendezvousReducer = createReducer(initialState, (builder) => {
       state.rendezvousArr = action.payload;
     })
     .addCase(setDayRendezvous, (state: any, action) => {
-      state.dayRendezvousArr = action.payload;
+      state.dayRendezvous = action.payload;
     })
     .addCase(addRendezvousAct, (state, action: any) => {
       state.rendezvousArr.push(action.payload as never);
@@ -45,13 +46,13 @@ const rendezvousReducer = createReducer(initialState, (builder) => {
         (rend: any) => rend.id === action.payload
       );
       let rendIndexDay = -1;
-      Object.entries(state.dayRendezvousArr).forEach(([key, value]) => {
+      Object.entries(state.dayRendezvous).forEach(([key, value]) => {
         rendIndexDay = value.findIndex(
           (rend: any) => rend.id === action.payload
         );
         if (rendIndexDay >= 0) {
-          state.dayRendezvousArr[key][rendIndexDay] = {
-            ...state.dayRendezvousArr[key][rendIndexDay],
+          state.dayRendezvous[key][rendIndexDay] = {
+            ...state.dayRendezvous[key][rendIndexDay],
             cancelled: true,
           };
           found = true;

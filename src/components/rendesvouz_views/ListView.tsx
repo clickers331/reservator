@@ -40,10 +40,7 @@ export default function ListView() {
           {allRendezvous.map(({ cancelled, date, name, id }, idx) => {
             const currentDate = new Date(date * 1000);
             return (
-              <TableRow
-                rowState={!cancelled ? "active" : "cancelled"}
-                key={idx}
-              >
+              <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
                 <p>{name}</p>
                 <p>
                   {currentDate.getDate()} {monthNamesTR[currentDate.getMonth()]}{" "}
