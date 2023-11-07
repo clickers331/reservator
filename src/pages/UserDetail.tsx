@@ -82,6 +82,16 @@ const Flex = styled.div<any>`
   gap: 1em;
 `;
 
+const BackButton = styled.button<StyledProps>`
+  color: white;
+  background-color: ${({ theme }) => theme.colors.primaries[500]};
+  padding: 0.5em 2em;
+  border-radius: 10px;
+  font-size: 1.3rem;
+  border: none;
+  cursor: pointer;
+`;
+
 export default function UserDetail() {
   const { uid } = useParams() as any;
   getAllRendezvousUser(uid);
@@ -98,7 +108,7 @@ export default function UserDetail() {
     <>
       <Container>
         <Container.Content>
-          <button onClick={() => navigate(-1)}>Back</button>
+          <BackButton onClick={() => navigate(-1)}>Geri</BackButton>
           <div>
             <Flex $jc={"space-between"}>
               <h1>Detaylar</h1>

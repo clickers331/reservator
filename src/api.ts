@@ -84,7 +84,6 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     userObj.birthDate = userObj.birthDate.seconds;
     usersObj[user.id] = userObj;
   });
-  console.log(usersObj);
   store.dispatch(addToUsers(usersObj));
   return userData;
 }
@@ -149,9 +148,7 @@ async function activateUser(uid: any) {
 }
 
 async function getRendezvousDayFB(date: string) {
-  console.log("function running");
   const newDate = new Date(date) || new Date();
-  console.log(newDate);
   const today = new Date(newDate);
   today.setHours(0);
   const tomorrow = new Date(today);
@@ -184,7 +181,6 @@ async function getRendezvousDayFB(date: string) {
 
 async function cancelDayFB(date: string) {
   const newDate = new Date(Date.now());
-  console.log(newDate);
   const today = new Date(
     newDate.getFullYear(),
     newDate.getMonth(),
@@ -216,7 +212,6 @@ async function cancelDayFB(date: string) {
 async function cancelRendezvous(rendId: any) {
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
-  console.log(dateNow);
   try {
     if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
       await updateDoc(doc(db, "rendezvous", rendId), {
@@ -278,7 +273,6 @@ async function getAllRendezvousFormatted(
   year: string,
   month: string
 ): Promise<Rendezvous2D | ErrorObject> {
-  console.log("Month is: ", month, "on line 156 in api.ts");
   const monthInt: number = parseInt(month);
   const yearInt: number = parseInt(year);
   const date: Date = new Date(yearInt, monthInt, 0);
@@ -402,7 +396,7 @@ async function createNewAccount(values: AuthFormValues) {
       });
     }
   } catch (err: any) {
-    console.log(err.message);
+    console.error(err.message);
     return err;
     //TODO
     //[ ] Automatically log in if the email exists and the credentials are correct.
@@ -416,9 +410,8 @@ async function signIn(values: AuthFormValues) {
       values.email,
       values.password
     );
-    console.log(user.user.uid);
   } catch (err: any) {
-    console.log(err.message);
+    console.error(err.message);
   }
 }
 
@@ -438,7 +431,6 @@ async function decreaseLessonAmount(amount = 1) {
 async function addRendezvous(date: Date) {
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
-  console.log(dateNow.getHours());
   try {
     if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
       const user = store.getState().user;
@@ -460,7 +452,6 @@ async function addRendezvous(date: Date) {
       await updateDoc(doc(db, "users", user.uid), {
         rendezvous: arrayUnion(rendezvousRef.id),
       });
-      console.log("Successfully added rendezvous: ", rendezvousRef.id);
     } else {
       throw new Error("Sistem 19:00'dan sonra kapanır");
     }
