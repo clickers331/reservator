@@ -75,6 +75,7 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     limit(lim)
   );
   const userData = await getDocs(q);
+  console.log("Get Users (getPaginatedUsers)");
   const usersObj: any = {};
   userData.forEach((user) => {
     const userObj = {
@@ -120,7 +121,7 @@ async function getAllRendezvousFB() {
       startAt(Date.now())
     );
     const rendezvous = await getDocs(q);
-
+    console.log("Rendezvous Request (getAllRendezvous)");
     const serializableRendezvous = rendezvous.docs.map((rend) => {
       const data = rend.data();
       data.id = rend.id;
@@ -141,6 +142,7 @@ async function activateUser(uid: any) {
     await updateDoc(doc(db, "users", uid), {
       active: !user.active,
     });
+    console.log("Activate User (activateUser)");
     store.dispatch(activateUserAct(uid));
   } catch (err) {
     console.error(err);
@@ -159,7 +161,9 @@ async function getRendezvousDayFB(date: string) {
       where("date", ">=", Timestamp.fromDate(today)),
       where("date", "<", Timestamp.fromDate(tomorrow))
     );
+
     const docs = await getDocs(q);
+    console.log("getRendezvousForTheDay");
     const rendezvous = {};
     docs.forEach((doc) => {
       const data = doc.data();
@@ -197,6 +201,7 @@ async function cancelDayFB(date: string) {
       where("date", ">=", Timestamp.fromDate(today)),
       where("date", "<", Timestamp.fromDate(tomorrow))
     );
+    console.log("cancelDayFB");
     const docs = await getDocs(q);
     docs.forEach(async (rendDoc) => {
       const docData = rendDoc.data();
@@ -217,6 +222,7 @@ async function cancelRendezvous(rendId: any) {
       await updateDoc(doc(db, "rendezvous", rendId), {
         cancelled: true,
       });
+      console.log("cancelOneRendezvous");
       await addClass(rendId, 1);
       store.dispatch(cancelRendezvousAct(rendId));
     } else {
@@ -245,7 +251,7 @@ async function getAllRendezvousUser(uid?: string) {
       orderBy("date")
     );
     const userRendezvous = await getDocs(q);
-
+    console.log("getAllRendezvousUser");
     const serializableRendezvous = userRendezvous.docs.map((rend) => {
       const data = rend.data();
       data.date = data.date.seconds;
@@ -364,6 +370,7 @@ async function getUser() {
 
 async function getUserWithUID(uid: string) {
   const user = await getDoc(doc(db, "users", uid));
+  console.log("getUser");
   return user.data();
 }
 
@@ -385,7 +392,7 @@ async function createNewAccount(values: AuthFormValues) {
       values.password
     );
     if (user) {
-      await setDoc(doc(db, `users/${user.user.uid}`), {
+      const yeah = await setDoc(doc(db, `users/${user.user.uid}`), {
         email: values.email,
         fullName: values.fullName,
         phone: values.phone,
@@ -394,22 +401,18 @@ async function createNewAccount(values: AuthFormValues) {
         active: false,
         lessonCount: 0,
       });
+      console.log("User Request (createNewAccount)");
     }
   } catch (err: any) {
     console.error(err.message);
     return err;
-    //TODO
-    //[ ] Automatically log in if the email exists and the credentials are correct.
   }
 }
 
 async function signIn(values: AuthFormValues) {
   try {
-    const user = await signInWithEmailAndPassword(
-      auth,
-      values.email,
-      values.password
-    );
+    await signInWithEmailAndPassword(auth, values.email, values.password);
+    console.log("Sign In (createNewAccount)");
   } catch (err: any) {
     console.error(err.message);
   }
@@ -423,6 +426,7 @@ async function decreaseLessonAmount(amount = 1) {
     await updateDoc(doc(db, "users", user.uid), {
       lessonCount: user.lessonCount,
     });
+    console.log("Update document");
   } catch (err) {
     console.error("Error while decreasing the error amount: ", err);
   }
@@ -446,12 +450,14 @@ async function addRendezvous(date: Date) {
         collection(db, "rendezvous"),
         rendezvousObj
       );
+      console.log("Add rendezvous document");
       rendezvousObj.date = rendezvousObj.date.seconds as any;
       rendezvousObj.id = rendezvousRef.id;
       store.dispatch(addUserDetailRendezvous(rendezvousObj));
       await updateDoc(doc(db, "users", user.uid), {
         rendezvous: arrayUnion(rendezvousRef.id),
       });
+      console.log("Update rendezvous document");
     } else {
       throw new Error("Sistem 19:00'dan sonra kapanır");
     }
@@ -484,6 +490,7 @@ async function addClass(uid: any, amount = 1) {
     await updateDoc(doc(db, "users", uid), {
       lessonCount: user.lessonCount + amount,
     });
+    console.log("Add Class");
     store.dispatch(addToUserLesson({ uid, amount }));
   } catch (err) {
     console.error(err);

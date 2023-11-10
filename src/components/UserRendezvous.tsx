@@ -4,7 +4,7 @@ import TableRow from "./tables/TableRow";
 import { monthNamesTR } from "../utils";
 import CancelBtn from "./buttons/circle_buttons/CancelBtn";
 import { useSelector } from "react-redux";
-import { cancelRendezvous } from "../api";
+import { cancelRendezvous, getAllRendezvousUser } from "../api";
 import { ReduxState } from "../redux/rootReducer";
 import { Store } from "react-notifications-component";
 

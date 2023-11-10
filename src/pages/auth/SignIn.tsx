@@ -29,9 +29,7 @@ const SignInFormSchema = object({
   email: string()
     .email("Emailinizi doğru giriniz")
     .required("Emailiniz gereklidir"),
-  password: string()
-    .length(11, "11 Karakter Olmalı")
-    .required("Şifreniz gereklidir"),
+  password: string().required("Şifreniz gereklidir"),
 });
 
 export default function SignIn() {

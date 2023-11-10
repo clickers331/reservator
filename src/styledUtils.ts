@@ -1,6 +1,8 @@
 import { DefaultTheme, createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+    
+
     body {
         padding: 0;
         margin: 0;
@@ -34,7 +36,13 @@ const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar-thumb:hover {
         background: ${({ theme }) => theme.colors.primaries[500]};
     }
-`;
+  
+   @media (max-width:${({ theme }) => theme.screenSizes.tablet}) {
+      html{
+      font-size:13px;
+      }
+   }
+  `;
 
 export interface StyledProps {
   theme: ThemeObj;
@@ -49,6 +57,13 @@ export interface ThemeObj {
       yellow: ColorPalette;
       blue: ColorPalette;
     };
+  };
+  screenSizes: {
+    mobile: string;
+    tablet: string;
+    laptop: string;
+    desktops: string;
+    extraLarge: string;
   };
   sizes: {
     navHeight: string;
@@ -116,6 +131,13 @@ const theme: ThemeObj = {
         900: "#1159BF",
       },
     },
+  },
+  screenSizes: {
+    mobile: "320px",
+    tablet: "480px",
+    laptop: "768px",
+    desktops: "1025px",
+    extraLarge: "1200px",
   },
   sizes: {
     navHeight: "50px",
