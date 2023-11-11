@@ -21,7 +21,9 @@ export default function Rendezvous() {
           </NavLink>
           <NavLink to="list">liste</NavLink>
         </ContainerNav>
-        <Outlet />
+        <Container.Content>
+          <Outlet />
+        </Container.Content>
       </Container>
     </>
   );

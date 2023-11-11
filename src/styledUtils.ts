@@ -4,6 +4,9 @@ const GlobalStyle = createGlobalStyle`
     
 
     body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         padding: 0;
         margin: 0;
         font-family: 'Inter', sans-serif;
@@ -17,27 +20,16 @@ const GlobalStyle = createGlobalStyle`
         color: ${({ theme }) => theme.colors.neutrals[400]}
     }
 
+    .extra-info{
+   
+    }
+
     /* width */
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: ${({ theme }) => theme.colors.primaries[900]};
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: ${({ theme }) => theme.colors.primaries[400]};
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: ${({ theme }) => theme.colors.primaries[500]};
-    }
   
    @media (max-width:${({ theme }) => theme.screenSizes.tablet}) {
+      .extra-info{
+        display:none;
+      }
       html{
       font-size:13px;
       }

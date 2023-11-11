@@ -21,7 +21,7 @@ import { ReduxState } from "../../redux/rootReducer";
 const CircleButtonContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1em;
 `;
 async function loader() {
   getAllRendezvousFB();
@@ -34,36 +34,33 @@ export default function ListView() {
   );
   return (
     <>
-      <SearchNav />
-      <Container.Content>
-        <TableContainer>
-          {allRendezvous.map(({ cancelled, date, name, id }, idx) => {
-            const currentDate = new Date(date * 1000);
-            return (
-              <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
-                <p>{name}</p>
-                <p>
-                  {currentDate.getDate()} {monthNamesTR[currentDate.getMonth()]}{" "}
-                  {currentDate.getFullYear()}
-                </p>
-                <p>
-                  {currentDate.getHours()}:00 - {currentDate.getHours() + 1}:00
-                </p>
-                <p>{!cancelled ? "Onaylı" : "İptal"}</p>
-                <CircleButtonContainer>
-                  {cancelled || (
-                    <CancelBtn
-                      clickHandler={() => {
-                        cancelRendezvous(id);
-                      }}
-                    />
-                  )}
-                </CircleButtonContainer>
-              </TableRow>
-            );
-          })}
-        </TableContainer>
-      </Container.Content>
+      <TableContainer>
+        {allRendezvous.map(({ cancelled, date, name, id }, idx) => {
+          const currentDate = new Date(date * 1000);
+          return (
+            <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
+              <p>{name}</p>
+              <p className="extra-info">
+                {currentDate.getDate()} {monthNamesTR[currentDate.getMonth()]}{" "}
+                {currentDate.getFullYear()}
+              </p>
+              <p>
+                {currentDate.getHours()}:00 - {currentDate.getHours() + 1}:00
+              </p>
+              <p className="extra-info">{!cancelled ? "Onaylı" : "İptal"}</p>
+              <CircleButtonContainer>
+                {cancelled || (
+                  <CancelBtn
+                    clickHandler={() => {
+                      cancelRendezvous(id);
+                    }}
+                  />
+                )}
+              </CircleButtonContainer>
+            </TableRow>
+          );
+        })}
+      </TableContainer>
     </>
   );
 }

@@ -50,8 +50,8 @@ export default function AllMembers() {
                     state={active ? "active" : "passive"}
                   >
                     <p>{fullName}</p>
-                    <p>{email}</p>
-                    <p>{active ? "Aktif" : "Pasif"}</p>
+                    <p className="extra-info">{email}</p>
+                    <p className="extra-info">{active ? "Aktif" : "Pasif"}</p>
                   </TableRow>
                 );
               })}

@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import { ReduxState } from "../../redux/rootReducer";
 
 const StyledDay = styled.div<StyledProps>`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -26,9 +27,13 @@ const StyledDay = styled.div<StyledProps>`
   padding: 2em;
   width: 90%;
   max-width: 600px;
-  margin: 1em auto;
   border-radius: 30px;
   color: ${({ theme }) => theme.colors.neutrals[100]};
+  @media (max-width: ${({ theme }) => theme.screenSizes.tablet}) {
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+  }
 `;
 
 const StyledHourHeader = styled.h2<StyledProps>`

@@ -9,6 +9,10 @@ const StyledTableContainer = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   width: 100%;
+  padding: 1em 3em;
+  @media screen and (max-width: ${({ theme }) => theme.screenSizes.tablet}) {
+    padding: 1em;
+  }
 `;
 
 export default function TableContainer({ children }: { children: any }) {

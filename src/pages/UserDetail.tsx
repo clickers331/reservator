@@ -13,7 +13,11 @@ import { Form, Formik } from "formik";
 import NumberInput from "../components/form/inputs/NumberInput";
 import AddBtn from "../components/buttons/circle_buttons/AddBtn";
 
-const DetailsGrid = styled.div`
+const StyledUserDetails = styled.div<StyledProps>`
+  padding: 1em;
+`;
+
+const DetailsGrid = styled.div<StyledProps>`
   display: grid;
   grid-template:
     "c pi" 1fr
@@ -21,6 +25,10 @@ const DetailsGrid = styled.div`
   align-items: center;
   justify-items: center;
   gap: 1em;
+  @media screen and (max-width: ${({ theme }) => theme.screenSizes.tablet}) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const DetailLabel = styled.span`
@@ -106,8 +114,8 @@ export default function UserDetail() {
   const navigate = useNavigate();
   return (
     <>
-      <Container>
-        <Container.Content>
+      <Container overflow={"visible"} height="auto">
+        <StyledUserDetails>
           <BackButton onClick={() => navigate(-1)}>Geri</BackButton>
           <div>
             <Flex $jc={"space-between"}>
@@ -194,7 +202,7 @@ export default function UserDetail() {
             <h1>Randevular</h1>
             <UserRendezvous />
           </div>
-        </Container.Content>
+        </StyledUserDetails>
       </Container>
     </>
   );

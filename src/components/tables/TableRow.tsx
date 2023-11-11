@@ -46,7 +46,7 @@ const StyledTableRow: any = styled(Link)<
   font-size: 1rem;
   font-weight: 700;
   & > ${TableItemContainer} {
-    width: ${({ children }) => 100 / children.length}%;
+    width: 1fr;
   }
 `;
 
