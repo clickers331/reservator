@@ -20,10 +20,10 @@ const StyledContainer = styled.div`
 const ContainerContent = styled.div<StyledProps>`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   height: 100%;
   padding: 1em;
   overflow-x: hidden;
+
   @media screen and (max-width: ${({ theme }) => theme.screenSizes.tablet}) {
     padding: 0.5em;
   }

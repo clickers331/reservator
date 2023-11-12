@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import { ReduxState } from "../../redux/rootReducer";
 
 const StyledDay = styled.div<StyledProps>`
+  margin: auto;
+  justify-content: center;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
