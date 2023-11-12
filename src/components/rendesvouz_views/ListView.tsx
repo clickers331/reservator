@@ -40,11 +40,11 @@ export default function ListView() {
           return (
             <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
               <p>{name}</p>
-              <p className="extra-info">
+              <p>
                 {currentDate.getDate()} {monthNamesTR[currentDate.getMonth()]}{" "}
                 {currentDate.getFullYear()}
               </p>
-              <p>
+              <p className="extra-info">
                 {currentDate.getHours()}:00 - {currentDate.getHours() + 1}:00
               </p>
               <p className="extra-info">{!cancelled ? "Onaylı" : "İptal"}</p>

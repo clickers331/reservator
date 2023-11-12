@@ -7,6 +7,7 @@ import LoggedOut from "../layouts/LoggedOut";
 import RootNav from "../components/navs/RootNav";
 
 const BodyContainer = styled.div`
+  overflow-x: hidden;
   min-height: 100vh;
 `;
 export default function RootLayout() {
