@@ -215,6 +215,7 @@ async function cancelDayFB(date: string) {
 }
 
 async function cancelRendezvous(rendId: any) {
+  const user = store.getState().user as UserState;
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
   try {
@@ -223,7 +224,7 @@ async function cancelRendezvous(rendId: any) {
         cancelled: true,
       });
       console.log("cancelOneRendezvous");
-      await addClass(rendId, 1);
+      await addClass(user.uid, 1);
       store.dispatch(cancelRendezvousAct(rendId));
     } else {
       throw Error("Saat 19:00'dan sonra sistem kapanır.");

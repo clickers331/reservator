@@ -4,6 +4,7 @@ import { ReactComponent as HamburgerIcon } from "../../assets/icons/menu.svg";
 import { ReactComponent as CloseIcon } from "../../assets/icons/close_round.svg";
 
 const Nav = styled.nav`
+  position: relative;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;

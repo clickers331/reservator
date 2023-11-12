@@ -10,7 +10,6 @@ const GlobalStyle = createGlobalStyle`
         padding: 0;
         margin: 0;
         font-family: 'Inter', sans-serif;
-        overflow:hidden;
     }
 
     input[type="text"]{
