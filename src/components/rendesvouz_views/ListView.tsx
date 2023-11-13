@@ -1,10 +1,6 @@
 import { Suspense } from "react";
 import styled from "styled-components";
-import {
-  cancelRendezvous,
-  getAllRendezvous,
-  getAllRendezvousFB,
-} from "../../api";
+import { cancelRendezvous, getAllRendezvous } from "../../api";
 import { monthNamesTR } from "../../utils";
 import { defer, useLoaderData, Await } from "react-router-dom";
 import TableContainer from "../tables/TableContainer";
@@ -24,7 +20,7 @@ const CircleButtonContainer = styled.div`
   gap: 1em;
 `;
 async function loader() {
-  getAllRendezvousFB();
+  getAllRendezvous();
   return null;
 }
 
@@ -33,7 +29,7 @@ export default function ListView() {
     (state: ReduxState) => state.rendezvous.rendezvousArr
   );
   return (
-    <>
+    <Container.Content $padding="1rem">
       <TableContainer>
         {allRendezvous.map(({ cancelled, date, name, id }, idx) => {
           const currentDate = new Date(date * 1000);
@@ -61,7 +57,7 @@ export default function ListView() {
           );
         })}
       </TableContainer>
-    </>
+    </Container.Content>
   );
 }
 

@@ -62,14 +62,14 @@ const AllLinksContainer = styled.div`
   @media screen and (max-width: ${({ theme }) => theme.screenSizes.tablet}) {
     transition: ${({ theme }) => theme.animations.transition};
     transition-duration: 500ms;
-    position: absolute;
+    position: fixed;
     top: 0;
     height: 100vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 1.5rem;
-    gap: 0.5em;
+    gap: 0.7em;
     width: 80vw;
     right: 0;
     background-color: ${({ theme }) => theme.colors.primaries[500]};

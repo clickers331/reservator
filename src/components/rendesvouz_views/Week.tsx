@@ -3,7 +3,7 @@ import styled, { useTheme } from "styled-components";
 import TimeCard from "../TimeCard";
 import WeekRow from "../WeekRow";
 import { defer, Await, Link, useLoaderData, useParams } from "react-router-dom";
-import { ErrorObject, Rendezvous2D, getAllRendezvousWeek } from "../../api";
+import { ErrorObject, Rendezvous2D } from "../../api";
 import { nanoid } from "nanoid";
 import { WeekParams } from "./paramsInterfaces";
 import { StyledProps } from "../../styledUtils";
@@ -58,8 +58,7 @@ const NameText = styled.span<StyledProps>`
   padding: 0.2em;
 `;
 async function loader({ params: { weekNo } }: WeekParams) {
-  console.log("kakak");
-  return defer({ weekData: getAllRendezvousWeek("2023", +weekNo) });
+  return defer({ weekData: [] });
 }
 
 export default function Week() {

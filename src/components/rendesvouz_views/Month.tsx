@@ -4,7 +4,7 @@ import TimeCard from "../TimeCard";
 import Error from "../Error";
 import WeekRow from "../WeekRow";
 import { defer, Await, useLoaderData, NavLink } from "react-router-dom";
-import { Rendezvous2D, getAllRendezvousFormatted } from "../../api";
+import { Rendezvous2D } from "../../api";
 import { nanoid } from "nanoid";
 import { DateParams } from "./paramsInterfaces";
 import { StyledProps, ThemeObj } from "../../styledUtils";
@@ -44,7 +44,7 @@ const NameText = styled.span<StyledProps>`
 
 async function loader({ params: { year, month } }: DateParams) {
   return defer({
-    rendezvousData: getAllRendezvousFormatted(year, month),
+    rendezvousData: [],
     dates: { year, month },
   });
 }

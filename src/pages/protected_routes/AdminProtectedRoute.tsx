@@ -7,7 +7,7 @@ import { useSelector } from "react-redux/es/exports";
 
 export default function AdminProtectedRoute() {
   const userData = useSelector((state: any) => state.user); //Change any
-  console.log(userData.isAdmin);
+  console.log(userData.admin);
   return (
     <>
       {userData.admin ? null : <Navigate to="/" />}

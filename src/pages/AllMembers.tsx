@@ -36,7 +36,7 @@ export default function AllMembers() {
       <h1>Üyeler</h1>
       <Container>
         <SearchNav />
-        <Container.Content>
+        <Container.Content $padding={"1rem"}>
           <TableContainer>
             <Suspense fallback={<h1>Loading...</h1>}>
               {Object.values(usersData).map((user: any) => {

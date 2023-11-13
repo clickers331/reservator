@@ -17,35 +17,40 @@ const StyledContainer = styled.div`
   }
 `;
 
-const ContainerContent = styled.div<StyledProps>`
+interface ContainerContentProps {
+  props: {
+    $overflowX: string;
+    $overflowY: string;
+    $padding: string;
+  };
+}
+
+const ContainerContent = styled.div<StyledProps | ContainerContentProps>`
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1em;
-  overflow-x: hidden;
-
-  @media screen and (max-width: ${({ theme }) => theme.screenSizes.tablet}) {
-    padding: 0.5em;
-  }
+  overflow-x: ${({ $overflowX }) => $overflowX || "scroll"};
+  overflow-y: ${({ $overflowY }) => $overflowY || "scroll"};
+  padding: ${({ $padding }) => $padding || "0"};
 `;
 
 interface ContainerProps {
   children: any;
   maxWidth?: string;
   height?: string;
-  overflow?: string;
+  overflowX?: string;
+  overflowY?: string;
+  padding?: string;
 }
 
 export default function Container({
   children,
   height,
-  overflow,
+  overflowX,
+  overflowY,
+  padding,
 }: ContainerProps) {
-  return (
-    <StyledContainer $height={height} $overflow={overflow}>
-      {children}
-    </StyledContainer>
-  );
+  return <StyledContainer $height={height}>{children}</StyledContainer>;
 }
 
 Container.Content = ContainerContent;

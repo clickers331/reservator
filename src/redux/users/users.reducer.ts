@@ -1,6 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  addToUserLesson,
+  increaseLessonCount,
+  decreaseLessonCount,
   addToUsers,
   resetUsers,
   activateUserAct,
@@ -29,9 +30,13 @@ const usersReducer = createReducer(initialState, (builder) => {
     .addCase(resetUsers, (state, action) => {
       state.allUsers = {};
     })
-    .addCase(addToUserLesson, (state: any, action: any) => {
+    .addCase(increaseLessonCount, (state: any, action: any) => {
       state.allUsers[action.payload.uid].lessonCount =
         state.allUsers[action.payload.uid].lessonCount + action.payload.amount;
+    })
+    .addCase(decreaseLessonCount, (state: any, action: any) => {
+      state.allUsers[action.payload.uid].lessonCount =
+        state.allUsers[action.payload.uid].lessonCount - action.payload.amount;
     })
     .addCase(activateUserAct, (state: any, action: any) => {
       state.allUsers[action.payload].active =

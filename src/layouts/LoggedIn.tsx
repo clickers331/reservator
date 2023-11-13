@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 
 const SignOutLink = styled(Link)<StyledProps>`
   color: ${({ theme }) => theme.colors.accents.red[300]} !important;
+  position: absolute;
+  bottom: 4em;
   &:hover {
     color: ${({ theme }) => theme.colors.accents.red[700]} !important;
   }

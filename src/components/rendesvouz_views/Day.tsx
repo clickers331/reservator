@@ -1,12 +1,7 @@
 import styled from "styled-components";
 import { Suspense } from "react";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
-import {
-  cancelDayFB,
-  cancelRendezvous,
-  getAllRendezvousDay,
-  getRendezvousDayFB,
-} from "../../api";
+import { cancelDay, cancelRendezvous, getRendezvousDay } from "../../api";
 import { monthNamesTR } from "../../utils";
 import { DateParams } from "./paramsInterfaces";
 import { StyledProps } from "../../styledUtils";
@@ -16,6 +11,7 @@ import OriginalCancelBtn from "../buttons/circle_buttons/CancelBtn";
 import { nanoid } from "nanoid";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../redux/rootReducer";
+import Container from "../../containers/Container";
 
 const StyledDay = styled.div<StyledProps>`
   margin: auto;
@@ -88,7 +84,7 @@ const CancelDayBtn = styled.button`
 type DayDataKeyValue = [string, Rendezvous[]];
 
 async function loader({ params: { month, day } }: DateParams) {
-  await getRendezvousDayFB(`2023-${month}-${day}`);
+  await getRendezvousDay(`2023-${month}-${day}`);
   return null;
 }
 
@@ -100,53 +96,55 @@ export default function Day() {
   console.log(dayRendezvous);
   const turkishMonthName = monthNamesTR[+month - 1];
   return (
-    <StyledDay>
-      <StyledDateHeader>
-        {day} {turkishMonthName}
-      </StyledDateHeader>
-      {!dayRendezvous ? (
-        <h1>Bugün randevu yok</h1>
-      ) : (
-        Object.entries(dayRendezvous).map(
-          ([hour, rendezvousArr]: DayDataKeyValue) => {
-            return (
-              <div key={nanoid()}>
-                <StyledHourHeader>{hour}:00</StyledHourHeader>
-                <StyledRendezvousItemContainer>
-                  {rendezvousArr.map((rendezvous: Rendezvous) => (
-                    <StyledRendezvousItem
-                      key={nanoid()}
-                      $cancelled={rendezvous.cancelled}
-                    >
-                      {rendezvous.name}
-                      {rendezvous.cancelled || (
-                        <CancelBtn
-                          clickHandler={async (e: any) => {
-                            e.target.disabled = true;
-                            cancelRendezvous(rendezvous.id).then(
-                              () => (e.target.disabled = false)
-                            );
-                          }}
-                        />
-                      )}
-                    </StyledRendezvousItem>
-                  ))}
-                </StyledRendezvousItemContainer>
-              </div>
-            );
-          }
-        )
-      )}
-      <CancelDayBtn
-        onClick={(e) => {
-          console.log("clicked!");
-          e.target.disabled = true;
-          cancelDayFB("").then(() => (e.target.disabled = false));
-        }}
-      >
-        Günü İptal Et
-      </CancelDayBtn>
-    </StyledDay>
+    <Container.Content>
+      <StyledDay>
+        <StyledDateHeader>
+          {day} {turkishMonthName}
+        </StyledDateHeader>
+        {!dayRendezvous ? (
+          <h1>Bugün randevu yok</h1>
+        ) : (
+          Object.entries(dayRendezvous).map(
+            ([hour, rendezvousArr]: DayDataKeyValue) => {
+              return (
+                <div key={nanoid()}>
+                  <StyledHourHeader>{hour}:00</StyledHourHeader>
+                  <StyledRendezvousItemContainer>
+                    {rendezvousArr.map((rendezvous: Rendezvous) => (
+                      <StyledRendezvousItem
+                        key={nanoid()}
+                        $cancelled={rendezvous.cancelled}
+                      >
+                        {rendezvous.name}
+                        {rendezvous.cancelled || (
+                          <CancelBtn
+                            clickHandler={async (e: any) => {
+                              e.target.disabled = true;
+                              cancelRendezvous(rendezvous.id).then(
+                                () => (e.target.disabled = false)
+                              );
+                            }}
+                          />
+                        )}
+                      </StyledRendezvousItem>
+                    ))}
+                  </StyledRendezvousItemContainer>
+                </div>
+              );
+            }
+          )
+        )}
+        <CancelDayBtn
+          onClick={(e) => {
+            console.log("clicked!");
+            e.target.disabled = true;
+            cancelDay("").then(() => (e.target.disabled = false));
+          }}
+        >
+          Günü İptal Et
+        </CancelDayBtn>
+      </StyledDay>
+    </Container.Content>
   );
 }
 
