@@ -1,9 +1,13 @@
 import { createAction } from "@reduxjs/toolkit";
-import type { User } from "../../data/mockDatabase";
+import { User } from "../../api";
+
+export interface AddToUsersPayload {
+  [uid: string]: User;
+}
 
 const updateSelf = createAction<any>("users/updateSelf");
 const resetSelf = createAction("users/resetSelf");
-const addToUsers = createAction<User[]>("users/add");
+const addToUsers = createAction<AddToUsersPayload>("users/add");
 const increaseLessonCount = createAction<Object>("users/increaseLessonCount");
 const decreaseLessonCount = createAction<Object>("users/decreaseLessonCount");
 const activateUserAct = createAction("users/activate");

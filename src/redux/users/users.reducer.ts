@@ -8,7 +8,7 @@ import {
   updateSelf,
   resetSelf,
 } from "./users.actions";
-import { User } from "../../data/mockDatabase";
+import { User } from "../../api";
 
 export interface UsersState {
   allUsers: {
@@ -40,7 +40,7 @@ const usersReducer = createReducer(initialState, (builder) => {
     .addCase(resetUsers, (state, action) => {
       state.allUsers = {};
     })
-    .addCase(increaseLessonCount, (state: any, action: any) => {
+    .addCase(increaseLessonCount, (state: UsersState, action: any) => {
       if (state.self.uid === action.payload.uid) {
         state.self.lessonCount = state.self.lessonCount + action.payload.amount;
       } else if (state.allUsers[action.payload.uid]) {
@@ -51,7 +51,7 @@ const usersReducer = createReducer(initialState, (builder) => {
         throw new Error("User not found");
       }
     })
-    .addCase(decreaseLessonCount, (state: any, action: any) => {
+    .addCase(decreaseLessonCount, (state: UsersState, action: any) => {
       if (state.self.uid === action.payload.uid) {
         state.self.lessonCount = state.self.lessonCount - action.payload.amount;
       } else if (state.allUsers[action.payload.uid]) {
@@ -62,7 +62,7 @@ const usersReducer = createReducer(initialState, (builder) => {
         throw new Error("User not found");
       }
     })
-    .addCase(activateUserAct, (state: any, action: any) => {
+    .addCase(activateUserAct, (state: UsersState, action: any) => {
       state.allUsers[action.payload].active =
         !state.allUsers[action.payload].active;
     });

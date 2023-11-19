@@ -9,7 +9,6 @@ import GuideRow from "../tables/GuideRow.js";
 import TableRow from "../tables/TableRow.js";
 import CancelBtn from "../buttons/circle_buttons/CancelBtn";
 import InfoBtn from "../buttons/circle_buttons/InfoBtn";
-import { type AllRandezvous } from "../../data/mockDatabase";
 import Container from "../../containers/Container";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../redux/rootReducer";

@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import { Suspense } from "react";
 import { defer, useLoaderData, Await, useParams } from "react-router-dom";
-import { cancelDay, cancelRendezvous, getRendezvousDay } from "../../api";
+import {
+  Rendezvous,
+  cancelDay,
+  cancelRendezvous,
+  getRendezvousDay,
+} from "../../api";
 import { monthNamesTR } from "../../utils";
 import { DateParams } from "./paramsInterfaces";
 import { StyledProps } from "../../styledUtils";
 import { type FormattedDay } from "../../api";
-import { Rendezvous } from "../../data/mockDatabase";
 import OriginalCancelBtn from "../buttons/circle_buttons/CancelBtn";
 import { nanoid } from "nanoid";
 import { useSelector } from "react-redux";
@@ -43,7 +47,7 @@ const StyledDateHeader = styled.h2<StyledProps>`
   font-size: 1.4rem;
 `;
 
-const StyledRendezvousItem = styled.p<StyledProps>`
+const StyledRendezvousItem = styled.p<StyledProps & { $cancelled: boolean }>`
   background-color: ${({ theme, $cancelled }) =>
     !$cancelled ? theme.colors.primaries[800] : theme.colors.accents.red[900]};
   display: flex;
@@ -81,11 +85,11 @@ const CancelDayBtn = styled.button`
   }
 `;
 
-type DayDataKeyValue = [string, Rendezvous[]];
-
 async function loader({ params: { month, day } }: DateParams) {
   return null;
 }
+
+type DayDataKeyValuePair = [string, Rendezvous[]];
 
 export default function Day() {
   const { month, day } = (useParams() as DateParams["params"])!;
@@ -104,7 +108,7 @@ export default function Day() {
           <h1>Bugün randevu yok</h1>
         ) : (
           Object.entries(dayRendezvous).map(
-            ([hour, rendezvousArr]: DayDataKeyValue) => {
+            ([hour, rendezvousArr]: DayDataKeyValuePair) => {
               return (
                 <div key={nanoid()}>
                   <StyledHourHeader>{hour}:00</StyledHourHeader>
@@ -136,8 +140,10 @@ export default function Day() {
         <CancelDayBtn
           onClick={(e) => {
             console.log("clicked!");
-            e.target.disabled = true;
-            cancelDay("").then(() => (e.target.disabled = false));
+            (e.target as HTMLButtonElement).disabled = true;
+            cancelDay("").then(
+              () => ((e.target as HTMLButtonElement).disabled = false)
+            );
           }}
         >
           Günü İptal Et

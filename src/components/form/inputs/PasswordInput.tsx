@@ -7,12 +7,10 @@ import { ReactComponent as IDIcon } from "../../../assets/icons/id_icon.svg";
 
 interface PasswordInputProps {
   id?: boolean;
+  [x: string]: any;
 }
 
-export default function PasswordInput({
-  id,
-  ...props
-}: PasswordInputProps & any) {
+export default function PasswordInput({ id, ...props }: PasswordInputProps) {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const iconData = {
     iconLeft: {

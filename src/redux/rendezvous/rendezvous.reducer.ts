@@ -7,11 +7,16 @@ import {
   setRendezvous,
   setUserDetailRendezvous,
 } from "./rendezvous.actions";
+import { Rendezvous } from "../../api";
+
+export interface DayRendezvous {
+  [key: string]: Rendezvous[];
+}
 
 export interface RendezvousState {
-  rendezvousArr: any[];
-  userDetailRendezvousArr: any[];
-  dayRendezvous: any;
+  rendezvousArr: Rendezvous[];
+  userDetailRendezvousArr: Rendezvous[];
+  dayRendezvous: DayRendezvous;
 }
 
 const initialState = {
@@ -46,7 +51,7 @@ const rendezvousReducer = createReducer(initialState, (builder) => {
         (rend: any) => rend.id === action.payload
       );
       let rendIndexDay = -1;
-      Object.entries(state.dayRendezvous).forEach(([key, value]) => {
+      Object.entries(state.dayRendezvous).forEach(([key, value]: any) => {
         rendIndexDay = value.findIndex(
           (rend: any) => rend.id === action.payload
         );

@@ -1,7 +1,17 @@
 import styled from "styled-components";
 
-const StyledContainer = styled.div`
-  overflow: ${({ $overflow }) => $overflow || "hidden"};
+interface ContainerProps {
+  children: any;
+  maxWidth?: string;
+  $height?: string;
+  $overflowX?: string;
+  $overflowY?: string;
+  padding?: string;
+}
+
+const StyledContainer = styled.div<ContainerProps>`
+  overflow-x: ${({ $overflowX }) => $overflowX || "hidden"};
+  overflow-y: ${({ $overflowY }) => $overflowY || "hidden"};
   height: ${({ $height }) => $height || "700px"};
   margin: 3em 0;
   display: flex;
@@ -18,14 +28,12 @@ const StyledContainer = styled.div`
 `;
 
 interface ContainerContentProps {
-  props: {
-    $overflowX: string;
-    $overflowY: string;
-    $padding: string;
-  };
+  $overflowX?: string;
+  $overflowY?: string;
+  $padding?: string;
 }
 
-const ContainerContent = styled.div<StyledProps | ContainerContentProps>`
+const ContainerContent = styled.div<StyledProps & ContainerContentProps>`
   display: flex;
   flex-direction: column;
   height: 100%;

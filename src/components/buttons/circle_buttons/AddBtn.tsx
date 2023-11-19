@@ -4,7 +4,11 @@ import { useTheme } from "styled-components";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../../../redux/rootReducer";
 
-export default function AddBtn(props) {
+interface AddBtnProps {
+  disabled?: boolean;
+}
+
+export default function AddBtn(props: AddBtnProps) {
   const theme = useTheme();
   const user = useSelector((state: ReduxState) => state.users.self);
   return (

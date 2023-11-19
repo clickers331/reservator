@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, doc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Unsubscribe, getAuth, onAuthStateChanged } from "firebase/auth";
 import store from "./redux/store";
 import { resetSelf, updateSelf } from "./redux/users/users.actions";
 import { getPaginatedUsers, getRendezvousDay } from "./api";
@@ -19,8 +19,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+let unsubs: Unsubscribe[] = [];
 onAuthStateChanged(auth, async (user) => {
-  let unsubs = [];
   if (user) {
     let userDetails: any; //Change it from any
     try {

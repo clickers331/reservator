@@ -2,24 +2,18 @@ import { Formik } from "formik";
 import { auth } from "../../firebaseObjects";
 import styled from "styled-components";
 import { createNewAccount } from "../../api";
-import {
-  useAuthState,
-  useCreateUserWithEmailAndPassword,
-} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { Navigate } from "react-router-dom";
 import EmailInput from "../../components/form/inputs/EmailInput";
 import PasswordInput from "../../components/form/inputs/PasswordInput";
-import { type StyledProps } from "../../styledUtils";
 import DateInput from "../../components/form/inputs/DateInput";
 import SelectInput from "../../components/form/inputs/SelectInput";
 import { ReactComponent as BloodIcon } from "../../assets/icons/blood_droplet.svg";
-import { ReactComponent as NavIcon } from "../../assets/icons/location_icon.svg";
 import AuthBtn from "../../components/form/AuthBtn";
 import Form from "./Form";
 import PhoneInput from "../../components/form/inputs/PhoneInput";
 import NameInput from "../../components/form/inputs/NameInput";
-import { ValidationError, object, string } from "yup";
-import ValidationMessage from "../../components/form/ValidationMessage";
+import { object, string } from "yup";
 import { useState } from "react";
 
 const phoneRegExp =

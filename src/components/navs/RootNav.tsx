@@ -56,7 +56,7 @@ const OutletContainer = styled.div`
   padding: 0;
 `;
 
-const AllLinksContainer = styled.div`
+const AllLinksContainer = styled.div<{ $open: boolean }>`
   display: flex;
   gap: 1em;
   @media screen and (max-width: ${({ theme }) => theme.screenSizes.tablet}) {

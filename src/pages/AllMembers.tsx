@@ -1,18 +1,9 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import styled from "styled-components";
-import { getPaginatedUsers } from "../api.js";
-import { defer, useLoaderData, Await } from "react-router-dom";
 import TableContainer from "../components/tables/TableContainer.js";
 import Container from "../containers/Container.js";
 import SearchNav from "../components/navs/SearchNav.jsx";
-import GuideRow from "../components/tables/GuideRow.js";
 import TableRow from "../components/tables/TableRow.js";
-
-import EditBtn from "../components/buttons/circle_buttons/EditBtn.js";
-import ActiveBtn from "../components/buttons/circle_buttons/ActiveBtn.js";
-import PassiveBtn from "../components/buttons/circle_buttons/PassiveBtn.js";
-import { UserDetail, User } from "../data/mockDatabase.js";
-import { useInView } from "react-intersection-observer";
 import { useSelector } from "react-redux";
 import { ReduxState } from "../redux/rootReducer.js";
 import { nanoid } from "nanoid";

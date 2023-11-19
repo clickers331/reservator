@@ -1,4 +1,3 @@
-import type { AllRandezvous, Rendezvous } from "./data/mockDatabase";
 import Chance from "chance";
 
 const monthNamesTR = [
@@ -58,33 +57,11 @@ function getWeekNo(date: string | Date): number {
   return weekNumber;
 }
 
-function createAllRendezvous(
-  startYear: number,
-  yearCount: number = 1
-): AllRandezvous {
-  let allRendezvous: AllRandezvous = {};
-  const chance = new Chance();
-  for (let i = 0; i < yearCount; i++) {
-    const currentFullYear: number = startYear + yearCount - 1;
-    const currentYear: Rendezvous[][] = [];
-    for (let j = 0; j < 12; i++) {
-      const currentMonth: Rendezvous[] = [];
-      for (let k = 0; k < new Date(currentFullYear, j, 0).getDate(); k++) {
-        currentMonth.push({
-          date: new Date(currentFullYear, j, k),
-          name: chance.name(),
-          cancelled: chance.bool(),
-          uid: chance.guid(),
-        });
-      }
-      currentYear.push(currentMonth);
-    }
-    allRendezvous[currentFullYear] = currentYear;
-  }
-  return allRendezvous;
+interface AuthCodes {
+  [key: string]: string;
 }
 
-const authCodes = {
+const authCodes: AuthCodes = {
   "admin-restricted-operation": "Bu işlem yalnızca yöneticilere kısıtlıdır.",
   "argument-error": "",
   "app-not-authorized":
@@ -243,7 +220,6 @@ const authCodes = {
 };
 
 export {
-  createAllRendezvous,
   getWeekNo,
   flattenObjectSimple,
   monthNamesTR,

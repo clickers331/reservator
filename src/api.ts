@@ -16,7 +16,6 @@ import {
   limit,
   startAfter,
   updateDoc,
-  arrayUnion,
   addDoc,
   where,
   startAt,
@@ -26,23 +25,41 @@ import {
 import { db, auth } from "./firebaseObjects.js";
 import store from "./redux/store.js";
 import {
-  activateUserAct,
   increaseLessonCount,
   decreaseLessonCount,
   addToUsers,
   resetUsers,
 } from "./redux/users/users.actions.js";
 import {
-  cancelRendezvousAct,
-  addUserDetailRendezvous,
   setRendezvous,
   setUserDetailRendezvous,
   setDayRendezvous,
 } from "./redux/rendezvous/rendezvous.actions.js";
 import { Store } from "react-notifications-component";
 import { authCodes } from "./utils.js";
+import { DayRendezvous } from "./redux/rendezvous/rendezvous.reducer.js";
 
 const SYSTEM_CLOSE_TIME = 23;
+
+export interface Rendezvous {
+  id: string;
+  name: string;
+  date: number;
+  cancelled: boolean;
+  completed: boolean;
+  uid: string;
+}
+
+export interface User {
+  uid: string;
+  email: string;
+  fullName: string;
+  phone: string;
+  birthDate: number;
+  bloodType: string;
+  active: boolean;
+  lessonCount: number;
+}
 
 export interface ErrorObject {
   error: string | number;
@@ -153,16 +170,19 @@ async function getRendezvousDay() {
       });
 
       console.log("");
-      const rendezvous = {};
+      const rendezvous: DayRendezvous = {};
       docs.forEach((doc) => {
-        const data = doc.data();
-        data.id = doc.id;
-        data.date = data.date.seconds * 1000;
+        const data = {
+          ...doc.data(),
+          id: doc.id,
+          date: doc.data().date.seconds * 1000,
+        };
         const date = new Date(data.date);
-        if (rendezvous[date.getHours()]) {
-          rendezvous[date.getHours()].push(data);
+        const hour = `${date.getHours()}`;
+        if (rendezvous[hour]) {
+          rendezvous[hour].push(data as Rendezvous);
         } else {
-          rendezvous[date.getHours()] = [data];
+          rendezvous[date.getHours()] = [data as Rendezvous];
         }
       });
       store.dispatch(setDayRendezvous(rendezvous));
@@ -321,7 +341,7 @@ async function createNewAccount(values: AuthFormValues) {
   } catch (err: any) {
     Store.addNotification({
       title: "Hata",
-      message: authCodes[err.code.slice(5)] || err.message,
+      message: authCodes[err.code.slice(5) as string] || err.message,
       type: "danger",
       container: "bottom-right",
       dismiss: {
@@ -339,7 +359,7 @@ async function signIn(values: AuthFormValues) {
   } catch (err: any) {
     Store.addNotification({
       title: "Hata",
-      message: authCodes[err.code.slice(5)] || err.message,
+      message: authCodes[err.code.slice(5) as string] || err.message,
       type: "danger",
       container: "bottom-right",
       dismiss: {
@@ -422,12 +442,12 @@ async function increaseLessonAmount(uid: string, amount = 1) {
 }
 
 async function addClass(uid: any, amount = 1) {
-  let user = await getUserFromStore(uid);
+  let user: User = await getUserFromStore(uid);
   if (!user) {
     try {
-      const newUser = await getUserWithUID(uid);
+      const newUser = (await getUserWithUID(uid)) as User;
       user = newUser;
-      store.dispatch(addToUsers([user]));
+      store.dispatch(addToUsers({ [uid]: user }));
     } catch (err: any) {
       console.error(err);
     }

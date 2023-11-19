@@ -4,11 +4,10 @@ import TimeCard from "../TimeCard";
 import Error from "../Error";
 import WeekRow from "../WeekRow";
 import { defer, Await, useLoaderData, NavLink } from "react-router-dom";
-import { Rendezvous2D } from "../../api";
+import { Rendezvous, Rendezvous2D } from "../../api";
 import { nanoid } from "nanoid";
 import { DateParams } from "./paramsInterfaces";
 import { StyledProps, ThemeObj } from "../../styledUtils";
-import { Rendezvous } from "../../data/mockDatabase";
 import MonthNav from "../navs/MonthNav";
 
 const MonthGrid = styled.div`

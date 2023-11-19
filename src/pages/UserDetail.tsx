@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { StyledProps } from "../styledUtils";
 import Container from "../containers/Container";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebaseObjects";
 import {
   activateUser,
   addClass,
@@ -17,8 +15,8 @@ import { ReduxState } from "../redux/rootReducer";
 import { Form, Formik } from "formik";
 import NumberInput from "../components/form/inputs/NumberInput";
 import AddBtn from "../components/buttons/circle_buttons/AddBtn";
-import store from "../redux/store";
-import { addToUsers } from "../redux/users/users.actions";
+import { AddToUsersPayload, addToUsers } from "../redux/users/users.actions";
+import { Unsubscribe } from "firebase/auth";
 
 const StyledUserDetails = styled.div<StyledProps>`
   padding: 1em;
@@ -109,7 +107,7 @@ const BackButton = styled.button<StyledProps>`
 
 export default function UserDetail() {
   const { uid } = useParams() as any;
-  let unsub;
+  let unsub: Unsubscribe;
   const dispatch = useDispatch();
   let userData = useSelector(
     (state: ReduxState) => state.users.allUsers[uid]
@@ -117,13 +115,13 @@ export default function UserDetail() {
   if (!userData) {
     getUserWithUID(uid).then((user) => {
       userData = user;
-      dispatch(addToUsers({ [uid]: user }));
+      dispatch(addToUsers({ [uid]: user } as AddToUsersPayload));
     });
   }
 
   useEffect(() => {
     async function getUnsub() {
-      unsub = await getAllRendezvousUser(uid);
+      unsub = (await getAllRendezvousUser(uid)) as Unsubscribe;
     }
     getUnsub();
   }, []);
@@ -135,7 +133,7 @@ export default function UserDetail() {
   const navigate = useNavigate();
   return (
     <>
-      <Container overflow={"visible"} height="auto">
+      <Container overflowX={"visible"} overflowY={"visible"} height="auto">
         <StyledUserDetails>
           <BackButton
             onClick={() => {
@@ -150,10 +148,10 @@ export default function UserDetail() {
             <Flex $jc={"space-between"}>
               <h1>Detaylar</h1>
               <ActivateButton
-                onClick={(e) => {
-                  e.target.disabled = true;
+                onClick={(e: Event) => {
+                  (e.target as HTMLButtonElement).disabled = true;
                   activateUser(uid).then(() => {
-                    e.target.disabled = false;
+                    (e.target as HTMLButtonElement).disabled = false;
                   });
                 }}
               >

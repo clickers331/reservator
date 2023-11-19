@@ -1,4 +1,3 @@
-import React from "react";
 import Container from "../containers/Container";
 import ContainerNav from "../components/navs/ContainerNav";
 import { NavLink, Outlet } from "react-router-dom";

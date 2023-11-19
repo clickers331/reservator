@@ -1,15 +1,7 @@
-import React, { Suspense, useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  addRendezvous,
-  decreaseLessonAmount,
-  getAllRendezvousFB,
-  getAllRendezvousUser,
-} from "../api";
+import { getAllRendezvousUser } from "../api";
 import UserRendezvous from "../components/UserRendezvous";
 import Container from "../containers/Container";
-import { ReduxState } from "../redux/rootReducer";
 import AddRendezvousForm from "../components/AddRendezvousForm";
 
 async function loader() {
