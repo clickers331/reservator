@@ -38,6 +38,7 @@ import {
   setDayRendezvous,
 } from "./redux/rendezvous/rendezvous.actions.js";
 import { Store } from "react-notifications-component";
+import { authCodes } from "./utils.js";
 
 const SYSTEM_CLOSE_TIME = 23;
 
@@ -176,7 +177,7 @@ async function cancelDay(date: string) {
 }
 
 async function cancelRendezvous(rendId: any) {
-  const user = store.getState().users.self as UserState;
+  const user = await getUserFromStore(auth.currentUser?.uid || "");
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
   try {
@@ -284,7 +285,7 @@ async function createNewAccount(values: AuthFormValues) {
       values.password
     );
     if (user) {
-      const yeah = await setDoc(doc(db, `users/${user.user.uid}`), {
+      await setDoc(doc(db, `users/${user.user.uid}`), {
         email: values.email,
         fullName: values.fullName,
         phone: values.phone,
@@ -293,19 +294,36 @@ async function createNewAccount(values: AuthFormValues) {
         active: false,
         lessonCount: 0,
       });
-      console.log("User Request (createNewAccount)");
     }
   } catch (err: any) {
+    Store.addNotification({
+      title: "Hata",
+      message: authCodes[err.code.slice(5)] || err.message,
+      type: "danger",
+      container: "bottom-right",
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
     console.error(err.message);
-    return err;
   }
 }
 
 async function signIn(values: AuthFormValues) {
   try {
     await signInWithEmailAndPassword(auth, values.email, values.password);
-    console.log("Sign In (createNewAccount)");
   } catch (err: any) {
+    Store.addNotification({
+      title: "Hata",
+      message: authCodes[err.code.slice(5)] || err.message,
+      type: "danger",
+      container: "bottom-right",
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+      },
+    });
     console.error(err.message);
   }
 }
@@ -318,12 +336,12 @@ async function getUserFromStore(uid: string) {
 }
 
 async function decreaseLessonAmount(uid: string, amount = 1) {
-  store.dispatch(decreaseLessonCount({ uid, amount }));
   const user = await getUserFromStore(uid);
+  store.dispatch(decreaseLessonCount({ uid, amount }));
 
   try {
     await updateDoc(doc(db, "users", user.uid), {
-      lessonCount: user.lessonCount,
+      lessonCount: user.lessonCount - amount,
     });
     console.log("Update document");
   } catch (err) {
