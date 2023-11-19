@@ -35,7 +35,9 @@ const StyledTimeCard = styled(Link)<StyledTimeCardProps>`
   }
 `;
 
-const StyledTimeCardItem = styled.div<StyledProps>`
+const StyledTimeCardItem = styled.div<
+  StyledProps & { $cancelled?: string | boolean }
+>`
   box-sizing: border-box;
   border-radius: 5px;
   padding: 0.5em;
