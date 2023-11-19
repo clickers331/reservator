@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { StyledProps } from "../styledUtils";
 import Container from "../containers/Container";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseObjects";
-import { activateUser, addClass, getAllRendezvousUser } from "../api";
+import {
+  activateUser,
+  addClass,
+  getAllRendezvousUser,
+  getUserWithUID,
+} from "../api";
 import UserRendezvous from "../components/UserRendezvous";
 import { ReduxState } from "../redux/rootReducer";
 import { Form, Formik } from "formik";
 import NumberInput from "../components/form/inputs/NumberInput";
 import AddBtn from "../components/buttons/circle_buttons/AddBtn";
+import store from "../redux/store";
+import { addToUsers } from "../redux/users/users.actions";
 
 const StyledUserDetails = styled.div<StyledProps>`
   padding: 1em;
@@ -102,10 +109,17 @@ const BackButton = styled.button<StyledProps>`
 
 export default function UserDetail() {
   const { uid } = useParams() as any;
+  const dispatch = useDispatch();
   getAllRendezvousUser(uid);
-  const userData = useSelector(
+  let userData = useSelector(
     (state: ReduxState) => state.users.allUsers[uid]
   ) as any;
+  if (!userData) {
+    getUserWithUID(uid).then((user) => {
+      userData = user;
+      dispatch(addToUsers({ [uid]: user }));
+    });
+  }
 
   const birthDate = new Date(userData.birthDate * 1000);
   const birthDateString = `${birthDate.getDate()}/${

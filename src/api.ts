@@ -23,7 +23,6 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "./firebaseObjects.js";
 import store from "./redux/store.js";
-import { UserState } from "./redux/user/user.reducer.js";
 import {
   activateUserAct,
   increaseLessonCount,
@@ -432,4 +431,5 @@ export {
   getCurrentTime,
   cancelDay,
   searchUserByName,
+  getUserWithUID,
 };
