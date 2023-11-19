@@ -15,7 +15,7 @@ const SignOutLink = styled(Link)<StyledProps>`
 `;
 
 export default function LoggedIn() {
-  const userData = useSelector((state: any) => state.user);
+  const userData = useSelector((state: any) => state.users.self);
   return (
     <RootNav admin={userData.admin}>
       <NavLink to="/">ev</NavLink>

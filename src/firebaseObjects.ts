@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, doc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import store from "./redux/store";
-import { resetUser, updateUserDetails } from "./redux/user/user.actions";
+import { resetSelf, updateSelf } from "./redux/users/users.actions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC1lygts6cwiNu-PQ8XblkwvuTHtYaed_A",
@@ -29,14 +29,14 @@ onAuthStateChanged(auth, async (user) => {
     }
     userDetails.birthDate = userDetails.birthDate.seconds;
     store.dispatch(
-      updateUserDetails({
+      updateSelf({
         uid: user.uid,
         email: user.email,
         ...userDetails,
       })
     );
   } else {
-    store.dispatch(resetUser());
+    store.dispatch(resetSelf());
   }
 });
 

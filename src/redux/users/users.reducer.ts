@@ -5,6 +5,8 @@ import {
   addToUsers,
   resetUsers,
   activateUserAct,
+  updateSelf,
+  resetSelf,
 } from "./users.actions";
 import { User } from "../../data/mockDatabase";
 
@@ -12,14 +14,22 @@ export interface UsersState {
   allUsers: {
     [key: string]: User;
   };
+  self: any;
 }
 
 const initialState = {
+  self: {},
   allUsers: {},
 } as UsersState;
 
 const usersReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(updateSelf, (state, action) => {
+      state.self = action.payload;
+    })
+    .addCase(resetSelf, (state, action) => {
+      state.self = {};
+    })
     .addCase(addToUsers, (state, action) => {
       if (action.payload)
         state.allUsers = { ...state.allUsers, ...action.payload } as any;
@@ -31,12 +41,26 @@ const usersReducer = createReducer(initialState, (builder) => {
       state.allUsers = {};
     })
     .addCase(increaseLessonCount, (state: any, action: any) => {
-      state.allUsers[action.payload.uid].lessonCount =
-        state.allUsers[action.payload.uid].lessonCount + action.payload.amount;
+      if (state.self.uid === action.payload.uid) {
+        state.self.lessonCount = state.self.lessonCount + action.payload.amount;
+      } else if (state.allUsers[action.payload.uid]) {
+        state.allUsers[action.payload.uid].lessonCount =
+          state.allUsers[action.payload.uid].lessonCount +
+          action.payload.amount;
+      } else {
+        throw new Error("User not found");
+      }
     })
     .addCase(decreaseLessonCount, (state: any, action: any) => {
-      state.allUsers[action.payload.uid].lessonCount =
-        state.allUsers[action.payload.uid].lessonCount - action.payload.amount;
+      if (state.self.uid === action.payload.uid) {
+        state.self.lessonCount = state.self.lessonCount - action.payload.amount;
+      } else if (state.allUsers[action.payload.uid]) {
+        state.allUsers[action.payload.uid].lessonCount =
+          state.allUsers[action.payload.uid].lessonCount -
+          action.payload.amount;
+      } else {
+        throw new Error("User not found");
+      }
     })
     .addCase(activateUserAct, (state: any, action: any) => {
       state.allUsers[action.payload].active =

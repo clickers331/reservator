@@ -20,7 +20,7 @@ const InputRow = styled.div`
 `;
 
 export default function AddRendezvousForm() {
-  const user = useSelector((state: ReduxState) => state.user);
+  const user = useSelector((state: ReduxState) => state.users.self);
   const today = new Date(); // get today's date
   return (
     <>

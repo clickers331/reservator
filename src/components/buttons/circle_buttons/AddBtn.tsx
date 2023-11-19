@@ -6,7 +6,7 @@ import { ReduxState } from "../../../redux/rootReducer";
 
 export default function AddBtn(props) {
   const theme = useTheme();
-  const user = useSelector((state: ReduxState) => state.user);
+  const user = useSelector((state: ReduxState) => state.users.self);
   return (
     <IconButton
       size="56px"

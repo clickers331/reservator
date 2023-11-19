@@ -21,29 +21,13 @@ import {
   where,
   startAt,
 } from "firebase/firestore";
-import {
-  users,
-  userDetailData,
-  allRandezvous,
-  type User,
-  type AllRandezvous,
-  type UserDetail,
-  Rendezvous,
-} from "./data/mockDatabase.js";
-import { flattenObjectSimple } from "./utils.js";
 import { db, auth } from "./firebaseObjects.js";
 import store from "./redux/store.js";
-import {
-  updateUserDetails,
-  decreaseLessonCount,
-  increaseLessonCount,
-  resetUser,
-} from "./redux/user/user.actions.js";
 import { UserState } from "./redux/user/user.reducer.js";
 import {
   activateUserAct,
-  increaseLessonCount as increaseLessonCountUsers,
-  decreaseLessonCount as decreaseLessonCountUsers,
+  increaseLessonCount,
+  decreaseLessonCount,
   addToUsers,
   resetUsers,
 } from "./redux/users/users.actions.js";
@@ -68,7 +52,6 @@ export interface FormattedDay {
 
 export type Rendezvous2D = Rendezvous[][];
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
   const q = query(
     collection(db, "users"),
@@ -194,7 +177,7 @@ async function cancelDay(date: string) {
 }
 
 async function cancelRendezvous(rendId: any) {
-  const user = store.getState().user as UserState;
+  const user = store.getState().users.self as UserState;
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
   try {
@@ -328,9 +311,16 @@ async function signIn(values: AuthFormValues) {
   }
 }
 
-async function decreaseLessonAmount(amount = 1) {
-  store.dispatch(decreaseLessonCount(amount));
-  const user = store.getState().user;
+async function getUserFromStore(uid: string) {
+  const user =
+    store.getState().users.allUsers[uid] || store.getState().users.self;
+  if (!user) throw new Error("User doesn't exist");
+  return user;
+}
+
+async function decreaseLessonAmount(uid: string, amount = 1) {
+  store.dispatch(decreaseLessonCount({ uid, amount }));
+  const user = await getUserFromStore(uid);
 
   try {
     await updateDoc(doc(db, "users", user.uid), {
@@ -341,16 +331,13 @@ async function decreaseLessonAmount(amount = 1) {
     console.error("Error while decreasing the error amount: ", err);
   }
 }
-async function decreaseLessonAmountUsers(uid: string, amount = 1) {
-  store.dispatch(decreaseLessonCountUsers({ uid, amount }));
-}
 
 async function addRendezvous(date: Date) {
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
   try {
     if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
-      const user = store.getState().user;
+      const user = store.getState().users.self;
       const rendezvousObj = {
         name: user.fullName,
         cancelled: false,
@@ -358,7 +345,7 @@ async function addRendezvous(date: Date) {
         uid: user.uid,
         completed: false,
       } as any;
-      await decreaseLessonAmount();
+      await decreaseLessonAmount(user.uid);
       const rendezvousRef = await addDoc(
         collection(db, "rendezvous"),
         rendezvousObj
@@ -388,8 +375,23 @@ async function addRendezvous(date: Date) {
   }
 }
 
+async function increaseLessonAmount(uid: string, amount = 1) {
+  store.dispatch(decreaseLessonCount({ uid, amount }));
+  const user = await getUserFromStore(uid);
+  console.log(user);
+
+  try {
+    await updateDoc(doc(db, "users", user.uid), {
+      lessonCount: user.lessonCount,
+    });
+    console.log("Update document");
+  } catch (err) {
+    console.error("Error while decreasing the error amount: ", err);
+  }
+}
+
 async function addClass(uid: any, amount = 1) {
-  let user = store.getState().users.allUsers[uid] as any;
+  let user = await getUserFromStore(uid);
   if (!user) {
     try {
       const newUser = await getUserWithUID(uid);
@@ -400,13 +402,11 @@ async function addClass(uid: any, amount = 1) {
     }
   }
   try {
-    store.dispatch(increaseLessonCountUsers({ uid, amount }));
     await updateDoc(doc(db, "users", uid), {
       lessonCount: user.lessonCount + amount,
     });
-    console.log("Add Class");
+    store.dispatch(increaseLessonCount({ uid, amount }));
   } catch (err) {
-    store.dispatch(decreaseLessonCountUsers({ uid, amount }));
     console.error(err);
   }
 }

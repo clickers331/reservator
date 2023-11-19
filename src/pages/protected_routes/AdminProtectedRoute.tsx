@@ -6,7 +6,7 @@ import { Navigate, Outlet, defer } from "react-router-dom";
 import { useSelector } from "react-redux/es/exports";
 
 export default function AdminProtectedRoute() {
-  const userData = useSelector((state: any) => state.user); //Change any
+  const userData = useSelector((state: any) => state.users.self); //Change any
   console.log(userData.admin);
   return (
     <>
