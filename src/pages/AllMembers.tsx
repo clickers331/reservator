@@ -23,7 +23,6 @@ const CircleButtonContainer = styled.div`
   gap: 1rem;
 `;
 async function loader() {
-  await getPaginatedUsers();
   return null;
 }
 

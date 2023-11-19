@@ -51,11 +51,6 @@ const SignUpFormSchema = object({
     .required("Şifre zorunludur"),
 });
 
-const firebaseErrorMessages = {
-  "auth/email-already-in-use": "Bu emaili kullanan bir hesap var.",
-  "auth/invalid-password": "Şifreniz yanlış",
-};
-
 export default function SignUp() {
   const [user] = useAuthState(auth);
   const [error, setError] = useState({});

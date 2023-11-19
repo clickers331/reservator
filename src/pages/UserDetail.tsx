@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -109,8 +109,8 @@ const BackButton = styled.button<StyledProps>`
 
 export default function UserDetail() {
   const { uid } = useParams() as any;
+  let unsub;
   const dispatch = useDispatch();
-  getAllRendezvousUser(uid);
   let userData = useSelector(
     (state: ReduxState) => state.users.allUsers[uid]
   ) as any;
@@ -121,6 +121,13 @@ export default function UserDetail() {
     });
   }
 
+  useEffect(() => {
+    async function getUnsub() {
+      unsub = await getAllRendezvousUser(uid);
+    }
+    getUnsub();
+  }, []);
+
   const birthDate = new Date(userData.birthDate * 1000);
   const birthDateString = `${birthDate.getDate()}/${
     birthDate.getMonth() + 1
@@ -130,7 +137,15 @@ export default function UserDetail() {
     <>
       <Container overflow={"visible"} height="auto">
         <StyledUserDetails>
-          <BackButton onClick={() => navigate(-1)}>Geri</BackButton>
+          <BackButton
+            onClick={() => {
+              unsub();
+              console.log("unsubbed");
+              navigate(-1);
+            }}
+          >
+            Geri
+          </BackButton>
           <div>
             <Flex $jc={"space-between"}>
               <h1>Detaylar</h1>

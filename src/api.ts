@@ -20,6 +20,8 @@ import {
   addDoc,
   where,
   startAt,
+  onSnapshot,
+  deleteDoc,
 } from "firebase/firestore";
 import { db, auth } from "./firebaseObjects.js";
 import store from "./redux/store.js";
@@ -59,19 +61,32 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     startAfter(lastRef || 0),
     limit(lim)
   );
-  const userData = await getDocs(q);
-  console.log("Get Users (getPaginatedUsers)");
-  const usersObj: any = {};
-  userData.forEach((user) => {
-    const userObj = {
-      uid: user.id,
-      ...user.data(),
-    } as any;
-    userObj.birthDate = userObj.birthDate.seconds;
-    usersObj[user.id] = userObj;
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    querySnapshot.docChanges().forEach((change) => {
+      if (change.type === "added") {
+        console.log("New user: ", change.doc.data());
+      }
+      if (change.type === "modified") {
+        console.log("Modified user: ", change.doc.data());
+      }
+      if (change.type === "removed") {
+        console.log("Removed user: ", change.doc.data());
+      }
+    });
+
+    const userData = querySnapshot.docs;
+    const usersObj: any = {};
+    userData.forEach((user) => {
+      const userObj = {
+        uid: user.id,
+        ...user.data(),
+      } as any;
+      userObj.birthDate = userObj.birthDate.seconds;
+      usersObj[user.id] = userObj;
+    });
+    store.dispatch(addToUsers(usersObj));
   });
-  store.dispatch(addToUsers(usersObj));
-  return userData;
+  return unsubscribe;
 }
 
 async function getAllRendezvous() {
@@ -81,38 +96,36 @@ async function getAllRendezvous() {
       orderBy("date"),
       startAt(Date.now())
     );
-    const rendezvous = await getDocs(q);
-    console.log("Rendezvous Request (getAllRendezvous)");
-    const serializableRendezvous = rendezvous.docs.map((rend) => {
-      const data = rend.data();
-      data.id = rend.id;
-      data.date = data.date.seconds;
-      return data;
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const rendezvous = querySnapshot.docs;
+      const serializableRendezvous = rendezvous.map((rend) => {
+        const data = rend.data();
+        data.id = rend.id;
+        data.date = data.date.seconds;
+        return data;
+      });
+      store.dispatch(setRendezvous(serializableRendezvous));
     });
-    store.dispatch(setRendezvous(serializableRendezvous));
 
-    return rendezvous.docs;
+    return unsubscribe;
   } catch (err) {
     console.error(err);
   }
 }
 
 async function activateUser(uid: any) {
-  //Rename to "toggleUserActive"
   const user = store.getState().users.allUsers[uid] as any;
   try {
     await updateDoc(doc(db, "users", uid), {
       active: !user.active,
     });
-    console.log("Activate User (activateUser)");
-    store.dispatch(activateUserAct(uid));
   } catch (err) {
     console.error(err);
   }
 }
 
-async function getRendezvousDay(date: string) {
-  const newDate = new Date(date) || new Date();
+async function getRendezvousDay() {
+  const newDate = new Date();
   const today = new Date(newDate);
   today.setHours(0);
   const tomorrow = new Date(today);
@@ -124,22 +137,37 @@ async function getRendezvousDay(date: string) {
       where("date", "<", Timestamp.fromDate(tomorrow))
     );
 
-    const docs = await getDocs(q);
-    console.log("getRendezvousForTheDay");
-    const rendezvous = {};
-    docs.forEach((doc) => {
-      const data = doc.data();
-      data.id = doc.id;
-      data.date = data.date.seconds * 1000;
-      const date = new Date(data.date);
-      if (rendezvous[date.getHours()]) {
-        rendezvous[date.getHours()].push(data);
-      } else {
-        rendezvous[date.getHours()] = [data];
-      }
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docs = querySnapshot.docs;
+      console.log("shit chaned over on getRendezvousDay");
+      querySnapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          console.log("New rend: ", change.doc.data());
+        }
+        if (change.type === "modified") {
+          console.log("Modified rend: ", change.doc.data());
+        }
+        if (change.type === "removed") {
+          console.log("Removed rend: ", change.doc.data());
+        }
+      });
+
+      console.log("");
+      const rendezvous = {};
+      docs.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        data.date = data.date.seconds * 1000;
+        const date = new Date(data.date);
+        if (rendezvous[date.getHours()]) {
+          rendezvous[date.getHours()].push(data);
+        } else {
+          rendezvous[date.getHours()] = [data];
+        }
+      });
+      store.dispatch(setDayRendezvous(rendezvous));
     });
-    store.dispatch(setDayRendezvous(rendezvous));
-    return rendezvous;
+    return unsubscribe;
   } catch (err) {
     console.error(err);
   }
@@ -163,7 +191,6 @@ async function cancelDay(date: string) {
       where("date", ">=", Timestamp.fromDate(today)),
       where("date", "<", Timestamp.fromDate(tomorrow))
     );
-    console.log("cancelDayFB");
     const docs = await getDocs(q);
     docs.forEach(async (rendDoc) => {
       const docData = rendDoc.data();
@@ -182,12 +209,8 @@ async function cancelRendezvous(rendId: any) {
   const dateNow = new Date(currentTimeData.datetime);
   try {
     if (dateNow.getHours() < SYSTEM_CLOSE_TIME) {
-      await updateDoc(doc(db, "rendezvous", rendId), {
-        cancelled: true,
-      });
-      console.log("cancelOneRendezvous");
+      await deleteDoc(doc(db, "rendezvous", rendId));
       await addClass(user.uid, 1);
-      store.dispatch(cancelRendezvousAct(rendId));
     } else {
       throw Error("Saat 19:00'dan sonra sistem kapanır.");
     }
@@ -213,16 +236,18 @@ async function getAllRendezvousUser(uid?: string) {
       where("uid", "==", userID),
       orderBy("date")
     );
-    const userRendezvous = await getDocs(q);
-    console.log("getAllRendezvousUser");
-    const serializableRendezvous = userRendezvous.docs.map((rend) => {
-      const data = rend.data();
-      data.date = data.date.seconds;
-      data.id = rend.id;
-      return data;
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const userRendezvous = querySnapshot.docs;
+      const serializableRendezvous = userRendezvous.map((rend) => {
+        const data = rend.data();
+        data.date = data.date.seconds;
+        data.id = rend.id;
+        return data;
+      });
+      store.dispatch(setUserDetailRendezvous(serializableRendezvous));
     });
-    store.dispatch(setUserDetailRendezvous(serializableRendezvous));
-    return userRendezvous.docs;
+    console.log(unsubscribe);
+    return unsubscribe;
   } catch (error) {
     console.error(error);
   }
@@ -246,7 +271,6 @@ async function searchUserByName(name: string) {
   });
   store.dispatch(resetUsers());
   store.dispatch(addToUsers(usersObj));
-  console.log("Search User (searchUserByName)");
 }
 
 async function getUser() {
@@ -263,7 +287,6 @@ async function getUser() {
 
 async function getUserWithUID(uid: string) {
   const user = await getDoc(doc(db, "users", uid));
-  console.log("getUser");
   return user.data();
 }
 
@@ -343,7 +366,6 @@ async function decreaseLessonAmount(uid: string, amount = 1) {
     await updateDoc(doc(db, "users", user.uid), {
       lessonCount: user.lessonCount - amount,
     });
-    console.log("Update document");
   } catch (err) {
     console.error("Error while decreasing the error amount: ", err);
   }
@@ -367,14 +389,8 @@ async function addRendezvous(date: Date) {
         collection(db, "rendezvous"),
         rendezvousObj
       );
-      console.log("Add rendezvous document");
       rendezvousObj.date = rendezvousObj.date.seconds as any;
       rendezvousObj.id = rendezvousRef.id;
-      store.dispatch(addUserDetailRendezvous(rendezvousObj));
-      await updateDoc(doc(db, "users", user.uid), {
-        rendezvous: arrayUnion(rendezvousRef.id),
-      });
-      console.log("Update rendezvous document");
     } else {
       throw new Error("Sistem 19:00'dan sonra kapanır");
     }
@@ -395,13 +411,11 @@ async function addRendezvous(date: Date) {
 async function increaseLessonAmount(uid: string, amount = 1) {
   store.dispatch(decreaseLessonCount({ uid, amount }));
   const user = await getUserFromStore(uid);
-  console.log(user);
 
   try {
     await updateDoc(doc(db, "users", user.uid), {
       lessonCount: user.lessonCount,
     });
-    console.log("Update document");
   } catch (err) {
     console.error("Error while decreasing the error amount: ", err);
   }

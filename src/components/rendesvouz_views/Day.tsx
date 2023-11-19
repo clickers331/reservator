@@ -84,7 +84,6 @@ const CancelDayBtn = styled.button`
 type DayDataKeyValue = [string, Rendezvous[]];
 
 async function loader({ params: { month, day } }: DateParams) {
-  await getRendezvousDay(`2023-${month}-${day}`);
   return null;
 }
 
@@ -101,7 +100,7 @@ export default function Day() {
         <StyledDateHeader>
           {day} {turkishMonthName}
         </StyledDateHeader>
-        {!dayRendezvous ? (
+        {Object.keys(dayRendezvous).length == 0 ? (
           <h1>Bugün randevu yok</h1>
         ) : (
           Object.entries(dayRendezvous).map(
