@@ -7,6 +7,9 @@ import {
   activateUserAct,
   updateSelf,
   resetSelf,
+  addSubscriptions,
+  unsubscribe,
+  unsubscribeAll,
 } from "./users.actions";
 import { User } from "../../api";
 
@@ -14,7 +17,13 @@ export interface UsersState {
   allUsers: {
     [key: string]: User;
   };
-  self: any;
+  self:
+    | (User & {
+        subscriptions: {
+          [key: string]: string;
+        };
+      })
+    | Record<string, never>;
 }
 
 const initialState = {
@@ -25,7 +34,14 @@ const initialState = {
 const usersReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(updateSelf, (state, action) => {
-      state.self = action.payload;
+      if (state.self.subscriptions) {
+        state.self = {
+          subscriptions: state.self.subscriptions,
+          ...action.payload,
+        };
+      } else {
+        state.self = action.payload;
+      }
     })
     .addCase(resetSelf, (state, action) => {
       state.self = {};

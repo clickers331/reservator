@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import styled from "styled-components";
 import TableContainer from "../components/tables/TableContainer.js";
 import Container from "../containers/Container.js";
 import SearchNav from "../components/navs/SearchNav.jsx";
@@ -8,11 +7,6 @@ import { useSelector } from "react-redux";
 import { ReduxState } from "../redux/rootReducer.js";
 import { nanoid } from "nanoid";
 
-const CircleButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
 async function loader() {
   return null;
 }

@@ -40,6 +40,8 @@ const monthNamesURL = [
   "december",
 ];
 
+//write me a redux middleware that serializes functions and turns them into strings
+
 function flattenObjectSimple<T>(object: object): T[] {
   const flattenedObject: any[] = [];
   Object.values(object).map((value) => flattenedObject.push(...value));

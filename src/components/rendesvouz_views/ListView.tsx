@@ -19,7 +19,6 @@ const CircleButtonContainer = styled.div`
   gap: 1em;
 `;
 async function loader() {
-  getAllRendezvous();
   return null;
 }
 
@@ -30,7 +29,8 @@ export default function ListView() {
   return (
     <Container.Content $padding="1rem">
       <TableContainer>
-        {allRendezvous.map(({ cancelled, date, name, id }, idx) => {
+        {allRendezvous.map((rend, idx) => {
+          const { cancelled, date, name, id } = rend;
           const currentDate = new Date(date * 1000);
           return (
             <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
@@ -47,7 +47,7 @@ export default function ListView() {
                 {cancelled || (
                   <CancelBtn
                     clickHandler={() => {
-                      cancelRendezvous(id);
+                      cancelRendezvous(rend);
                     }}
                   />
                 )}

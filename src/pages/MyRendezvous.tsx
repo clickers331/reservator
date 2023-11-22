@@ -3,10 +3,11 @@ import { getAllRendezvousUser } from "../api";
 import UserRendezvous from "../components/UserRendezvous";
 import Container from "../containers/Container";
 import AddRendezvousForm from "../components/AddRendezvousForm";
+import { useLoaderData } from "react-router-dom";
 
 async function loader() {
-  getAllRendezvousUser();
-  return null;
+  const unsub = await getAllRendezvousUser();
+  return unsub;
 }
 
 const StyledMyRendezvous = styled.div`
@@ -17,6 +18,10 @@ const StyledMyRendezvous = styled.div`
 `;
 
 export default function MyRendezvous() {
+  const unsub = useLoaderData();
+  if (window.location.pathname !== "/my-rendezvous") {
+    unsub();
+  }
   return (
     <Container maxWidth="1400px">
       <Container.Content>

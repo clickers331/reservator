@@ -123,7 +123,7 @@ export default function Day() {
                           <CancelBtn
                             clickHandler={async (e: any) => {
                               e.target.disabled = true;
-                              cancelRendezvous(rendezvous.id).then(
+                              cancelRendezvous(rendezvous).then(
                                 () => (e.target.disabled = false)
                               );
                             }}

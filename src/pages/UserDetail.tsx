@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { StyledProps } from "../styledUtils";
 import Container from "../containers/Container";
@@ -9,6 +9,7 @@ import {
   addClass,
   getAllRendezvousUser,
   getUserWithUID,
+  subscribeToUserWithUID,
 } from "../api";
 import UserRendezvous from "../components/UserRendezvous";
 import { ReduxState } from "../redux/rootReducer";
@@ -105,26 +106,45 @@ const BackButton = styled.button<StyledProps>`
   cursor: pointer;
 `;
 
+async function loader({ request, params }) {
+  const uid = params.uid;
+  const userSub = await subscribeToUserWithUID(uid);
+  const rendSub = await getAllRendezvousUser(uid);
+  return () => {
+    userSub();
+    rendSub();
+  };
+}
+
 export default function UserDetail() {
   const { uid } = useParams() as any;
-  let unsub: Unsubscribe;
+  const unsubscribe = useLoaderData();
   const dispatch = useDispatch();
+  console.log("rerendered");
+  useEffect(() => {
+    if (window.location.pathname.includes(uid)) {
+    }
+  }, []);
   let userData = useSelector(
     (state: ReduxState) => state.users.allUsers[uid]
   ) as any;
   if (!userData) {
+    userData = {
+      fullName: "",
+      birthPlace: "",
+      birthDate: 0,
+      email: "",
+      phone: "",
+      bloodType: "",
+      lessonCount: 0,
+      active: false,
+      admin: false,
+    };
     getUserWithUID(uid).then((user) => {
       userData = user;
       dispatch(addToUsers({ [uid]: user } as AddToUsersPayload));
     });
   }
-
-  useEffect(() => {
-    async function getUnsub() {
-      unsub = (await getAllRendezvousUser(uid)) as Unsubscribe;
-    }
-    getUnsub();
-  }, []);
 
   const birthDate = new Date(userData.birthDate * 1000);
   const birthDateString = `${birthDate.getDate()}/${
@@ -137,8 +157,7 @@ export default function UserDetail() {
         <StyledUserDetails>
           <BackButton
             onClick={() => {
-              unsub();
-              console.log("unsubbed");
+              unsubscribe();
               navigate(-1);
             }}
           >
@@ -234,3 +253,5 @@ export default function UserDetail() {
     </>
   );
 }
+
+UserDetail.loader = loader;

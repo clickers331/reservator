@@ -35,7 +35,6 @@ export default function AddRendezvousForm() {
         }}
         onSubmit={(values, { setSubmitting }) => {
           if (parseInt(user.lessonCount as string) > 0) {
-            console.log(values);
             const valueDate = new Date(values.date);
             valueDate.setHours(parseInt(values.hour));
             addRendezvous(valueDate).then(() => setSubmitting(false));
@@ -56,7 +55,16 @@ export default function AddRendezvousForm() {
                   },
                 }}
               >
-                <option value={`${today}`}>{dayNamesTR[today.getDay()]}</option>
+                <option
+                  value={`${new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate() + 1
+                  )}
+                `}
+                >
+                  {dayNamesTR[today.getDay()]}
+                </option>
                 <option
                   value={`${new Date(
                     today.getFullYear(),
@@ -76,7 +84,7 @@ export default function AddRendezvousForm() {
                   value={`${new Date(
                     today.getFullYear(),
                     today.getMonth(),
-                    today.getDate()
+                    today.getDate() + 3
                   )}`}
                 >
                   {

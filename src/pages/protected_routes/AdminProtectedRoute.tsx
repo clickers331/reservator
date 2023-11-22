@@ -4,7 +4,6 @@ import { ReduxState } from "../../redux/rootReducer";
 
 export default function AdminProtectedRoute() {
   const userData = useSelector((state: ReduxState) => state.users.self); //Change any
-  console.log(userData.admin);
   return (
     <>
       {userData.admin ? null : <Navigate to="/" />}

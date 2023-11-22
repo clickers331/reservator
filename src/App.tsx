@@ -1,9 +1,11 @@
+import React from "react";
 import { ThemeProvider } from "styled-components";
 import {
   createRoutesFromElements,
   createBrowserRouter,
   Route,
   RouterProvider,
+  useLocation,
 } from "react-router-dom";
 import RootLayout from "./pages/RootLayout.js";
 import AllMembers from "./pages/AllMembers.jsx";
@@ -72,7 +74,11 @@ const router = createBrowserRouter(
             loader={AllMembers.loader}
             errorElement={<Error />}
           />
-          <Route path="users/:uid" element={<UserDetail />} />
+          <Route
+            path="users/:uid"
+            element={<UserDetail />}
+            loader={UserDetail.loader}
+          />
         </Route>
       </Route>
     </Route>

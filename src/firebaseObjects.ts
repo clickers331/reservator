@@ -1,9 +1,14 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, getDoc, doc } from "firebase/firestore";
+import { getFirestore, getDoc, doc, onSnapshot } from "firebase/firestore";
 import { Unsubscribe, getAuth, onAuthStateChanged } from "firebase/auth";
 import store from "./redux/store";
 import { resetSelf, updateSelf } from "./redux/users/users.actions";
-import { getPaginatedUsers, getRendezvousDay } from "./api";
+import {
+  getAllRendezvous,
+  getAllRendezvousUser,
+  getPaginatedUsers,
+  getRendezvousDay,
+} from "./api";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC1lygts6cwiNu-PQ8XblkwvuTHtYaed_A",
@@ -19,30 +24,42 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-let unsubs: Unsubscribe[] = [];
+let unsubs = [] as Unsubscribe[];
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     let userDetails: any; //Change it from any
     try {
-      const docSnap = await getDoc(doc(db, "users", user.uid));
-      userDetails = docSnap.data();
-      if (userDetails.admin) {
-        unsubs = [await getPaginatedUsers(), await getRendezvousDay()];
-      }
+      const unsubscribe = await onSnapshot(
+        doc(db, "users", user.uid),
+        async (docSnap) => {
+          console.log("User updated");
+          userDetails = docSnap.data();
+          userDetails.birthDate = userDetails.birthDate.seconds;
+          store.dispatch(
+            updateSelf({
+              uid: user.uid,
+              email: user.email,
+              ...userDetails,
+            })
+          );
+
+          unsubs = [...unsubs, unsubscribe];
+          if (userDetails.admin) {
+            unsubs = [
+              ...unsubs,
+              await getPaginatedUsers(),
+              await getRendezvousDay(),
+              await getAllRendezvous(),
+            ];
+          }
+        }
+      );
     } catch (err: any) {
       console.log(err);
     }
-    userDetails.birthDate = userDetails.birthDate.seconds;
-    store.dispatch(
-      updateSelf({
-        uid: user.uid,
-        email: user.email,
-        ...userDetails,
-      })
-    );
   } else {
     unsubs.forEach((unsub) => unsub());
-    console.log("unsubbed from all");
+    unsubs = [];
     store.dispatch(resetSelf());
   }
 });

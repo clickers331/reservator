@@ -4,9 +4,8 @@ import TableRow from "./tables/TableRow";
 import { monthNamesTR } from "../utils";
 import CancelBtn from "./buttons/circle_buttons/CancelBtn";
 import { useSelector } from "react-redux";
-import { cancelRendezvous, getAllRendezvousUser } from "../api";
+import { cancelRendezvous } from "../api";
 import { ReduxState } from "../redux/rootReducer";
-import { Store } from "react-notifications-component";
 
 const CircleButtonContainer = styled.div`
   display: flex;
@@ -15,7 +14,6 @@ const CircleButtonContainer = styled.div`
 `;
 
 export default function UserRendezvous() {
-  //Declare the "name" prop
   const userRendezvous = useSelector(
     (state: ReduxState) => state.rendezvous.userDetailRendezvousArr
   );
@@ -26,7 +24,7 @@ export default function UserRendezvous() {
           <h2>Randevu Yok</h2>
         ) : (
           userRendezvous.map((rend, idx) => {
-            const { date, cancelled, id } = rend;
+            const { date, cancelled } = rend;
             const currentDate = new Date(date * 1000);
             return (
               <TableRow state={!cancelled ? "active" : "cancelled"} key={idx}>
@@ -43,7 +41,7 @@ export default function UserRendezvous() {
                     <CancelBtn
                       clickHandler={async (e: any) => {
                         e.target.disabled = true;
-                        cancelRendezvous(id).then(
+                        cancelRendezvous(rend).then(
                           () => (e.target.disabled = false)
                         );
                       }}

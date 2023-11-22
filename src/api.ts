@@ -79,18 +79,6 @@ async function getPaginatedUsers(lastRef?: any, lim = 10): Promise<any> {
     limit(lim)
   );
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    querySnapshot.docChanges().forEach((change) => {
-      if (change.type === "added") {
-        console.log("New user: ", change.doc.data());
-      }
-      if (change.type === "modified") {
-        console.log("Modified user: ", change.doc.data());
-      }
-      if (change.type === "removed") {
-        console.log("Removed user: ", change.doc.data());
-      }
-    });
-
     const userData = querySnapshot.docs;
     const usersObj: any = {};
     userData.forEach((user) => {
@@ -156,20 +144,7 @@ async function getRendezvousDay() {
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const docs = querySnapshot.docs;
-      console.log("shit chaned over on getRendezvousDay");
-      querySnapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-          console.log("New rend: ", change.doc.data());
-        }
-        if (change.type === "modified") {
-          console.log("Modified rend: ", change.doc.data());
-        }
-        if (change.type === "removed") {
-          console.log("Removed rend: ", change.doc.data());
-        }
-      });
 
-      console.log("");
       const rendezvous: DayRendezvous = {};
       docs.forEach((doc) => {
         const data = {
@@ -215,7 +190,7 @@ async function cancelDay(date: string) {
     docs.forEach(async (rendDoc) => {
       const docData = rendDoc.data();
       if (!docData.cancelled) {
-        cancelRendezvous(rendDoc.id);
+        cancelRendezvous(docData);
       }
     });
   } catch (err) {
@@ -223,8 +198,9 @@ async function cancelDay(date: string) {
   }
 }
 
-async function cancelRendezvous(rendId: any) {
-  const user = await getUserFromStore(auth.currentUser?.uid || "");
+async function cancelRendezvous(rendData: any) {
+  const rendId = rendData.id;
+  const user = await getUserFromStore(rendData.uid);
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
   try {
@@ -250,6 +226,7 @@ async function cancelRendezvous(rendId: any) {
 async function getAllRendezvousUser(uid?: string) {
   try {
     const userID = uid || auth.currentUser?.uid;
+
     const q = query(
       collection(db, "rendezvous"),
       where("date", ">=", Timestamp.fromDate(new Date(Date.now()))),
@@ -257,6 +234,7 @@ async function getAllRendezvousUser(uid?: string) {
       orderBy("date")
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      console.log("User rendezvous updated");
       const userRendezvous = querySnapshot.docs;
       const serializableRendezvous = userRendezvous.map((rend) => {
         const data = rend.data();
@@ -266,7 +244,6 @@ async function getAllRendezvousUser(uid?: string) {
       });
       store.dispatch(setUserDetailRendezvous(serializableRendezvous));
     });
-    console.log(unsubscribe);
     return unsubscribe;
   } catch (error) {
     console.error(error);
@@ -277,7 +254,8 @@ async function searchUserByName(name: string) {
   const q = query(
     collection(db, "users"),
     where("fullName", ">=", name),
-    where("fullName", "<=", name + "\uf8ff")
+    where("fullName", "<=", name + "\uf8ff"),
+    limit(15)
   );
   const userData = await getDocs(q);
   const usersObj: any = {};
@@ -306,8 +284,28 @@ async function getUser() {
 }
 
 async function getUserWithUID(uid: string) {
-  const user = await getDoc(doc(db, "users", uid));
-  return user.data();
+  try {
+    const user = await getDoc(doc(db, "users", uid));
+    const userData = user.data();
+    userData.birthDate = userData.birthDate.seconds * 1000;
+    return userData;
+  } catch (err) {
+    console.error(null);
+    return null;
+  }
+}
+
+async function subscribeToUserWithUID(uid: string) {
+  const unsubscribe = onSnapshot(doc(db, "users", uid), (doc) => {
+    console.log("User updated");
+    const userObj = {
+      uid: uid,
+      ...doc.data(),
+    } as any;
+    userObj.birthDate = userObj.birthDate.seconds;
+    store.dispatch(addToUsers({ [uid]: userObj }));
+  });
+  return unsubscribe;
 }
 
 export interface AuthFormValues {
@@ -372,15 +370,24 @@ async function signIn(values: AuthFormValues) {
 }
 
 async function getUserFromStore(uid: string) {
-  const user =
+  let user =
     store.getState().users.allUsers[uid] || store.getState().users.self;
-  if (!user) throw new Error("User doesn't exist");
-  return user;
+  if (!user || user.uid !== uid) {
+    user = await getUserWithUID(uid);
+    if (user) {
+      store.dispatch(addToUsers({ [uid]: user }));
+      return user;
+    } else {
+      console.error("User not found");
+      return null;
+    }
+  } else {
+    return user;
+  }
 }
 
 async function decreaseLessonAmount(uid: string, amount = 1) {
   const user = await getUserFromStore(uid);
-  store.dispatch(decreaseLessonCount({ uid, amount }));
 
   try {
     await updateDoc(doc(db, "users", user.uid), {
@@ -428,35 +435,12 @@ async function addRendezvous(date: Date) {
   }
 }
 
-async function increaseLessonAmount(uid: string, amount = 1) {
-  store.dispatch(decreaseLessonCount({ uid, amount }));
-  const user = await getUserFromStore(uid);
-
-  try {
-    await updateDoc(doc(db, "users", user.uid), {
-      lessonCount: user.lessonCount,
-    });
-  } catch (err) {
-    console.error("Error while decreasing the error amount: ", err);
-  }
-}
-
 async function addClass(uid: any, amount = 1) {
   let user: User = await getUserFromStore(uid);
-  if (!user) {
-    try {
-      const newUser = (await getUserWithUID(uid)) as User;
-      user = newUser;
-      store.dispatch(addToUsers({ [uid]: user }));
-    } catch (err: any) {
-      console.error(err);
-    }
-  }
   try {
     await updateDoc(doc(db, "users", uid), {
       lessonCount: user.lessonCount + amount,
     });
-    store.dispatch(increaseLessonCount({ uid, amount }));
   } catch (err) {
     console.error(err);
   }
@@ -484,4 +468,5 @@ export {
   cancelDay,
   searchUserByName,
   getUserWithUID,
+  subscribeToUserWithUID,
 };
