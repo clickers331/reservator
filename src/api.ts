@@ -192,8 +192,9 @@ async function cancelDay(date: string) {
     const docs = await getDocs(q);
     docs.forEach(async (rendDoc) => {
       const docData = rendDoc.data();
+      docData.id = rendDoc.id;
       if (!docData.cancelled) {
-        cancelRendezvous(docData);
+        await cancelRendezvous(docData);
       }
     });
   } catch (err) {
@@ -203,6 +204,7 @@ async function cancelDay(date: string) {
 
 async function cancelRendezvous(rendData: any) {
   const rendId = rendData.id;
+  console.log(rendId);
   const user = await getUserFromStore(rendData.uid);
   if (!user) return;
   const currentTimeData = await getCurrentTime();
@@ -215,6 +217,7 @@ async function cancelRendezvous(rendData: any) {
       throw Error("Saat 19:00'dan sonra sistem kapanır.");
     }
   } catch (err: any) {
+    console.error(err);
     Store.addNotification({
       title: "Hata",
       message: err.message,
@@ -457,7 +460,7 @@ async function addClass(uid: any, amount = 1) {
 }
 
 async function getCurrentTime() {
-  const res = await fetch("http://worldtimeapi.org/api/timezone/Turkey");
+  const res = await fetch("https://worldtimeapi.org/api/timezone/Turkey");
   const data = await res.json();
   return data;
 }

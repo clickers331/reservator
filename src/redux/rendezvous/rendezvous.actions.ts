@@ -8,13 +8,11 @@ const setUserDetailRendezvous = createAction<DocumentData>(
 );
 const addUserDetailRendezvous = createAction("rendezvous/userDetail/add");
 const addRendezvousAct = createAction("rendezvous/add");
-const cancelRendezvousAct = createAction("rendezvous/cancel");
 
 export {
   setRendezvous,
   addRendezvousAct,
   setUserDetailRendezvous,
   addUserDetailRendezvous,
-  cancelRendezvousAct,
   setDayRendezvous,
 };
