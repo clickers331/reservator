@@ -34,7 +34,7 @@ export default function AddRendezvousForm() {
           hour: "7",
         }}
         onSubmit={(values, { setSubmitting }) => {
-          if (parseInt(user.lessonCount as string) > 0) {
+          if (parseInt(user.lessonCount as unknown as string) > 0) {
             const valueDate = new Date(values.date);
             valueDate.setHours(parseInt(values.hour));
             addRendezvous(valueDate).then(() => setSubmitting(false));
