@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLoaderData, useNavigate, useParams } from "react-router-dom";
+import {
+  LoaderFunctionArgs,
+  useLoaderData,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import { StyledProps } from "../styledUtils";
 import Container from "../containers/Container";
@@ -106,21 +111,20 @@ const BackButton = styled.button<StyledProps>`
   cursor: pointer;
 `;
 
-async function loader({ request, params }) {
-  const uid = params.uid;
+async function loader({ request, params }: LoaderFunctionArgs) {
+  const uid = params.uid as string;
   const userSub = await subscribeToUserWithUID(uid);
   const rendSub = await getAllRendezvousUser(uid);
   return () => {
-    userSub();
-    rendSub();
+    if (userSub) userSub();
+    if (rendSub) rendSub();
   };
 }
 
 export default function UserDetail() {
   const { uid } = useParams() as any;
-  const unsubscribe = useLoaderData();
+  const unsubscribe = useLoaderData() as Function;
   const dispatch = useDispatch();
-  console.log("rerendered");
   useEffect(() => {
     if (window.location.pathname.includes(uid)) {
     }

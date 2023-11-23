@@ -21,6 +21,7 @@ import {
   startAt,
   onSnapshot,
   deleteDoc,
+  DocumentData,
 } from "firebase/firestore";
 import { db, auth } from "./firebaseObjects.js";
 import store from "./redux/store.js";
@@ -59,6 +60,8 @@ export interface User {
   bloodType: string;
   active: boolean;
   lessonCount: number;
+  admin?: boolean;
+  subscriptions?: string[];
 }
 
 export interface ErrorObject {
@@ -201,6 +204,7 @@ async function cancelDay(date: string) {
 async function cancelRendezvous(rendData: any) {
   const rendId = rendData.id;
   const user = await getUserFromStore(rendData.uid);
+  if (!user) return;
   const currentTimeData = await getCurrentTime();
   const dateNow = new Date(currentTimeData.datetime);
   try {
@@ -287,6 +291,7 @@ async function getUserWithUID(uid: string) {
   try {
     const user = await getDoc(doc(db, "users", uid));
     const userData = user.data();
+    if (!userData) return null;
     userData.birthDate = userData.birthDate.seconds * 1000;
     return userData;
   } catch (err) {
@@ -296,16 +301,20 @@ async function getUserWithUID(uid: string) {
 }
 
 async function subscribeToUserWithUID(uid: string) {
-  const unsubscribe = onSnapshot(doc(db, "users", uid), (doc) => {
-    console.log("User updated");
-    const userObj = {
-      uid: uid,
-      ...doc.data(),
-    } as any;
-    userObj.birthDate = userObj.birthDate.seconds;
-    store.dispatch(addToUsers({ [uid]: userObj }));
-  });
-  return unsubscribe;
+  try {
+    const unsubscribe = onSnapshot(doc(db, "users", uid), (doc) => {
+      console.log("User updated");
+      const userObj = {
+        uid: uid,
+        ...doc.data(),
+      } as any;
+      userObj.birthDate = userObj.birthDate.seconds;
+      store.dispatch(addToUsers({ [uid]: userObj }));
+    });
+    return unsubscribe;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export interface AuthFormValues {
@@ -373,7 +382,7 @@ async function getUserFromStore(uid: string) {
   let user =
     store.getState().users.allUsers[uid] || store.getState().users.self;
   if (!user || user.uid !== uid) {
-    user = await getUserWithUID(uid);
+    user = (await getUserWithUID(uid)) as User;
     if (user) {
       store.dispatch(addToUsers({ [uid]: user }));
       return user;
@@ -388,7 +397,7 @@ async function getUserFromStore(uid: string) {
 
 async function decreaseLessonAmount(uid: string, amount = 1) {
   const user = await getUserFromStore(uid);
-
+  if (!user) return;
   try {
     await updateDoc(doc(db, "users", user.uid), {
       lessonCount: user.lessonCount - amount,
@@ -436,7 +445,8 @@ async function addRendezvous(date: Date) {
 }
 
 async function addClass(uid: any, amount = 1) {
-  let user: User = await getUserFromStore(uid);
+  let user: User | null = await getUserFromStore(uid);
+  if (!user) return;
   try {
     await updateDoc(doc(db, "users", uid), {
       lessonCount: user.lessonCount + amount,

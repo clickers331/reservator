@@ -7,7 +7,7 @@ import { useLoaderData } from "react-router-dom";
 
 async function loader() {
   const unsub = await getAllRendezvousUser();
-  return unsub;
+  return unsub || null;
 }
 
 const StyledMyRendezvous = styled.div`
@@ -20,7 +20,11 @@ const StyledMyRendezvous = styled.div`
 export default function MyRendezvous() {
   const unsub = useLoaderData();
   if (window.location.pathname !== "/my-rendezvous") {
-    unsub();
+    if (typeof unsub === "function") {
+      unsub();
+    } else {
+      console.error("unsub is null");
+    }
   }
   return (
     <Container maxWidth="1400px">
