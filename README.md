@@ -1,4 +1,5 @@
-# Bursa Kürek Kulubu Rezervasyon Sistemi
+# Reservator
+## A reservation system template
 
 Kullanılan teknolojiler
 1. React 18
