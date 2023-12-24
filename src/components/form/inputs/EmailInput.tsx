@@ -6,7 +6,7 @@ export default function EmailInput() {
     <IconInput
       type="email"
       name="email"
-      placeholder="E-Posta Adresi"
+      placeholder="E-Mail"
       iconData={{
         iconLeft: {
           icon: EmailIcon,

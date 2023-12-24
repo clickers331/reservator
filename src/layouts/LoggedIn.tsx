@@ -18,14 +18,14 @@ export default function LoggedIn() {
   const userData = useSelector((state: any) => state.users.self);
   return (
     <RootNav admin={userData.admin}>
-      <NavLink to="/">ev</NavLink>
+      <NavLink to="/">home</NavLink>
       {userData.admin ? (
         <>
-          <NavLink to="admin/rendezvous">tüm randevular</NavLink>
-          <NavLink to="admin/users">üyeler</NavLink>
+          <NavLink to="admin/rendezvous">all rendezvous</NavLink>
+          <NavLink to="admin/users">members</NavLink>
         </>
       ) : (
-        <NavLink to="my-rendezvous">randevularim</NavLink>
+        <NavLink to="my-rendezvous">my rendezvous</NavLink>
       )}
       <SignOutLink
         to="/signin"
@@ -33,7 +33,7 @@ export default function LoggedIn() {
           signOut(auth);
         }}
       >
-        çıkış
+        sign out
       </SignOutLink>
     </RootNav>
   );

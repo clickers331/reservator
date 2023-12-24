@@ -31,7 +31,7 @@ export default function PasswordInput({ id, ...props }: PasswordInputProps) {
     <IconInput
       type={passwordVisibility ? "text" : "password"}
       name="password"
-      placeholder={id ? "TC Kimlik No." : "Şifre"}
+      placeholder={id ? "ID" : "Password"}
       iconData={iconData}
     />
   );

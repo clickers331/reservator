@@ -119,7 +119,7 @@ export default function RootNav({
   return (
     <Nav>
       <StyledHeader>
-        BKK <LightText>Randevu</LightText>
+        Acme <LightText>Rendezvous</LightText>
         {admin ? (
           <>
             <Seperator> | </Seperator>

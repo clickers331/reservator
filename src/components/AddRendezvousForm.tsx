@@ -24,9 +24,9 @@ export default function AddRendezvousForm() {
   const today = new Date(); // get today's date
   return (
     <>
-      <h1>Randevu Al</h1>
+      <h1>Make a Rendezvous!</h1>
       <StyledLessonCountText>
-        Kalan Ders Sayısı: {user.lessonCount}
+        Rendezvous Left: {user.lessonCount}
       </StyledLessonCountText>
       <Formik
         initialValues={{

@@ -165,11 +165,11 @@ export default function UserDetail() {
               navigate(-1);
             }}
           >
-            Geri
+            Back
           </BackButton>
           <div>
             <Flex $jc={"space-between"}>
-              <h1>Detaylar</h1>
+              <h1>Details</h1>
               <ActivateButton
                 onClick={(e: Event) => {
                   (e.target as HTMLButtonElement).disabled = true;
@@ -178,54 +178,54 @@ export default function UserDetail() {
                   });
                 }}
               >
-                {userData.active ? "Pasifleştir" : "Aktifleştir"}
+                {userData.active ? "Deactivate" : "Activate"}
               </ActivateButton>
             </Flex>
             <DetailsGrid>
               <DetailCategory style={{ gridArea: "pi" }}>
-                <DetailHeader>Kişisel Bilgiler</DetailHeader>
+                <DetailHeader>Personal Information</DetailHeader>
                 <DetailContainer>
                   <p>
-                    <DetailLabel>Tam İsim:</DetailLabel>{" "}
-                    {userData.fullName || "Belirtilmemiş"}
+                    <DetailLabel>Full Name:</DetailLabel>{" "}
+                    {userData.fullName || "Not Specified"}
                   </p>
                   <p>
-                    <DetailLabel>Doğum Yeri:</DetailLabel>{" "}
-                    {userData.birthPlace || "Belirtilmemiş"}
+                    <DetailLabel>Birth Place:</DetailLabel>{" "}
+                    {userData.birthPlace || "Not Specified"}
                   </p>
                   <p>
-                    <DetailLabel>Doğum Tarihi:</DetailLabel>{" "}
-                    {birthDateString || "Belirtilmemiş"}
+                    <DetailLabel>Date of Birth:</DetailLabel>{" "}
+                    {birthDateString || "Not Specified"}
                   </p>
                 </DetailContainer>
               </DetailCategory>
               <DetailCategory style={{ gridArea: "c" }}>
-                <DetailHeader>İletişim</DetailHeader>
+                <DetailHeader>Contact</DetailHeader>
                 <DetailContainer>
                   <p>
                     <DetailLabel>Email:</DetailLabel>{" "}
-                    {userData.email || "Belirtilmemiş"}
+                    {userData.email || "Not Specified"}
                   </p>
                   <p>
-                    <DetailLabel>Telefon No.:</DetailLabel>{" "}
-                    {userData.phone || "Belirtilmemiş"}
+                    <DetailLabel>Phone No.:</DetailLabel>{" "}
+                    {userData.phone || "Not Specified"}
                   </p>
                 </DetailContainer>
               </DetailCategory>
               <DetailCategory style={{ gridArea: "h" }}>
-                <DetailHeader>Sağlık</DetailHeader>
+                <DetailHeader>Health</DetailHeader>
                 <DetailContainer>
                   <p>
-                    <DetailLabel>Kan Gurubu:</DetailLabel>{" "}
-                    {userData.bloodType || "Belirtilmemiş"}
+                    <DetailLabel>Blood Type:</DetailLabel>{" "}
+                    {userData.bloodType || "Not Specified"}
                   </p>
                 </DetailContainer>
               </DetailCategory>
             </DetailsGrid>
           </div>
           <div>
-            <h1>Ders Ekle</h1>
-            <h3>Ders Sayısı: {userData.lessonCount}</h3>
+            <h1>Add Course</h1>
+            <h3>Number of Classes: {userData.lessonCount}</h3>
             <Formik
               initialValues={{
                 classAmount: 0,
@@ -249,7 +249,7 @@ export default function UserDetail() {
             </Formik>
           </div>
           <div>
-            <h1>Randevular</h1>
+            <h1>Appointments</h1>
             <UserRendezvous />
           </div>
         </StyledUserDetails>

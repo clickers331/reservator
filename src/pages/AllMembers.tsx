@@ -17,7 +17,7 @@ export default function AllMembers() {
   const usersData = useSelector((state: ReduxState) => state.users.allUsers);
   return (
     <>
-      <h1>Üyeler</h1>
+      <h1>Users</h1>
       <Container>
         <SearchNav />
         <Container.Content $padding={"1rem"}>

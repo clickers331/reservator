@@ -35,7 +35,9 @@ export default function UserRendezvous() {
                 <p>
                   {currentDate.getHours()}:00 - {currentDate.getHours() + 1}:00
                 </p>
-                <p className="extra-info">{!cancelled ? "Onaylı" : "İptal"}</p>
+                <p className="extra-info">
+                  {!cancelled ? "Confirmed" : "Cancelled"}
+                </p>
                 <CircleButtonContainer>
                   {cancelled || (
                     <CancelBtn

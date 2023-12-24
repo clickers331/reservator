@@ -51,7 +51,7 @@ export default function SearchNav() {
       <SearchInputContainer>
         <SearchIconImg />
         <SearchInput
-          placeholder="İsim aratın"
+          placeholder="Search Names"
           onChange={(e) => {
             searchUserByName(e.target.value);
           }}

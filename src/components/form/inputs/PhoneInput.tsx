@@ -6,7 +6,7 @@ export default function PhoneInput() {
     <IconInput
       type="tel"
       name="phone"
-      placeholder="Cep Telefon No."
+      placeholder="Phone Number"
       iconData={{
         iconLeft: {
           icon: PhoneIcon,

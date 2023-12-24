@@ -35,14 +35,14 @@ const StyledFormSectionHeader = styled.div`
 
 const SignUpFormSchema = object({
   email: string()
-    .email("Geçersiz e-posta adresi")
-    .required("E-posta adresi zorunludur"),
-  fullName: string().required("İsim Soyisim zorunludur"),
-  phone: string().matches(phoneRegExp, "Telefon numarası geçersiz"),
+    .email("Invalid email address")
+    .required("Email address is required"),
+  fullName: string().required("Full name is required"),
+  phone: string().matches(phoneRegExp, "Phone number is invalid"),
   birthDate: string(),
   password: string()
-    .length(6, "Şifreniz en az 6 haneli olmalıdır")
-    .required("Şifre zorunludur"),
+    .length(6, "Your password must be at least 6 characters long")
+    .required("Password is required"),
 });
 
 export default function SignUp() {
@@ -54,7 +54,7 @@ export default function SignUp() {
         <Navigate to="/" />
       ) : (
         <>
-          <h1>Hesap Oluştur</h1>
+          <h1>Sign Up</h1>
           <Formik
             initialValues={{
               email: "",
@@ -97,7 +97,7 @@ export default function SignUp() {
                   <option value="O-">O-</option>
                 </SelectInput>
               </StyledFormSection>
-              <AuthBtn>Kayıt Ol</AuthBtn>
+              <AuthBtn>Sign Up</AuthBtn>
             </Form>
           </Formik>
         </>

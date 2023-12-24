@@ -15,18 +15,18 @@ const MonthLink = styled(NavLink)`
 export default function MonthNav() {
   return (
     <StyledMonthNav>
-      <MonthLink to="../month/2023/1">ocak</MonthLink>
-      <MonthLink to="../month/2023/2">şubat</MonthLink>
-      <MonthLink to="../month/2023/3">mart</MonthLink>
-      <MonthLink to="../month/2023/4">nisan</MonthLink>
-      <MonthLink to="../month/2023/5">mayıs</MonthLink>
-      <MonthLink to="../month/2023/6">haziran</MonthLink>
-      <MonthLink to="../month/2023/7">temmuz</MonthLink>
-      <MonthLink to="../month/2023/8">ağustos</MonthLink>
-      <MonthLink to="../month/2023/9">eylül</MonthLink>
-      <MonthLink to="../month/2023/10">ekim</MonthLink>
-      <MonthLink to="../month/2023/11">kasım</MonthLink>
-      <MonthLink to="../month/2023/12">aralık</MonthLink>
+      <MonthLink to="../month/2023/1">january</MonthLink>
+      <MonthLink to="../month/2023/2">february</MonthLink>
+      <MonthLink to="../month/2023/3">march</MonthLink>
+      <MonthLink to="../month/2023/4">april</MonthLink>
+      <MonthLink to="../month/2023/5">may</MonthLink>
+      <MonthLink to="../month/2023/6">june</MonthLink>
+      <MonthLink to="../month/2023/7">july</MonthLink>
+      <MonthLink to="../month/2023/8">august</MonthLink>
+      <MonthLink to="../month/2023/9">september</MonthLink>
+      <MonthLink to="../month/2023/10">october</MonthLink>
+      <MonthLink to="../month/2023/11">november</MonthLink>
+      <MonthLink to="../month/2023/12">december</MonthLink>
     </StyledMonthNav>
   );
 }

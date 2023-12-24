@@ -31,7 +31,7 @@ export default function MyRendezvous() {
       <Container.Content>
         <StyledMyRendezvous>
           <AddRendezvousForm />
-          <h1>Randevularım</h1>
+          <h1>My Rendezvous</h1>
           <UserRendezvous />
         </StyledMyRendezvous>
       </Container.Content>

@@ -27,9 +27,9 @@ const StyledForm = styled(Form)<StyledProps>`
 
 const SignInFormSchema = object({
   email: string()
-    .email("Emailinizi doğru giriniz")
-    .required("Emailiniz gereklidir"),
-  password: string().required("Şifreniz gereklidir"),
+    .email("You email isn't correctly formatted")
+    .required("You email is required"),
+  password: string().required("Password is required"),
 });
 
 export default function SignIn() {
@@ -54,7 +54,7 @@ export default function SignIn() {
                 <Form>
                   <EmailInput />
                   <PasswordInput />
-                  <AuthBtn onClick={() => signOut(auth)}>Giriş Yap</AuthBtn>
+                  <AuthBtn onClick={() => signOut(auth)}>Sign In</AuthBtn>
                 </Form>
               );
             }}

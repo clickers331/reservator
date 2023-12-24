@@ -16,9 +16,9 @@ export default function Rendezvous() {
               today.getMonth() + 1
             }/${today.getDate()}`}
           >
-            gün
+            day
           </NavLink>
-          <NavLink to="list">liste</NavLink>
+          <NavLink to="list">list</NavLink>
         </ContainerNav>
         <Outlet />
       </Container>
